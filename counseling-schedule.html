@@ -19,10 +19,8 @@
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <button onclick="window.location.href='index.html'" class="text-teal-600 hover:text-teal-800">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
+          <button onclick="goBackToMain()" class="text-teal-600 hover:text-teal-800">
+            ← 메인으로
           </button>
           <h1 class="text-2xl font-bold text-teal-700">📅 상담일정 관리</h1>
         </div>
@@ -292,6 +290,11 @@
   </div>
 
   <script>
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
     // 일정 데이터
     const scheduleData = {
       '7월 1일': [
@@ -398,5 +401,4 @@
     });
   </script>
 </body>
-</html> 
 </html> 

@@ -34,8 +34,8 @@
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <a href="index.html" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
-          <h1 class="text-2xl font-bold text-gray-800">🔧 관리자 도구</h1>
+          <a href="#" onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
+          <h1 class="text-2xl font-bold text-indigo-700">⚙️ 관리자 설정</h1>
         </div>
         <div class="flex items-center space-x-4">
           <span class="text-gray-600">운영자: 권회은</span>
@@ -330,6 +330,15 @@
   </div>
 
   <script>
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    function saveSettings() {
+      // 현재 함수는 비어있습니다. 필요한 경우 구현할 수 있습니다.
+    }
+
     // 페이지 로드 후 차트 초기화
     document.addEventListener('DOMContentLoaded', function() {
       try {

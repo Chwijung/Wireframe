@@ -43,8 +43,8 @@
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <button onclick="window.location.href='index.html'" class="text-yellow-600 hover:text-yellow-700">
-            ← 돌아가기
+          <button onclick="goBackToMain()" class="text-yellow-600 hover:text-yellow-700">
+            ← 메인으로
           </button>
           <h1 class="text-2xl font-bold text-yellow-700">📁 자료 보관소</h1>
         </div>
@@ -495,6 +495,11 @@
   </div>
 
   <script>
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
     // 드래그 앤 드롭 기능
     document.addEventListener('DOMContentLoaded', function() {
       const dragArea = document.getElementById('dragArea');

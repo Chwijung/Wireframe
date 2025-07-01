@@ -35,8 +35,8 @@
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <button onclick="window.location.href='index.html'" class="text-teal-600 hover:text-teal-700">
-            ← 돌아가기
+          <button onclick="goBackToMain()" class="text-teal-600 hover:text-teal-700">
+            ← 메인으로
           </button>
           <h1 class="text-2xl font-bold text-teal-700">💬 멘토링 시스템</h1>
         </div>
@@ -446,6 +446,11 @@
   </div>
 
   <script>
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
     // 탭 전환 기능
     document.addEventListener('DOMContentLoaded', function() {
       const tabs = ['records', 'students', 'analytics'];
