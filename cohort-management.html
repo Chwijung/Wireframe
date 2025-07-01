@@ -12,8 +12,8 @@
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <a href="index.html" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
-          <h1 class="text-2xl font-bold text-gray-800">📁 기수 관리</h1>
+          <a href="#" onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
+          <h1 class="text-2xl font-bold text-indigo-700">📚 기수 관리</h1>
         </div>
         <div class="flex items-center space-x-4">
           <span class="text-gray-600">운영자: 권회은</span>
@@ -53,7 +53,7 @@
         </svg>
         현재 활성 기수
       </h2>
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 cursor-pointer hover:bg-blue-100 transition-colors" onclick="window.location.href='cohort-detail.html?cohort=ai-x-3rd'">
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 cursor-pointer hover:bg-blue-100 transition-colors" onclick="window.location.href='main.html?cohort=ai-x-3rd'">
         <div class="flex justify-between items-start">
           <div>
             <h3 class="text-xl font-bold text-blue-800">AI-X 3기</h3>
@@ -62,8 +62,8 @@
             <p class="text-blue-600">진행률: 45% (중간 발표 준비중)</p>
           </div>
           <div class="flex space-x-2">
-            <button onclick="event.stopPropagation(); window.location.href='cohort-detail.html?cohort=ai-x-3rd'" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-              상세 관리
+            <button onclick="event.stopPropagation(); window.location.href='main.html?cohort=ai-x-3rd'" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+              전체 보기
             </button>
           </div>
         </div>
@@ -101,7 +101,7 @@
       <div class="grid md:grid-cols-3 gap-6">
         
         <!-- AI-X 3기 (현재) -->
-        <div class="border border-blue-300 rounded-lg p-6 bg-blue-50 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.location.href='cohort-detail.html?cohort=ai-x-3rd'">
+        <div class="border border-blue-300 rounded-lg p-6 bg-blue-50 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.location.href='main.html?cohort=ai-x-3rd'">
           <div class="flex justify-between items-start mb-4">
             <h3 class="text-lg font-bold text-blue-800">AI-X 3기</h3>
             <span class="bg-blue-600 text-white px-2 py-1 rounded-full text-xs">진행중</span>
@@ -112,8 +112,8 @@
             <p>📊 진행률: 45%</p>
           </div>
           <div class="mt-4 flex space-x-2">
-            <button onclick="event.stopPropagation(); window.location.href='cohort-detail.html?cohort=ai-x-3rd'" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
-              상세관리
+            <button onclick="event.stopPropagation(); window.location.href='main.html?cohort=ai-x-3rd'" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+              전체보기
             </button>
             <button onclick="event.stopPropagation(); generateReport('ai-x-3rd')" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
               보고서
@@ -122,7 +122,7 @@
         </div>
 
         <!-- AI-X 2기 (종료) -->
-        <div class="border border-gray-300 rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.location.href='cohort-detail.html?cohort=ai-x-2nd'">
+        <div class="border border-gray-300 rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.location.href='main.html?cohort=ai-x-2nd'">
           <div class="flex justify-between items-start mb-4">
             <h3 class="text-lg font-bold text-gray-800">AI-X 2기</h3>
             <span class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs">완료</span>
@@ -133,7 +133,7 @@
             <p>📊 완료율: 100%</p>
           </div>
           <div class="mt-4 flex space-x-2">
-            <button onclick="event.stopPropagation(); window.location.href='cohort-detail.html?cohort=ai-x-2nd'" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
+            <button onclick="event.stopPropagation(); window.location.href='main.html?cohort=ai-x-2nd'" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
               아카이브
             </button>
             <button onclick="event.stopPropagation(); copyStructure('ai-x-2nd')" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700">
@@ -143,7 +143,7 @@
         </div>
 
         <!-- AI-X 1기 (종료) -->
-        <div class="border border-gray-300 rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.location.href='cohort-detail.html?cohort=ai-x-1st'">
+        <div class="border border-gray-300 rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.location.href='main.html?cohort=ai-x-1st'">
           <div class="flex justify-between items-start mb-4">
             <h3 class="text-lg font-bold text-gray-800">AI-X 1기</h3>
             <span class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs">완료</span>
@@ -154,7 +154,7 @@
             <p>📊 완료율: 100%</p>
           </div>
           <div class="mt-4 flex space-x-2">
-            <button onclick="event.stopPropagation(); window.location.href='cohort-detail.html?cohort=ai-x-1st'" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
+            <button onclick="event.stopPropagation(); window.location.href='main.html?cohort=ai-x-1st'" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
               아카이브
             </button>
             <button onclick="event.stopPropagation(); copyStructure('ai-x-1st')" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700">
@@ -215,6 +215,15 @@
       if (confirm(`${cohortId}의 구조를 새 기수에 복사하시겠습니까?\n\n복사될 내용:\n• 교육 일정 구조\n• 과제 템플릿\n• 평가 기준\n• 멘토링 양식`)) {
         alert('구조가 복사되었습니다! 새 기수 생성 시 자동으로 적용됩니다.');
       }
+    }
+
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `main.html?cohort=${currentCohort}`;
+    }
+
+    function goToCohortDetail(cohortId) {
+      window.location.href = `main.html?cohort=${cohortId}`;
     }
   </script>
 </body>

@@ -12,7 +12,7 @@
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <a href="cohort-management.html" class="text-indigo-600 hover:text-indigo-800">← 기수 목록으로</a>
+          <a href="#" id="backLink" class="text-indigo-600 hover:text-indigo-800">← 기수 전체보기로</a>
           <h1 class="text-2xl font-bold text-gray-800" id="cohortTitle">📅 AI-X 3기 상세 관리</h1>
         </div>
         <div class="flex items-center space-x-4">
@@ -341,6 +341,9 @@
         document.getElementById('cohortTitle').textContent = `📅 ${cohort.name} 상세 관리`;
         document.getElementById('cohortName').textContent = cohort.name;
         document.title = `${cohort.name} 상세 관리 - AI-X 시스템`;
+        
+        // 뒤로가기 링크 설정
+        document.getElementById('backLink').href = `main.html?cohort=${cohortId}`;
       }
     }
 
