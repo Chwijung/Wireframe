@@ -79,28 +79,84 @@
 </head>
 <body class="bg-gray-100 p-6" style="overflow-x: hidden;">
   
-  <!-- 로그인 화면 -->
+  <!-- 로그인/회원가입 화면 -->
   <div id="loginScreen" class="min-h-screen flex items-center justify-center">
     <div class="bg-white rounded-xl shadow-lg p-8 w-96 max-w-sm mx-4">
-      <div class="text-center mb-6">
-        <h1 class="text-2xl font-bold mb-2">🔐 AI-X 시스템</h1>
-        <p class="text-gray-600">운영자 로그인이 필요합니다</p>
+      <!-- 로그인 폼 -->
+      <div id="loginForm">
+        <div class="text-center mb-6">
+          <h1 class="text-2xl font-bold mb-2">🔐 AI-X 시스템</h1>
+          <p class="text-gray-600">운영자 로그인이 필요합니다</p>
+        </div>
+        <form onsubmit="handleLogin(event)">
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-2">아이디</label>
+            <input type="text" id="adminId" class="w-full border p-3 rounded-lg" placeholder="운영자 아이디" required>
+          </div>
+          <div class="mb-6">
+            <label class="block text-sm font-medium mb-2">비밀번호</label>
+            <input type="password" id="adminPassword" class="w-full border p-3 rounded-lg" placeholder="비밀번호" required>
+          </div>
+          <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
+            로그인
+          </button>
+        </form>
+        <div class="mt-4 text-center">
+          <div class="text-sm text-gray-500 mb-3">
+            <p>테스트 계정: admin / admin123</p>
+          </div>
+          <div class="border-t pt-4">
+            <p class="text-sm text-gray-600 mb-2">아직 계정이 없으신가요?</p>
+            <button onclick="showSignupForm()" class="text-blue-600 hover:text-blue-700 font-medium text-sm underline">
+              회원가입하기
+            </button>
+          </div>
+        </div>
       </div>
-      <form onsubmit="handleLogin(event)">
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-2">아이디</label>
-          <input type="text" id="adminId" class="w-full border p-3 rounded-lg" placeholder="운영자 아이디" required>
+
+      <!-- 회원가입 폼 -->
+      <div id="signupForm" class="hidden">
+        <div class="text-center mb-6">
+          <h1 class="text-2xl font-bold mb-2">📝 AI-X 시스템</h1>
+          <p class="text-gray-600">새 운영자 계정을 생성합니다</p>
         </div>
-        <div class="mb-6">
-          <label class="block text-sm font-medium mb-2">비밀번호</label>
-          <input type="password" id="adminPassword" class="w-full border p-3 rounded-lg" placeholder="비밀번호" required>
+        <form onsubmit="handleSignup(event)">
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-2">이메일</label>
+            <input type="email" id="signupEmail" class="w-full border p-3 rounded-lg" placeholder="이메일 주소" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-2">비밀번호</label>
+            <input type="password" id="signupPassword" class="w-full border p-3 rounded-lg" placeholder="6자 이상" minlength="6" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-2">비밀번호 확인</label>
+            <input type="password" id="signupPasswordConfirm" class="w-full border p-3 rounded-lg" placeholder="비밀번호 재입력" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-2">이름</label>
+            <input type="text" id="signupName" class="w-full border p-3 rounded-lg" placeholder="이름" required>
+          </div>
+
+          <div class="mb-6">
+            <label class="block text-sm font-medium mb-2">역할</label>
+            <select id="signupRole" class="w-full border p-3 rounded-lg" required>
+              <option value="">역할을 선택하세요</option>
+              <option value="operator">운영자</option>
+              <option value="coach">코치</option>
+              <option value="mentor">멘토</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
+            회원가입 하기
+          </button>
+        </form>
+        <div class="mt-4 text-center border-t pt-4">
+          <p class="text-sm text-gray-600 mb-2">이미 계정이 있으신가요?</p>
+          <button onclick="showLoginForm()" class="text-blue-600 hover:text-blue-700 font-medium text-sm underline">
+            로그인하기
+          </button>
         </div>
-        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
-          로그인
-        </button>
-      </form>
-      <div class="mt-4 text-center text-sm text-gray-500">
-        <p>테스트 계정: admin / admin123</p>
       </div>
     </div>
   </div>
@@ -385,35 +441,140 @@
       }
     }
 
-    // 로그인 처리
+    // 폼 전환 함수들
+    function showSignupForm() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('signupForm').classList.remove('hidden');
+      document.getElementById('signupForm').style.display = 'block';
+    }
+
+    function showLoginForm() {
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+    }
+
+    // 회원가입 처리
+    function handleSignup(event) {
+      event.preventDefault();
+      
+      const signupId = document.getElementById('signupId').value;
+      const signupPassword = document.getElementById('signupPassword').value;
+      const signupPasswordConfirm = document.getElementById('signupPasswordConfirm').value;
+      const signupName = document.getElementById('signupName').value;
+      const signupEmail = document.getElementById('signupEmail').value;
+      const signupRole = document.getElementById('signupRole').value;
+      
+      // 비밀번호 확인
+      if (signupPassword !== signupPasswordConfirm) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+      
+      // 기존 사용자와 중복 확인 (실제로는 서버에서 처리)
+      const existingUsers = JSON.parse(localStorage.getItem('aixUsers') || '[]');
+      if (existingUsers.some(user => user.id === signupId)) {
+        alert('이미 존재하는 아이디입니다.');
+        return;
+      }
+      
+      if (existingUsers.some(user => user.email === signupEmail)) {
+        alert('이미 등록된 이메일입니다.');
+        return;
+      }
+      
+      // 새 사용자 저장
+      const newUser = {
+        id: signupId,
+        password: signupPassword, // 실제로는 해시화 필요
+        name: signupName,
+        email: signupEmail,
+        role: signupRole,
+        createdAt: new Date().toISOString()
+      };
+      
+      existingUsers.push(newUser);
+      localStorage.setItem('aixUsers', JSON.stringify(existingUsers));
+      
+      alert(`${signupName}님, 회원가입이 완료되었습니다!\n로그인 화면으로 이동합니다.`);
+      
+      // 회원가입 성공 후 로그인 폼으로 전환
+      showLoginForm();
+      
+      // 로그인 폼에 새로 가입한 아이디 자동 입력
+      document.getElementById('adminId').value = signupId;
+      document.getElementById('adminPassword').focus();
+    }
+
+    // 로그인 처리 (기존 사용자 + 새 사용자 지원)
     function handleLogin(event) {
       event.preventDefault();
       
       const adminId = document.getElementById('adminId').value;
       const adminPassword = document.getElementById('adminPassword').value;
       
-      // 간단한 로그인 검증 (실제 프로젝트에서는 서버에서 처리)
+      // 기본 관리자 계정 확인
       if (adminId === 'admin' && adminPassword === 'admin123') {
-        // 로그인 화면 숨기고 메인 콘텐츠 표시
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('mainContent').classList.remove('hidden');
-        document.getElementById('mainContent').classList.add('block');
+        loginSuccess('권회은', 'operator');
+        return;
+      }
+      
+      // 등록된 사용자 확인
+      const existingUsers = JSON.parse(localStorage.getItem('aixUsers') || '[]');
+      const user = existingUsers.find(u => u.id === adminId && u.password === adminPassword);
+      
+      if (user) {
+        loginSuccess(user.name, user.role);
       } else {
         alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+      }
+    }
+
+    // 로그인 성공 처리
+    function loginSuccess(userName, userRole) {
+      // 사용자 정보를 세션에 저장
+      localStorage.setItem('currentUser', JSON.stringify({
+        name: userName,
+        role: userRole,
+        loginTime: new Date().toISOString()
+      }));
+      
+      // 로그인 화면 숨기고 메인 콘텐츠 표시
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('mainContent').classList.remove('hidden');
+      document.getElementById('mainContent').classList.add('block');
+      
+      // 헤더에 사용자 이름 업데이트
+      const userGreeting = document.querySelector('header p');
+      if (userGreeting) {
+        userGreeting.textContent = `운영자 ${userName} 님, 총 3개 기수를 관리 중입니다.`;
       }
     }
 
     // 로그아웃
     function logout() {
       if (confirm('로그아웃하시겠습니까?')) {
+        // 사용자 세션 정보 제거
+        localStorage.removeItem('currentUser');
+        
         // 메인 콘텐츠 숨기고 로그인 화면 표시
         document.getElementById('mainContent').classList.add('hidden');
         document.getElementById('mainContent').classList.remove('block');
         document.getElementById('loginScreen').style.display = 'flex';
         
+        // 로그인 폼으로 돌아가기
+        showLoginForm();
+        
         // 입력 필드 초기화
         document.getElementById('adminId').value = '';
         document.getElementById('adminPassword').value = '';
+        
+        // 회원가입 폼 필드도 초기화
+        const signupForm = document.getElementById('signupForm');
+        if (signupForm) {
+          signupForm.querySelectorAll('input, select').forEach(field => {
+            field.value = '';
+          });
+        }
       }
     }
   </script>
