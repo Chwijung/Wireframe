@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>멘토 대시보드 - AI-X 운영 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+    .card {
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- 네비게이션 -->
+  <nav class="bg-blue-600 text-white shadow-lg">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-4">
+          <button onclick="goBackToMain()" class="text-blue-200 hover:text-white">
+            ← 메인으로
+          </button>
+          <h1 class="text-xl font-bold">멘토 대시보드</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-blue-200">멘토: 김민준 멘토님</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 메인 콘텐츠 -->
+  <div class="max-w-6xl mx-auto p-6">
+    <!-- 환영 메시지 -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">안녕하세요, 김민준 멘토님! 👋</h2>
+          <div class="grid md:grid-cols-3 gap-4">
+            <a href="https://open.kakao.com/o/team1" target="_blank" class="flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors">
+              <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 01-1.896-.13l-2.646 1.585c-.24.144-.66.147-.9.006a.547.547 0 01-.234-.689l.659-2.435C4.671 16.199 1.5 12.82 1.5 11.185 1.5 6.665 6.201 3 12 3z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="font-medium text-gray-800">오픈톡</div>
+                <div class="text-sm text-gray-600">팀 단체 채팅</div>
+              </div>
+            </a>
+    
+            <a href="https://notion.so/team-workspace" target="_blank" class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="font-medium text-gray-800">노션</div>
+                <div class="text-sm text-gray-600">팀 워크스페이스</div>
+              </div>
+            </a>
+    
+            <a href="https://zoom.us/j/meeting-room" target="_blank" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+              <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 2v12h16V6H4zm2 2h4v4H6V8zm6 0h6v2h-6V8zm0 4h6v2h-6v-2z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="font-medium text-gray-800">줌 미팅</div>
+                <div class="text-sm text-gray-600">화상 회의</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">담당 팀 선택</label>
+            <select id="teamSelect" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="switchTeam()">
+              <option value="team1">1팀 - AI 챗봇 프로젝트</option>
+              <option value="team2">2팀 - 추천 시스템 프로젝트</option>
+            </select>
+          </div>
+          <div class="text-2xl font-bold text-blue-600">D-3</div>
+          <div class="text-sm text-gray-500">중간발표까지</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 간소화된 액션 버튼들 -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <a href="students.html" class="bg-white rounded-xl shadow-lg p-6 card hover:shadow-xl">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-green-100 rounded-lg mr-4 flex items-center justify-center">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-800 mb-1">수강생 현황</h3>
+            <p class="text-sm text-gray-600">조원 수와 스크럼 요약 확인</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="log-write.html" class="bg-white rounded-xl shadow-lg p-6 card hover:shadow-xl relative">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-orange-100 rounded-lg mr-4 flex items-center justify-center">
+            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-800 mb-1">멘토링 일지</h3>
+            <p class="text-sm text-gray-600">날짜별 일지 작성</p>
+          </div>
+        </div>
+        <div class="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+      </a>
+    </div>
+
+            <!-- 주요 일정 -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+              <h3 class="text-xl font-semibold mb-4">📅 주요 일정</h3>
+              
+              <!-- 2025년 7월 -->
+              <div class="mb-4">
+                <h4 class="text-sm font-medium text-gray-500 mb-2">2025년 7월</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <!-- 빈 공간 -->
+                </div>
+              </div>
+        
+              <!-- 2025년 8월 -->
+              <div class="mb-4">
+                <h4 class="text-sm font-medium text-gray-500 mb-2">2025년 8월</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <div class="flex justify-between p-2 bg-gray-50 rounded">
+                    <span class="font-medium">8/1(금)</span>
+                    <span class="text-gray-600">이력서 제출 마감 grace-t@hanmail.net</span>
+                    <span class="text-gray-500 text-xs">오전 9:00 - 오후 6:00</span>
+                  </div>
+                  <div class="flex justify-between p-2 bg-blue-50 rounded">
+                    <span class="font-medium">8/2(토)</span>
+                    <span class="text-gray-600">현업특강</span>
+                    <span class="text-gray-500 text-xs">오전 9:00 - 오후 6:00</span>
+                  </div>
+                  <div class="flex justify-between p-2 bg-yellow-50 rounded">
+                    <span class="font-medium">8/15(금)</span>
+                    <span class="text-gray-600">중간발표(정상출결)</span>
+                    <span class="text-gray-500 text-xs">오후 12:00 - 오후 9:00</span>
+                  </div>
+                  <div class="flex justify-between p-2 bg-green-50 rounded">
+                    <span class="font-medium">8/23(토)</span>
+                    <span class="text-gray-600">현직자특강</span>
+                    <span class="text-gray-500 text-xs">오전 9:00 - 오후 6:00</span>
+                  </div>
+                </div>
+              </div>
+        
+              <!-- 2025년 9월 -->
+              <div>
+                <h4 class="text-sm font-medium text-gray-500 mb-2">2025년 9월</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <div class="flex justify-between p-2 bg-purple-50 rounded">
+                    <span class="font-medium">9/2(화)</span>
+                    <span class="text-gray-600">최종발표D-2(1차 리허설)</span>
+                    <span class="text-gray-500 text-xs">오후 4:00 - 오후 6:00</span>
+                  </div>
+                  <div class="flex justify-between p-2 bg-orange-50 rounded">
+                    <span class="font-medium">9/3(수)</span>
+                    <span class="text-gray-600">최종발표D-1(1&2차 자료제출, 2차 리허설)</span>
+                    <span class="text-gray-500 text-xs">오후 4:00 - 오후 6:00</span>
+                  </div>
+                  <div class="flex justify-between p-2 bg-red-50 rounded">
+                    <span class="font-medium">9/4(목)</span>
+                    <span class="text-gray-600">최종발표</span>
+                    <span class="text-gray-500 text-xs">오전 9:00 - 오후 6:00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+  </div>
+
+  <script>
+    // 팀 데이터
+    const TEAMS_DATA = {
+      team1: {
+        name: '1팀 - AI 챗봇 프로젝트',
+        students: 6,
+        attendance: 80,
+        completion: 75,
+        lastLog: '1/13',
+        status: '정상',
+        statusClass: 'bg-green-100 text-green-800'
+      },
+      team2: {
+        name: '2팀 - 추천 시스템 프로젝트',
+        students: 5,
+        attendance: 60,
+        completion: 70,
+        lastLog: '미작성',
+        status: '주의',
+        statusClass: 'bg-red-100 text-red-800'
+      }
+    };
+
+    function goBackToMain() {
+      const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
+      window.location.href = `../main.html?cohort=${currentCohort}`;
+    }
+
+    function switchTeam() {
+      const selectedTeam = document.getElementById('teamSelect').value;
+      const teamData = TEAMS_DATA[selectedTeam];
+      
+      if (teamData) {
+        updateTeamInfo(teamData);
+      }
+    }
+
+    function updateTeamInfo(teamData) {
+      const teamInfo = document.getElementById('teamInfo');
+      
+      teamInfo.innerHTML = `
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-semibold text-gray-800">${teamData.name.split(' - ')[0]} 현황</h3>
+          <span class="${teamData.statusClass} text-xs font-medium px-2.5 py-0.5 rounded">${teamData.status}</span>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-blue-600">${teamData.students}명</div>
+            <div class="text-sm text-gray-600">수강생 수</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-orange-600">${teamData.completion}%</div>
+            <div class="text-sm text-gray-600">과제 완성도</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-purple-600">${teamData.lastLog}</div>
+            <div class="text-sm text-gray-600">최근 일지</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 페이지 로드 시 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      // 기본 선택된 팀 정보 표시
+      updateTeamInfo(TEAMS_DATA.team1);
+    });
+  </script>
+</body>
+</html>
