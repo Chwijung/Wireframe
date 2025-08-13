@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>자료 보관소 - AI-X 통합 운영 시스템</title>
+  <title>코치 자료실 - AI-X 통합 운영 시스템</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     html, body {
@@ -46,12 +46,13 @@
           <button onclick="goBackToMain()" class="text-yellow-600 hover:text-yellow-700">
             ← 메인으로
           </button>
-          <h1 class="text-2xl font-bold text-yellow-700">📁 자료 보관소</h1>
+          <h1 class="text-2xl font-bold text-yellow-700">👨‍🏫 코치 자료실</h1>
         </div>
         <div class="flex items-center space-x-4">
           <span class="text-gray-600">AI-X 3기 | 저장공간: 2.3GB / 10GB</span>
-          <button onclick="openModal('uploadModal')" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">강의자료 업로드</button>
-          <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">제출물 일괄 다운로드</button>
+          <button onclick="openModal('uploadModal')" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">자료 업로드</button>
+          <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">강의 템플릿</button>
+          <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">자료 일괄 관리</button>
         </div>
       </div>
     </div>
@@ -60,8 +61,8 @@
   <div class="max-w-7xl mx-auto p-6 space-y-8">
     <!-- 메인 헤더 -->
     <header class="text-center py-6">
-      <h2 class="text-3xl font-bold text-gray-800 mb-2">교육자료 중앙 관리 시스템</h2>
-      <p class="text-lg text-gray-600">강의자료, 과제, 제출물 통합 관리 플랫폼</p>
+      <h2 class="text-3xl font-bold text-gray-800 mb-2">코치 전용 자료 관리 시스템</h2>
+      <p class="text-lg text-gray-600">강의 준비, 안내사항, 교육 템플릿 통합 관리</p>
     </header>
 
     <!-- 통계 카드 -->
@@ -159,26 +160,40 @@
       <!-- 폴더 구조 -->
       <div class="p-6">
         <div class="grid md:grid-cols-6 gap-4 mb-6">
-          <!-- 폴더들 -->
-          <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer">
+          <!-- 코치용 폴더들 -->
+          <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer" onclick="openFolder('lectures')">
+            <svg class="w-12 h-12 text-blue-500 mb-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
+            </svg>
+            <span class="text-sm text-center">강의자료</span>
+          </div>
+
+          <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer" onclick="openFolder('announcements')">
+            <svg class="w-12 h-12 text-green-500 mb-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
+            </svg>
+            <span class="text-sm text-center">안내사항</span>
+          </div>
+
+          <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer" onclick="openFolder('templates')">
             <svg class="w-12 h-12 text-purple-500 mb-2" fill="currentColor" viewBox="0 0 24 24">
               <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
             </svg>
-            <span class="text-sm text-center">프로젝트</span>
+            <span class="text-sm text-center">교육 템플릿</span>
           </div>
 
-          <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer">
+          <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer" onclick="openFolder('evaluations')">
             <svg class="w-12 h-12 text-orange-500 mb-2" fill="currentColor" viewBox="0 0 24 24">
               <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
             </svg>
-            <span class="text-sm text-center">참고 자료</span>
+            <span class="text-sm text-center">평가자료</span>
           </div>
 
-          <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer">
+          <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer" onclick="openFolder('guidelines')">
             <svg class="w-12 h-12 text-red-500 mb-2" fill="currentColor" viewBox="0 0 24 24">
               <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
             </svg>
-            <span class="text-sm text-center">멘토링</span>
+            <span class="text-sm text-center">운영 가이드</span>
           </div>
 
           <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer" onclick="openSurveyFolder()">
@@ -187,88 +202,135 @@
             </svg>
             <span class="text-sm text-center">수강생 설문</span>
           </div>
-
-          <div class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 cursor-pointer">
-            <svg class="w-12 h-12 text-gray-500 mb-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
-            </svg>
-            <span class="text-sm text-center">기타</span>
-          </div>
         </div>
 
-        <!-- 파일 목록 -->
+        <!-- 코치 자료 목록 -->
         <div class="border-t border-gray-200 pt-6">
-          <h4 class="font-semibold mb-4">최근 파일</h4>
+          <h4 class="font-semibold mb-4">최근 업로드된 코치 자료</h4>
           <div class="space-y-2">
-            <!-- 파일 1 -->
-            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
-              <div class="flex items-center space-x-3">
-                <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                </svg>
-                <div>
-                  <p class="font-medium">Python 기초 강의자료.pdf</p>
-                  <p class="text-sm text-gray-600">김하늘 • 2024.01.11 • 2.3MB</p>
-                </div>
-              </div>
-              <div class="flex items-center space-x-2">
-                <button class="p-2 text-gray-500 hover:text-gray-700">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                  </svg>
-                </button>
-                <button class="text-blue-600 hover:text-blue-700">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- 파일 2 -->
-            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
-              <div class="flex items-center space-x-3">
-                <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                </svg>
-                <div>
-                  <p class="font-medium">1조_미니프로젝트_최종.xlsx</p>
-                  <p class="text-sm text-gray-600">이서준 • 2024.01.10 • 1.8MB</p>
-                </div>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">제출완료</span>
-                <button class="p-2 text-gray-500 hover:text-gray-700">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                  </svg>
-                </button>
-                <button class="text-blue-600 hover:text-blue-700">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- 파일 3 -->
+            <!-- 강의 자료 1 -->
             <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
               <div class="flex items-center space-x-3">
                 <svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                 </svg>
                 <div>
-                  <p class="font-medium">웹개발_실습코드.zip</p>
-                  <p class="text-sm text-gray-600">박지민 • 2024.01.09 • 15.2MB</p>
+                  <p class="font-medium">AI 기초 이론 강의 슬라이드.pptx</p>
+                  <p class="text-sm text-gray-600">강의자료 • 2024.01.15 • 8.5MB</p>
                 </div>
               </div>
               <div class="flex items-center space-x-2">
+                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">강의자료</span>
                 <button class="p-2 text-gray-500 hover:text-gray-700">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
                   </svg>
                 </button>
-                <button class="text-blue-600 hover:text-blue-700">
+                <button onclick="downloadFile('ai-theory.pptx')" class="text-blue-600 hover:text-blue-700">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- 안내사항 1 -->
+            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+              <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+                <div>
+                  <p class="font-medium">3기 오리엔테이션 가이드.pdf</p>
+                  <p class="text-sm text-gray-600">안내사항 • 2024.01.14 • 1.2MB</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">안내사항</span>
+                <button class="p-2 text-gray-500 hover:text-gray-700">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                  </svg>
+                </button>
+                <button onclick="downloadFile('orientation-guide.pdf')" class="text-blue-600 hover:text-blue-700">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- 교육 템플릿 1 -->
+            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+              <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-purple-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+                <div>
+                  <p class="font-medium">프로젝트 평가 체크리스트.xlsx</p>
+                  <p class="text-sm text-gray-600">교육 템플릿 • 2024.01.13 • 0.8MB</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs">템플릿</span>
+                <button class="p-2 text-gray-500 hover:text-gray-700">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                  </svg>
+                </button>
+                <button onclick="downloadFile('evaluation-checklist.xlsx')" class="text-blue-600 hover:text-blue-700">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- 운영 가이드 1 -->
+            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+              <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+                <div>
+                  <p class="font-medium">코치 운영 매뉴얼 v2.1.pdf</p>
+                  <p class="text-sm text-gray-600">운영 가이드 • 2024.01.12 • 3.4MB</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">운영가이드</span>
+                <button class="p-2 text-gray-500 hover:text-gray-700">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                  </svg>
+                </button>
+                <button onclick="downloadFile('coach-manual.pdf')" class="text-blue-600 hover:text-blue-700">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- 평가자료 1 -->
+            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+              <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+                <div>
+                  <p class="font-medium">중간 평가 기준 및 루브릭.docx</p>
+                  <p class="text-sm text-gray-600">평가자료 • 2024.01.11 • 2.1MB</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs">평가자료</span>
+                <button class="p-2 text-gray-500 hover:text-gray-700">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                  </svg>
+                </button>
+                <button onclick="downloadFile('evaluation-rubric.docx')" class="text-blue-600 hover:text-blue-700">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                   </svg>
@@ -445,11 +507,11 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">업로드 폴더</label>
           <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
-            <option>강의 자료</option>
-            <option>과제 제출</option>
-            <option>프로젝트</option>
-            <option>참고 자료</option>
-            <option>회의록</option>
+            <option>강의자료</option>
+            <option>안내사항</option>
+            <option>교육 템플릿</option>
+            <option>평가자료</option>
+            <option>운영 가이드</option>
             <option>수강생 설문</option>
             <option>기타</option>
           </select>
@@ -466,15 +528,15 @@
         </div>
         
         <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">공유 설정</label>
-            <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
-              <option>전체 공개</option>
-              <option>조별 공개</option>
-              <option>멘토만 공개</option>
-              <option>비공개</option>
-            </select>
-          </div>
+                  <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">공유 설정</label>
+          <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
+            <option>전체 코치 공유</option>
+            <option>현재 기수만</option>
+            <option>운영진 전용</option>
+            <option>비공개</option>
+          </select>
+        </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">태그</label>
             <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500" placeholder="태그를 입력하세요 (쉼표로 구분)">
@@ -483,7 +545,7 @@
         
         <div class="flex items-center">
           <input type="checkbox" id="notify" class="h-4 w-4 text-yellow-600 focus:ring-yellow-500 border-gray-300 rounded">
-          <label for="notify" class="ml-2 block text-sm text-gray-900">업로드 완료 시 팀원들에게 알림</label>
+          <label for="notify" class="ml-2 block text-sm text-gray-900">업로드 완료 시 다른 코치들에게 알림</label>
         </div>
         
         <div class="flex space-x-4">
@@ -534,6 +596,24 @@
 
     function closeModal(modalId) {
       document.getElementById(modalId).classList.remove('show');
+    }
+
+    // 폴더 관리 함수들
+    function openFolder(folderType) {
+      const folderNames = {
+        'lectures': '강의자료',
+        'announcements': '안내사항',
+        'templates': '교육 템플릿',
+        'evaluations': '평가자료',
+        'guidelines': '운영 가이드'
+      };
+      
+      alert(`${folderNames[folderType]} 폴더를 열었습니다.\n\n폴더 내용:\n• 관련 파일들이 표시됩니다\n• 필터링 및 검색 기능 제공\n• 드래그 앤 드롭으로 정리 가능`);
+    }
+
+    // 파일 다운로드 함수
+    function downloadFile(fileName) {
+      alert(`${fileName} 파일을 다운로드합니다.\n\n다운로드가 시작됩니다...`);
     }
 
     // 수강생 설문 관련 함수들
