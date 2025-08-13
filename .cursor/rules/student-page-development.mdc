@@ -1,0 +1,199 @@
+---
+description: AI-X 학생 전용 페이지 제작 가이드라인
+globs: student/*.html
+---
+
+# AI-X 학생 페이지 제작 가이드
+
+## 개발 원칙
+- **목업 데이터 활용**: 실제 API 없이 UI/UX 검증
+- **HTML 올인원**: CSS, JavaScript 모두 HTML 파일에 직접 작성
+- **Tailwind CSS**: CDN 사용으로 스타일링
+- **학생 관점**: 자신의 데이터만 조회/수정 가능
+
+## 필수 구성 요소
+1. **일정 조회**: D-day 카운터, 개인 출석 현황
+2. **산출물 제출**: 제출 현황, 파일 업로드, 피드백 확인
+3. **설문 응답**: 응답 가능한 설문 목록, 완료 상태
+4. **문의 관리**: 새 문의 작성, 내 문의 내역, 답변 확인
+5. **프로젝트 진행**: 개인 작업 기록, 팀 진행률, 멘토링 피드백
+
+## HTML 템플릿 (올인원)
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-X 학생 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100">
+  <!-- 네비게이션 -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <h1 class="text-2xl font-bold text-blue-700">🎓 AI-X 학생 포털</h1>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">김수강</span>
+          <span class="text-gray-600">1조</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 메인 콘텐츠 -->
+  <div class="max-w-7xl mx-auto p-6" id="content">
+    <!-- 동적 콘텐츠 영역 -->
+  </div>
+
+  <script>
+    // 목업 데이터
+    const MOCK_DATA = {
+      student: { name: '김수강', team: 1, cohort: 'ai-x-3rd' },
+      schedule: [
+        { title: '중간발표', date: '2025-07-25', dday: 3, status: 'upcoming' },
+        { title: '현직자 특강', date: '2025-07-27', dday: 5, status: 'upcoming' }
+      ],
+      submissions: [
+        { title: '미니프로젝트', status: 'completed', feedback: '잘 구현되었습니다.' },
+        { title: '중간발표', status: 'pending', dueDate: '2025-07-23' }
+      ],
+      surveys: [
+        { title: '팀 빌딩 설문', status: 'completed' },
+        { title: '프로젝트 생활 Part 1', status: 'available' }
+      ]
+    };
+
+    // 유틸리티 함수
+    function createBadge(status) {
+      const colors = {
+        'completed': 'bg-green-100 text-green-800',
+        'pending': 'bg-yellow-100 text-yellow-800',
+        'upcoming': 'bg-blue-100 text-blue-800'
+      };
+      return `<span class="px-2 py-1 rounded-full text-xs ${colors[status] || 'bg-gray-100 text-gray-800'}">${status}</span>`;
+    }
+
+    function showNotification(message) {
+      const notif = document.createElement('div');
+      notif.className = 'fixed top-4 right-4 bg-blue-100 text-blue-800 px-6 py-4 rounded-lg shadow-lg z-50';
+      notif.textContent = message;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 3000);
+    }
+
+    // 페이지 렌더링
+    function renderContent() {
+      document.getElementById('content').innerHTML = `
+        <!-- 대시보드 카드들 -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- 일정 카드 -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-xl font-semibold mb-4">📅 다가오는 일정</h3>
+            ${MOCK_DATA.schedule.map(item => `
+              <div class="mb-3 p-3 border rounded-lg">
+                <div class="flex justify-between items-center">
+                  <span class="font-medium">${item.title}</span>
+                  <span class="text-orange-600 text-sm">D-${item.dday}</span>
+                </div>
+                <div class="text-sm text-gray-600">${item.date}</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- 산출물 카드 -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-xl font-semibold mb-4">📋 산출물 현황</h3>
+            ${MOCK_DATA.submissions.map(item => `
+              <div class="mb-3 p-3 border rounded-lg">
+                <div class="flex justify-between items-center">
+                  <span class="font-medium">${item.title}</span>
+                  ${createBadge(item.status)}
+                </div>
+                ${item.feedback ? `<div class="text-sm text-gray-600 mt-1">${item.feedback}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- 설문 카드 -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-xl font-semibold mb-4">📝 설문 응답</h3>
+            ${MOCK_DATA.surveys.map(item => `
+              <div class="mb-3 p-3 border rounded-lg">
+                <div class="flex justify-between items-center">
+                  <span class="font-medium">${item.title}</span>
+                  ${createBadge(item.status)}
+                </div>
+                ${item.status === 'available' ? `
+                  <button onclick="handleSurveyResponse('${item.title}')" class="mt-2 bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                    응답하기
+                  </button>
+                ` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 빠른 액션 -->
+        <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-semibold mb-4">⚡ 빠른 액션</h3>
+          <div class="grid md:grid-cols-4 gap-4">
+            <button onclick="showNotification('일정 페이지로 이동')" class="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700">
+              📅 일정 보기
+            </button>
+            <button onclick="showNotification('과제 제출 페이지로 이동')" class="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700">
+              📋 과제 제출
+            </button>
+            <button onclick="showNotification('문의 페이지로 이동')" class="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700">
+              💬 문의하기
+            </button>
+            <button onclick="showNotification('진행상황 페이지로 이동')" class="bg-orange-600 text-white p-4 rounded-lg hover:bg-orange-700">
+              📊 진행상황
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // 이벤트 핸들러
+    function handleSurveyResponse(title) {
+      showNotification(`${title} 응답을 시작합니다`);
+      // 실제 구현에서는 설문 페이지로 이동
+    }
+
+    // 초기 렌더링
+    document.addEventListener('DOMContentLoaded', renderContent);
+  </script>
+</body>
+</html>
+```
+
+## 페이지별 구현 가이드
+
+### 📁 파일 구조
+```
+student/
+├── index.html          # 메인 대시보드
+├── schedule.html       # 일정 조회  
+├── submissions.html    # 산출물 제출
+├── surveys.html        # 설문 응답
+├── inquiries.html      # 문의 관리
+└── progress.html       # 프로젝트 진행상황
+```
+
+### 🛠️ 개발 체크리스트
+- [ ] HTML 단일 파일로 작성 (CSS/JS 내장)
+- [ ] Tailwind CSS CDN 사용
+- [ ] 목업 데이터 시뮬레이션
+- [ ] 반응형 디자인 (모바일 지원)
+- [ ] 알림 시스템 구현
+
+### 🎯 구현 우선순위
+1. index.html (메인 대시보드)
+2. submissions.html (산출물 제출)
+3. schedule.html (일정 조회)
+4. surveys.html (설문 응답)
+5. inquiries.html (문의 관리)
+6. progress.html (프로젝트 진행상황)
