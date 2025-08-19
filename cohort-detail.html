@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>기수 상세 관리 - AI-X 시스템</title>
+  <title>과정 상세 관리 - AI-X 시스템</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -16,7 +16,7 @@
           <button onclick="handleBackToDashboard()" class="text-indigo-600 hover:text-indigo-800">
             ← 메인페이지로
           </button>
-          <h1 class="text-2xl font-bold text-gray-800" id="cohortTitle">기수 상세 관리</h1>
+          <h1 class="text-2xl font-bold text-gray-800" id="cohortTitle">과정 상세 관리</h1>
         </div>
         <div class="flex items-center space-x-4">
           <span class="text-gray-600">운영자: 권회은</span>
@@ -27,7 +27,7 @@
 
   <div class="max-w-7xl mx-auto p-6 space-y-8">
     
-    <!-- 기수 상태 정보 -->
+    <!-- 과정 상태 정보 -->
     <section class="bg-white rounded-xl shadow-lg p-6" id="cohortInfo">
       <div class="space-y-4">
         <!-- 헤더 섹션 -->
@@ -536,7 +536,7 @@
     }
 
     function handleEditCohortInfo() {
-      alert('기수 정보 수정 모달을 엽니다.\n\n수정 가능 항목:\n• 기수 이름\n• 교육 기간\n• 수강생 수\n• 멘토링 일정');
+      alert('과정 정보 수정 모달을 엽니다.\n\n수정 가능 항목:\n• 과정 이름\n• 교육 기간\n• 수강생 수\n• 멘토링 일정');
     }
 
     function handleModifySchedule() {

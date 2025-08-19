@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>기수 관리 - AI-X 시스템</title>
+  <title>과정 관리 - AI-X 시스템</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
@@ -13,7 +13,7 @@
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
           <a href="#" onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
-          <h1 class="text-2xl font-bold text-indigo-700">📚 기수 관리</h1>
+          <h1 class="text-2xl font-bold text-indigo-700">📚 과정 관리</h1>
         </div>
         <div class="flex items-center space-x-4">
           <span class="text-gray-600">운영자: 권회은</span>
@@ -24,7 +24,7 @@
 
   <div class="max-w-7xl mx-auto p-6 space-y-8">
     
-    <!-- 새 기수 생성 버튼 -->
+    <!-- 새 과정 생성 버튼 -->
     <section class="bg-white rounded-xl shadow-lg p-6">
       <div class="flex justify-between items-center">
         <div>
@@ -32,26 +32,26 @@
             <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
-            기수 관리
+            과정 관리
           </h2>
-          <p class="text-gray-600 mt-2">AI-X 과정의 모든 기수를 관리하고 새로운 기수를 생성할 수 있습니다.</p>
+          <p class="text-gray-600 mt-2">AI-X 과정의 모든 과정를 관리하고 새로운 과정를 생성할 수 있습니다.</p>
         </div>
         <button onclick="window.location.href='cohort-create.html'" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
           <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
           </svg>
-          새 기수 생성
+          새 과정 생성
         </button>
       </div>
     </section>
 
-    <!-- 현재 활성 기수 -->
+    <!-- 현재 활성 과정 -->
     <section class="bg-white rounded-xl shadow-lg p-6">
       <h2 class="text-2xl font-bold mb-6 flex items-center">
         <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
         </svg>
-        현재 활성 기수
+        현재 활성 과정
       </h2>
       <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 cursor-pointer hover:bg-blue-100 transition-colors" onclick="window.location.href='main.html?cohort=ai-x-3rd'">
         <div class="flex justify-between items-start">
@@ -90,13 +90,13 @@
       </div>
     </section>
 
-    <!-- 전체 기수 목록 -->
+    <!-- 전체 과정 목록 -->
     <section class="bg-white rounded-xl shadow-lg p-6">
       <h2 class="text-2xl font-bold mb-6 flex items-center">
         <svg class="w-6 h-6 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
         </svg>
-        전체 기수 목록
+        전체 과정 목록
       </h2>
       <div class="grid md:grid-cols-3 gap-6">
         
@@ -163,14 +163,14 @@
           </div>
         </div>
 
-        <!-- 새 기수 생성 카드 -->
+        <!-- 새 과정 생성 카드 -->
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-green-500 hover:bg-green-50 transition-colors" onclick="window.location.href='cohort-create.html'">
           <div class="flex flex-col items-center justify-center h-full text-center">
             <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">새 기수 생성</h3>
-            <p class="text-sm text-gray-500">새로운 AI-X 기수를<br>생성하고 관리하세요</p>
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">새 과정 생성</h3>
+            <p class="text-sm text-gray-500">새로운 AI-X 과정를<br>생성하고 관리하세요</p>
           </div>
         </div>
       </div>
@@ -187,7 +187,7 @@
       <div class="grid md:grid-cols-4 gap-6">
         <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-lg text-white">
           <div class="text-3xl font-bold">3</div>
-          <div class="text-blue-100">총 기수</div>
+          <div class="text-blue-100">총 과정</div>
         </div>
         <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-lg text-white">
           <div class="text-3xl font-bold">57</div>
@@ -212,8 +212,8 @@
     }
 
     function copyStructure(cohortId) {
-      if (confirm(`${cohortId}의 구조를 새 기수에 복사하시겠습니까?\n\n복사될 내용:\n• 교육 일정 구조\n• 과제 템플릿\n• 평가 기준\n• 멘토링 양식`)) {
-        alert('구조가 복사되었습니다! 새 기수 생성 시 자동으로 적용됩니다.');
+      if (confirm(`${cohortId}의 구조를 새 과정에 복사하시겠습니까?\n\n복사될 내용:\n• 교육 일정 구조\n• 과제 템플릿\n• 평가 기준\n• 멘토링 양식`)) {
+        alert('구조가 복사되었습니다! 새 과정 생성 시 자동으로 적용됩니다.');
       }
     }
 

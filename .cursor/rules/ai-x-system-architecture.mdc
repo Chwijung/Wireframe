@@ -12,11 +12,11 @@ AI-X 교육과정의 통합 운영 관리 시스템 - 운영진, 코치, 멘토�
 
 ### 1. 진입점 및 네비게이션
 - [index.html](mdc:index.html) - 메인 대시보드 및 시스템 진입점
-- [main.html](mdc:main.html) - 전체 기수 관리 페이지
+- [main.html](mdc:main.html) - 전체 과정 관리 페이지
 - [dashboard.html](mdc:dashboard.html) - 교육과정 소개 및 온보딩
 
-### 2. 기수 및 학습자 관리
-- [cohort-management.html](mdc:cohort-management.html) - 기수 생성, 진행률 모니터링, 아카이브
+### 2. 과정 및 학습자 관리
+- [cohort-management.html](mdc:cohort-management.html) - 과정 생성, 진행률 모니터링, 아카이브
 - [team-management.html](mdc:team-management.html) - 조 편성, 출석 관리, 수강생 현황
 - [student-onboarding.html](mdc:student-onboarding.html) - 수강생 설문 및 팀 편성용 정보 수집
 

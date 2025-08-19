@@ -14,13 +14,13 @@ graph TB
     %% 사용자 및 진입점
     subgraph "사용자 진입점"
         A[index.html<br/>메인 대시보드]
-        B[main.html<br/>전체 기수 관리]
+        B[main.html<br/>전체 과정 관리]
         C[dashboard.html<br/>교육과정 소개]
     end
     
     %% 핵심 관리 시스템
-    subgraph "기수 및 학습자 관리"
-        D[cohort-management.html<br/>기수 운영 관리]
+    subgraph "과정 및 학습자 관리"
+        D[cohort-management.html<br/>과정 운영 관리]
         E[team-management.html<br/>조 편성 및 수강생 관리]
         F[student-onboarding.html<br/>수강생 설문 시스템]
     end
@@ -64,10 +64,10 @@ graph TB
     A --> O
     A --> P
     
-    %% 전체 기수 관리 연결
+    %% 전체 과정 관리 연결
     B --> D
     
-    %% 기수 관리 연결
+    %% 과정 관리 연결
     D --> E
     D --> F
     
@@ -123,7 +123,7 @@ flowchart TD
     %% 데이터 플로우 다이어그램
     subgraph "데이터 수집 단계"
         A1[학습자 설문<br/>student-onboarding.html]
-        A2[기수 생성<br/>cohort-management.html]
+        A2[과정 생성<br/>cohort-management.html]
     end
     
     subgraph "조 편성 및 관리 단계"
@@ -206,7 +206,7 @@ graph TB
     %% 운영자 전용 기능
     subgraph "운영자 전용 기능"
         A1[admin.html<br/>시스템 관리]
-        A2[cohort-management.html<br/>기수 관리]
+        A2[cohort-management.html<br/>과정 관리]
         A3[team-management.html<br/>조 편성 관리]
         A4[file-storage.html<br/>파일 시스템 관리]
     end
@@ -297,13 +297,13 @@ graph TB
 | 파일명 | 역할 | 주요 기능 |
 |--------|------|-----------|
 | `index.html` | 메인 대시보드 | 시스템 전체 개요, 핵심 기능 접근 |
-| `main.html` | 전체 기수 관리 | 기수별 전환, 아카이브 관리 |
+| `main.html` | 전체 과정 관리 | 과정별 전환, 아카이브 관리 |
 | `dashboard.html` | 교육과정 소개 | 온보딩, 과정 안내 |
 
-### 2. 기수 및 학습자 관리
+### 2. 과정 및 학습자 관리
 | 파일명 | 역할 | 주요 기능 |
 |--------|------|-----------|
-| `cohort-management.html` | 기수 운영 관리 | 기수 생성, 진행률 모니터링, 아카이브 |
+| `cohort-management.html` | 과정 운영 관리 | 과정 생성, 진행률 모니터링, 아카이브 |
 | `team-management.html` | 조 편성 및 수강생 관리 | 자동/수동 조 편성, 출석 관리 |
 | `student-onboarding.html` | 수강생 설문 시스템 | 팀 편성용 정보 수집, 설문 관리 |
 
@@ -357,7 +357,7 @@ graph TB
 - **자동 조 편성**: 알고리즘 기반 최적 팀 구성
 
 ### 📊 실시간 모니터링
-- **진행률 추적**: 기수별, 개인별 학습 진도 실시간 모니터링
+- **진행률 추적**: 과정별, 개인별 학습 진도 실시간 모니터링
 - **알림 시스템**: 긴급 알림, 과제 마감, 멘토링 일지 미작성 알림
 - **대시보드**: 통합 현황판으로 전체 시스템 상태 한눈에 파악
 
@@ -372,7 +372,7 @@ graph TB
 ## 📊 데이터 플로우
 
 ### 6단계 프로세스
-1. **데이터 수집**: 학습자 설문 및 기수 정보 입력
+1. **데이터 수집**: 학습자 설문 및 과정 정보 입력
 2. **조 편성**: 자동/수동 팀 구성 및 관리
 3. **학습 진행**: 과제 관리, 스크럼, 멘토링 진행
 4. **모니터링**: 멘토링 일지, AI 분석, 상담 스케줄 관리
@@ -383,7 +383,7 @@ graph TB
 
 ### 🔴 운영자 (권회은)
 - **전체 시스템 관리 권한**
-- 기수 생성/관리, 조 편성, 시스템 설정
+- 과정 생성/관리, 조 편성, 시스템 설정
 - 모든 기능에 대한 읽기/쓰기 권한
 
 ### 🟢 코치/멘토
