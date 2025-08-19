@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>멘토/코치 회원가입 - AI-X 과정</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+  
+  <!-- 헤더 -->
+  <header class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-bold text-gray-900 cursor-pointer hover:text-green-600 transition-colors" onclick="goToPreview()">AI-X 과정</h1>
+          <span class="ml-2 text-sm text-gray-500">멘토/코치 회원가입</span>
+        </div>
+        <div class="flex space-x-4">
+          <button onclick="goBack()" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+            돌아가기
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 -->
+  <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <div>
+        <div class="mx-auto h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+          <span class="text-2xl">👨‍🏫</span>
+        </div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          멘토/코치 회원가입
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+          AI-X 과정에 멘토 또는 코치로 참여하기 위한 회원가입입니다
+        </p>
+      </div>
+
+      <!-- 초대 코드 입력 -->
+      <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+        <h3 class="font-semibold text-green-900 mb-2">초대 코드 확인</h3>
+        <div class="text-sm text-green-800">
+          <p>멘토/코치 가입은 초대 코드가 필요합니다.</p>
+          <p>운영진에게 초대 코드를 확인해주세요.</p>
+        </div>
+      </div>
+
+      <form class="mt-8 space-y-6" onsubmit="handleMentorSignup(event)">
+        <div class="space-y-4">
+          <!-- 초대 코드 -->
+          <div>
+            <label for="inviteCode" class="block text-sm font-medium text-gray-700">초대 코드 *</label>
+            <input id="inviteCode" name="inviteCode" type="text" required 
+                   class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500" 
+                   placeholder="운영진에게 받은 초대 코드를 입력하세요">
+          </div>
+
+          <!-- 이름 -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">이름 *</label>
+            <input id="name" name="name" type="text" required 
+                   class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500" 
+                   placeholder="실명을 입력하세요">
+          </div>
+
+          <!-- 비밀번호 -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">비밀번호 *</label>
+            <input id="password" name="password" type="password" required minlength="6"
+                   class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500" 
+                   placeholder="6자 이상">
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" 
+                  class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            멘토/코치 회원가입 신청
+          </button>
+        </div>
+
+        <div class="text-center">
+          <p class="text-sm text-gray-600">
+            이미 계정이 있으신가요? 
+            <a href="login.html" class="font-medium text-green-600 hover:text-green-500">
+              로그인하기
+            </a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    function goToPreview() {
+      window.location.href = 'preview.html';
+    }
+
+    function handleMentorSignup(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      const data = {
+        inviteCode: formData.get('inviteCode'),
+        name: formData.get('name'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+        passwordConfirm: formData.get('passwordConfirm'),
+        phone: formData.get('phone'),
+        role: formData.get('role'),
+        company: formData.get('company'),
+        position: formData.get('position'),
+        experience: formData.get('experience'),
+        expertise: formData.getAll('expertise'),
+        introduction: formData.get('introduction'),
+        agreeTerms: formData.get('agreeTerms'),
+        agreeMarketing: formData.get('agreeMarketing'),
+        userType: 'staff',
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+
+      // 초대 코드 확인 (테스트용)
+      const validCodes = ['MENTOR2025', 'COACH2025', 'OPERATOR2025'];
+      if (!validCodes.includes(data.inviteCode)) {
+        alert('유효하지 않은 초대 코드입니다.\n운영진에게 올바른 초대 코드를 확인해주세요.');
+        return;
+      }
+
+      // 비밀번호 확인
+      if (data.password !== data.passwordConfirm) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
+      // 필수 약관 동의 확인
+      if (!data.agreeTerms) {
+        alert('이용약관 및 개인정보처리방침에 동의해주세요.');
+        return;
+      }
+
+      // 실제로는 서버로 전송
+      console.log('멘토/코치 회원가입 데이터:', data);
+      
+      // 회원가입 성공 처리
+      const roleText = {
+        'mentor': '멘토',
+        'coach': '코치', 
+        'operator': '운영자'
+      }[data.role];
+
+      alert(`${data.name}님, ${roleText} 회원가입 신청이 완료되었습니다!\n\n관리자 승인 후 이메일로 결과를 안내드리겠습니다.\n승인까지 1-2일 정도 소요될 수 있습니다.`);
+      
+      // 로그인 페이지로 이동
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>

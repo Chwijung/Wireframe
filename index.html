@@ -10,70 +10,37 @@
     window.addEventListener('DOMContentLoaded', function() {
       const urlParams = new URLSearchParams(window.location.search);
       const isAuthenticated = urlParams.get('authenticated') === 'true';
+      const inviteCode = urlParams.get('invite') === 'true';
+      
+      // 첫 방문자인지 확인 (인증되지 않았고 초대 코드도 없고 로그인 의도도 없는 경우)
+      const fromLogin = urlParams.get('from') === 'login';
+      if (!isAuthenticated && !inviteCode && !fromLogin) {
+        // 첫 방문자는 preview.html로 리다이렉트
+        window.location.href = 'preview.html';
+        return;
+      }
       
       if (isAuthenticated) {
         // main.html에서 온 경우 로그인 건너뛰기
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('mainContent').classList.remove('hidden');
         document.getElementById('mainContent').classList.add('block');
+        
+        // 사용자 역할에 따른 UI 조정
+        checkUserRoleAndAdjustUI();
       }
       
-      // 스크롤 버튼 상태 초기화
-      setTimeout(() => {
-        updateScrollButtons();
-        
-        // 스크롤 이벤트 리스너 추가
-        const container = document.getElementById('cohortCardContainer');
-        if (container) {
-          container.addEventListener('scroll', updateScrollButtons);
-        }
-      }, 100);
+      // 초대 코드로 온 경우 멘토 회원가입 페이지로 리다이렉트
+      if (inviteCode) {
+        window.location.href = 'mentor-signup.html';
+        return;
+      }
+      
+      // 초기화 완료
     });
 
     function goToCohort(id) {
       window.location.href = `main.html?cohort=${id}`;
-    }
-
-    // 과정 목록 스크롤 기능
-    function scrollCohortList(direction) {
-      const container = document.getElementById('cohortCardContainer');
-      const scrollAmount = 320; // 카드 폭 + 간격
-      
-      if (direction === 'left') {
-        container.scrollLeft -= scrollAmount;
-      } else {
-        container.scrollLeft += scrollAmount;
-      }
-      
-      // 스크롤 버튼 표시/숨김 업데이트
-      updateScrollButtons();
-    }
-
-    // 스크롤 버튼 표시/숨김 업데이트
-    function updateScrollButtons() {
-      const container = document.getElementById('cohortCardContainer');
-      const leftButton = document.getElementById('scrollLeft');
-      const rightButton = document.getElementById('scrollRight');
-      
-      if (!container || !leftButton || !rightButton) return;
-      
-      // 좌측 버튼: 스크롤이 맨 왼쪽에 있으면 흐리게
-      if (container.scrollLeft <= 0) {
-        leftButton.style.opacity = '0.3';
-        leftButton.style.pointerEvents = 'none';
-      } else {
-        leftButton.style.opacity = '1';
-        leftButton.style.pointerEvents = 'auto';
-      }
-      
-      // 우측 버튼: 스크롤이 맨 오른쪽에 있으면 흐리게
-      if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
-        rightButton.style.opacity = '0.3';
-        rightButton.style.pointerEvents = 'none';
-      } else {
-        rightButton.style.opacity = '1';
-        rightButton.style.pointerEvents = 'auto';
-      }
     }
   </script>
 </head>
@@ -82,78 +49,6 @@
   <!-- 로그인/회원가입 화면 -->
   <div id="loginScreen" class="min-h-screen flex items-center justify-center">
     <div class="bg-white rounded-xl shadow-lg p-8 w-96 max-w-sm mx-4">
-      <!-- 로그인 폼 -->
-      <div id="loginForm">
-        <div class="text-center mb-6">
-          <h1 class="text-2xl font-bold mb-2">🔐 AI-X 시스템</h1>
-          <p class="text-gray-600">운영자 로그인이 필요합니다</p>
-        </div>
-        <form onsubmit="handleLogin(event)">
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-2">아이디</label>
-            <input type="text" id="adminId" class="w-full border p-3 rounded-lg" placeholder="운영자 아이디" required>
-          </div>
-          <div class="mb-6">
-            <label class="block text-sm font-medium mb-2">비밀번호</label>
-            <input type="password" id="adminPassword" class="w-full border p-3 rounded-lg" placeholder="비밀번호" required>
-          </div>
-          <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
-            로그인
-          </button>
-        </form>
-        <div class="mt-4 text-center">
-          <div class="text-sm text-gray-500 mb-3">
-            <p>테스트 계정: admin / admin123</p>
-          </div>
-          <div class="border-t pt-4">
-            <p class="text-sm text-gray-600 mb-2">아직 계정이 없으신가요?</p>
-            <button onclick="showSignupForm()" class="text-blue-600 hover:text-blue-700 font-medium text-sm underline">
-              회원가입하기
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 회원가입 폼 -->
-      <div id="signupForm" class="hidden">
-        <div class="text-center mb-6">
-          <h1 class="text-2xl font-bold mb-2">📝 AI-X 시스템</h1>
-          <p class="text-gray-600">새 운영자 계정을 생성합니다</p>
-        </div>
-        <form onsubmit="handleSignup(event)">
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-2">이메일</label>
-            <input type="email" id="signupEmail" class="w-full border p-3 rounded-lg" placeholder="이메일 주소" required>
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-2">비밀번호</label>
-            <input type="password" id="signupPassword" class="w-full border p-3 rounded-lg" placeholder="6자 이상" minlength="6" required>
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-2">이름</label>
-            <input type="text" id="signupName" class="w-full border p-3 rounded-lg" placeholder="이름" required>
-          </div>
-
-          <div class="mb-6">
-            <label class="block text-sm font-medium mb-2">역할</label>
-            <select id="signupRole" class="w-full border p-3 rounded-lg" required>
-              <option value="">역할을 선택하세요</option>
-              <option value="operator">운영자</option>
-              <option value="coach">코치</option>
-              <option value="mentor">멘토</option>
-            </select>
-          </div>
-          <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
-            회원가입 하기
-          </button>
-        </form>
-        <div class="mt-4 text-center border-t pt-4">
-          <p class="text-sm text-gray-600 mb-2">이미 계정이 있으신가요?</p>
-          <button onclick="showLoginForm()" class="text-blue-600 hover:text-blue-700 font-medium text-sm underline">
-            로그인하기
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -164,631 +59,76 @@
     <header class="flex justify-between items-center">
       <div>
         <h1 class="text-3xl font-bold mb-2">📁 AI-X 과정 관리</h1>
-        <p class="text-gray-600">운영자 권회은 님, 총 3개 과정를 관리 중입니다.</p>
+        <p class="text-gray-600">운영자 권회은 님, 총 3개 과정을 관리 중입니다.</p>
       </div>
-      <div>
+      <div class="flex gap-2">
+        <button id="adminToolBtn" onclick="window.location.href='admin.html'" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors">
+          ⚙️ 관리자 도구
+        </button>
         <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">
-          🚪 로그아웃
+          로그아웃
         </button>
       </div>
     </header>
 
     <!-- 전체 과정 목록 -->
     <section class="bg-white shadow rounded-xl p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">🗂 과정 목록</h2>
-        <select class="border p-2 rounded w-full md:w-1/3 ml-4" onchange="goToCohort(this.value)">
-          <option selected disabled>과정을 선택하세요</option>
-          <option value="ai-x-3rd">AI-X 3기 (진행 중)</option>
-          <option value="ai-x-2nd">AI-X 2기 (종료)</option>
-          <option value="ai-x-1st">AI-X 1기 (종료)</option>
-        </select>
-      </div>
+      <h2 class="text-xl font-semibold mb-6">🗂 과정 목록</h2>
       
-      <!-- 스와이프 가능한 과정 카드 컨테이너 -->
-      <div class="relative">
-        <!-- 좌측 스크롤 버튼 -->
-        <button id="scrollLeft" onclick="scrollCohortList('left')" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors">
-          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-        </button>
+      <!-- 과정 카드 그리드 -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="border rounded-lg p-6 bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer" onclick="goToCohort('ai-x-3rd')">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-blue-800">AI-X 3기</h3>
+            <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">진행 중</span>
+          </div>
+          <div class="space-y-2 text-sm text-gray-700">
+            <p><span class="font-medium">운영 기간:</span> 2025.06.18 ~ 2025.08.30</p>
+            <p><span class="font-medium">수강생:</span> 24명</p>
+            <p><span class="font-medium">멘토:</span> 정기수, 배경관</p>
+          </div>
+          <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">
+            📋 과정 관리
+          </button>
+        </div>
         
-        <!-- 우측 스크롤 버튼 -->
-        <button id="scrollRight" onclick="scrollCohortList('right')" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors">
-          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </button>
+        <div class="border rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onclick="goToCohort('ai-x-2nd')">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-gray-800">AI-X 2기</h3>
+            <span class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-semibold">종료</span>
+          </div>
+          <div class="space-y-2 text-sm text-gray-600">
+            <p><span class="font-medium">운영 기간:</span> 2025.03.01 ~ 2025.05.20</p>
+            <p><span class="font-medium">수강생:</span> 28명</p>
+            <p><span class="font-medium">멘토:</span> 정기수, 김민수</p>
+          </div>
+          <button class="mt-4 w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition-colors">
+            📚 아카이브 보기
+          </button>
+        </div>
         
-        <!-- 스크롤 가능한 과정 카드 리스트 -->
-        <div id="cohortCardContainer" class="flex gap-4 overflow-x-auto scroll-smooth mx-8" style="scrollbar-width: none; -ms-overflow-style: none;">
-          <style>
-            #cohortCardContainer::-webkit-scrollbar {
-              display: none;
-            }
-          </style>
-          
-          <div class="flex-shrink-0 w-80 border rounded-lg p-4 bg-blue-50 text-sm">
-            <h3 class="font-bold">AI-X 3기</h3>
-            <p>운영 기간: 2025.06.18 ~ 2025.08.30</p>
-            <p>상태: <span class="text-blue-700 font-semibold">진행 중</span></p>
-            <button onclick="goToCohort('ai-x-3rd')" class="mt-2 text-blue-600 underline">접속하기</button>
+        <div class="border rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onclick="goToCohort('ai-x-1st')">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-gray-800">AI-X 1기</h3>
+            <span class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-semibold">종료</span>
           </div>
-          
-          <div class="flex-shrink-0 w-80 border rounded-lg p-4 text-sm">
-            <h3 class="font-bold">AI-X 2기</h3>
-            <p>운영 기간: 2025.03.01 ~ 2025.05.20</p>
-            <p>상태: 종료</p>
-            <button onclick="goToCohort('ai-x-2nd')" class="mt-2 text-blue-600 underline">아카이브 보기</button>
+          <div class="space-y-2 text-sm text-gray-600">
+            <p><span class="font-medium">운영 기간:</span> 2024.10.01 ~ 2024.12.15</p>
+            <p><span class="font-medium">수강생:</span> 22명</p>
+            <p><span class="font-medium">멘토:</span> 박지영, 이상훈</p>
           </div>
-          
-          <div class="flex-shrink-0 w-80 border rounded-lg p-4 text-sm">
-            <h3 class="font-bold">AI-X 1기</h3>
-            <p>운영 기간: 2024.10.01 ~ 2024.12.15</p>
-            <p>상태: 종료</p>
-            <button onclick="goToCohort('ai-x-1st')" class="mt-2 text-blue-600 underline">아카이브 보기</button>
-          </div>
+          <button class="mt-4 w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition-colors">
+            📚 아카이브 보기
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- 신규 과정 생성 -->
-    <section class="bg-white shadow rounded-xl p-4">
-      <h2 class="text-lg font-semibold mb-3">➕ 새 과정 생성</h2>
-      <form class="space-y-4" onsubmit="createNewCohort(event)">
-        <!-- 기본 정보 -->
-        <div class="grid md:grid-cols-4 gap-3">
-          <div>
-            <label class="block text-xs font-medium mb-1">과정명</label>
-            <input type="text" id="cohortName" placeholder="예: AI-X 4기" class="w-full border p-2 rounded text-sm" required>
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1">과정 시작일</label>
-            <input type="date" id="startDate" class="w-full border p-2 rounded text-sm" required onchange="generateSchedule()">
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1">과정 종료일</label>
-            <input type="date" id="endDate" class="w-full border p-2 rounded text-sm" required onchange="generateSchedule()">
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1">멘토링 요일</label>
-            <select id="mentoringDay" class="w-full border p-2 rounded text-sm" required onchange="generateSchedule()">
-              <option value="">선택하세요</option>
-              <option value="화,금">화, 금</option>
-              <option value="월,수">월, 수</option>
-              <option value="월,목">월, 목</option>
-              <option value="토">토</option>
-            </select>
-          </div>
-        </div>
 
-        <!-- 자동 생성된 주요 일정 -->
-        <div class="border-t pt-4">
-          <h3 class="text-base font-semibold mb-3">📅 주요 일정</h3>
-          <div class="grid md:grid-cols-3 gap-3">
-            <div data-schedule-item="orientationDate">
-              <label class="block text-xs font-medium mb-1">OT (오리엔테이션)</label>
-              <input type="date" id="orientationDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="deepLearning1Date">
-              <label class="block text-xs font-medium mb-1">딥러닝 특강 1일차</label>
-              <input type="date" id="deepLearning1Date" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="deepLearning2Date">
-              <label class="block text-xs font-medium mb-1">딥러닝 특강 2일차</label>
-              <input type="date" id="deepLearning2Date" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="courseInfoDate">
-              <label class="block text-xs font-medium mb-1">과정 안내</label>
-              <input type="date" id="courseInfoDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="miniProjectDate">
-              <label class="block text-xs font-medium mb-1">미니 발표 (3회차)</label>
-              <input type="date" id="miniProjectDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="careerLectureDate">
-              <label class="block text-xs font-medium mb-1">취업 특강 (4회차)</label>
-              <input type="date" id="careerLectureDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="planningPresentationDate">
-              <label class="block text-xs font-medium mb-1">기획 발표 (5회차)</label>
-              <input type="date" id="planningPresentationDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="collaborationLectureDate">
-              <label class="block text-xs font-medium mb-1">협업 특강</label>
-              <input type="date" id="collaborationLectureDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="midPresentationDate">
-              <label class="block text-xs font-medium mb-1">중간 발표 (10회차)</label>
-              <input type="date" id="midPresentationDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="industryLectureDate">
-              <label class="block text-xs font-medium mb-1">현직자 특강</label>
-              <input type="date" id="industryLectureDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="finalPresentationDate">
-              <label class="block text-xs font-medium mb-1">최종발표</label>
-              <input type="date" id="finalPresentationDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-          </div>
-        </div>
-
-        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-semibold text-sm">
-          📝 과정 생성하기
-        </button>
-      </form>
-    </section>
 
   </div>
 
   <script>
-    /**
-     * 날짜 유틸리티 함수들
-     */
-    const DateUtils = {
-      // 날짜에 일수 추가
-      addDays(date, days) {
-        const result = new Date(date);
-        result.setDate(result.getDate() + days);
-        return result;
-      },
-
-      // 휴일인지 확인 (간단한 고정 휴일만)
-      isHoliday(date) {
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const dateString = `${month}${day}`;
-        const FIXED_HOLIDAYS = ["0101", "0301", "0505", "0606", "1003", "1009", "1225"];
-        return FIXED_HOLIDAYS.includes(dateString);
-      },
-
-      // 주말인지 확인
-      isWeekend(date) {
-        const dayOfWeek = date.getDay();
-        return dayOfWeek === 0 || dayOfWeek === 6;
-      },
-
-      // 평일인지 확인 (휴일이 아니고 주말이 아닌 날)
-      isWorkingDay(date) {
-        return !this.isWeekend(date) && !this.isHoliday(date);
-      },
-
-      // 요일명 가져오기
-      getDayOfWeek(date) {
-        const days = ["일", "월", "화", "수", "목", "금", "토"];
-        return days[date.getDay()];
-      },
-
-      // 해당 주의 토요일 가져오기
-      getSaturdayOfWeek(date) {
-        const result = new Date(date);
-        const dayOfWeek = result.getDay();
-        const daysUntilSaturday = 6 - dayOfWeek;
-        result.setDate(result.getDate() + daysUntilSaturday);
-        return result;
-      },
-
-      // 날짜를 YYYY-MM-DD 형식으로 포맷
-      formatDate(date) {
-        return date.toISOString().split('T')[0];
-      }
-    };
-
-    /**
-     * 멘토링 유틸리티 함수들
-     */
-    const MentoringUtils = {
-      // 멘토링 요일인지 확인
-      isMentoringDay(date, mentoringDays) {
-        return mentoringDays.includes(DateUtils.getDayOfWeek(date));
-      },
-
-      // 유효한 멘토링 날짜인지 확인 (멘토링 요일이면서 평일인 경우)
-      isValidMentoringDay(date, mentoringDays) {
-        return this.isMentoringDay(date, mentoringDays) && DateUtils.isWorkingDay(date);
-      },
-
-      // 특정 회차의 멘토링 날짜 찾기
-      findDateBySession(startDate, endDate, mentoringDays, targetSession) {
-        let session = 0;
-        let currentDate = new Date(startDate);
-        
-        // OT + 딥러닝 특강 2일 + 과정안내 1일 = 총 4일 건너뛰기
-        currentDate = DateUtils.addDays(currentDate, 4);
-        
-        while (currentDate <= endDate) {
-          if (this.isValidMentoringDay(currentDate, mentoringDays)) {
-            session++;
-            if (session === targetSession) {
-              return currentDate;
-            }
-          }
-          currentDate = DateUtils.addDays(currentDate, 1);
-        }
-        
-        return null; // 찾지 못한 경우
-      }
-    };
-
-    /**
-     * 일정 자동 생성 함수
-     */
-    function generateSchedule() {
-      const startDateInput = document.getElementById('startDate');
-      const endDateInput = document.getElementById('endDate');
-      const mentoringDayInput = document.getElementById('mentoringDay');
-
-      // 필수 입력값 확인
-      if (!startDateInput.value || !endDateInput.value || !mentoringDayInput.value) {
-        // 입력값이 없으면 모든 필드 초기화
-        clearScheduleFields();
-        return;
-      }
-
-      const startDate = new Date(startDateInput.value);
-      const endDate = new Date(endDateInput.value);
-      const mentoringDays = mentoringDayInput.value.split(',').map(day => day.trim());
-
-      // 날짜 유효성 검사
-      if (startDate >= endDate) {
-        alert('종료일은 시작일보다 뒤여야 합니다.');
-        clearScheduleFields();
-        return;
-      }
-
-      try {
-        // 기본 일정 생성
-        generateBasicSchedule(startDate, endDate, mentoringDays);
-      } catch (error) {
-        console.error('일정 생성 중 오류:', error);
-        alert('일정 생성 중 오류가 발생했습니다. 입력값을 확인해주세요.');
-        clearScheduleFields();
-      }
-    }
-
-    /**
-     * 기본 일정 생성
-     */
-    function generateBasicSchedule(startDate, endDate, mentoringDays) {
-      // 1. OT: 과정 시작일
-      document.getElementById('orientationDate').value = DateUtils.formatDate(startDate);
-
-      // 2. 딥러닝 특강: OT 다음 2일간
-      const dlDay1 = DateUtils.addDays(startDate, 1);
-      const dlDay2 = DateUtils.addDays(startDate, 2);
-      document.getElementById('deepLearning1Date').value = DateUtils.formatDate(dlDay1);
-      document.getElementById('deepLearning2Date').value = DateUtils.formatDate(dlDay2);
-
-      // 3. 과정 안내: 딥러닝 특강 다음날
-      const courseInfoDate = DateUtils.addDays(dlDay2, 1);
-      document.getElementById('courseInfoDate').value = DateUtils.formatDate(courseInfoDate);
-
-      // 4. 멘토링 회차별 일정 계산
-      const careerLectureDate = MentoringUtils.findDateBySession(startDate, endDate, mentoringDays, 4);
-      const miniProjectDate = MentoringUtils.findDateBySession(startDate, endDate, mentoringDays, 3);
-      const planningPresentationDate = MentoringUtils.findDateBySession(startDate, endDate, mentoringDays, 5);
-      const midPresentationDate = MentoringUtils.findDateBySession(startDate, endDate, mentoringDays, 10);
-
-      // 취업 특강 (4회차)
-      if (careerLectureDate) {
-        document.getElementById('careerLectureDate').value = DateUtils.formatDate(careerLectureDate);
-      }
-
-      // 미니 발표 (3회차)
-      if (miniProjectDate) {
-        document.getElementById('miniProjectDate').value = DateUtils.formatDate(miniProjectDate);
-      }
-
-      // 기획 발표 (5회차)
-      if (planningPresentationDate) {
-        document.getElementById('planningPresentationDate').value = DateUtils.formatDate(planningPresentationDate);
-        
-        // 협업 특강: 기획 발표 주 토요일
-        const collaborationDate = DateUtils.getSaturdayOfWeek(planningPresentationDate);
-        document.getElementById('collaborationLectureDate').value = DateUtils.formatDate(collaborationDate);
-      }
-
-      // 중간 발표 (10회차)
-      if (midPresentationDate) {
-        document.getElementById('midPresentationDate').value = DateUtils.formatDate(midPresentationDate);
-        
-        // 현직자 특강: 중간 발표 주 토요일
-        const industryDate = DateUtils.getSaturdayOfWeek(midPresentationDate);
-        document.getElementById('industryLectureDate').value = DateUtils.formatDate(industryDate);
-      }
-
-      // 최종 발표: 과정 종료일
-      document.getElementById('finalPresentationDate').value = DateUtils.formatDate(endDate);
-
-      // 일정 생성 완료 후 수정/삭제 버튼 활성화
-      enableScheduleEditButtons();
-
-      // 생성된 일정 확인 메시지
-      console.log('📅 일정이 자동으로 생성되었습니다.');
-      console.log(`시작일: ${DateUtils.formatDate(startDate)}`);
-      console.log(`종료일: ${DateUtils.formatDate(endDate)}`);
-      console.log(`멘토링 요일: ${mentoringDays.join(', ')}`);
-    }
-
-    /**
-     * 일정 수정/삭제 기능 활성화
-     */
-    function enableScheduleEditButtons() {
-      const scheduleItems = document.querySelectorAll('[data-schedule-item]');
-      
-      scheduleItems.forEach(container => {
-        const inputId = container.getAttribute('data-schedule-item');
-        const input = container.querySelector('input');
-        const label = container.querySelector('label');
-        const itemName = label.textContent;
-        
-        // 값이 있는 항목만 수정 가능하게 설정
-        if (input.value) {
-          // 컨테이너 스타일 변경
-          container.classList.add('border', 'rounded-lg', 'p-3', 'bg-gray-50', 'relative', 'hover:bg-blue-50', 'transition-colors');
-          
-          // 우상단에 삭제 버튼만 추가
-          const actionButtons = document.createElement('div');
-          actionButtons.className = 'absolute top-2 right-2';
-          actionButtons.innerHTML = `
-            <button type="button" onclick="quickDelete('${inputId}', '${itemName}')" class="text-red-600 hover:text-red-800 text-sm opacity-70 hover:opacity-100" title="삭제">
-              🗑️
-            </button>
-          `;
-          container.appendChild(actionButtons);
-          
-          // 입력 필드를 호버 시 수정 가능하게 설정
-          input.classList.remove('bg-gray-100');
-          input.classList.add('bg-white', 'hover:bg-blue-50', 'cursor-pointer', 'transition-colors');
-          input.title = '클릭하여 수정';
-          
-          // 클릭 이벤트로 수정 모드 활성화
-          input.addEventListener('click', function() {
-            enableEditMode(inputId);
-          });
-          
-          // 마우스 오버 시 시각적 피드백
-          input.addEventListener('mouseenter', function() {
-            if (input.readOnly) {
-              input.classList.add('border-blue-300');
-            }
-          });
-          
-          input.addEventListener('mouseleave', function() {
-            if (input.readOnly) {
-              input.classList.remove('border-blue-300');
-            }
-          });
-        }
-      });
-    }
-
-    /**
-     * 수정 모드 활성화
-     */
-    function enableEditMode(itemId) {
-      const input = document.getElementById(itemId);
-      const originalValue = input.value;
-      
-      if (input.readOnly) {
-        // 수정 모드로 전환
-        input.readOnly = false;
-        input.classList.remove('bg-blue-50', 'hover:bg-blue-50', 'border-blue-300');
-        input.classList.add('bg-yellow-50', 'border-yellow-400', 'ring-2', 'ring-yellow-200');
-        input.title = 'Enter: 저장, Escape: 취소';
-        input.focus();
-        
-        // 키보드 이벤트 설정
-        input.onkeydown = function(e) {
-          if (e.key === 'Enter') {
-            saveEdit(itemId, originalValue);
-          } else if (e.key === 'Escape') {
-            cancelEdit(itemId, originalValue);
-          }
-        };
-        
-        // 포커스 벗어나면 저장
-        input.onblur = function() {
-          setTimeout(() => saveEdit(itemId, originalValue), 100);
-        };
-      }
-    }
-
-    /**
-     * 일정 필드 초기화
-     */
-    function clearScheduleFields() {
-      const scheduleFields = [
-        'orientationDate', 'deepLearning1Date', 'deepLearning2Date', 'courseInfoDate',
-        'careerLectureDate', 'miniProjectDate', 'planningPresentationDate',
-        'collaborationLectureDate', 'midPresentationDate', 'industryLectureDate',
-        'finalPresentationDate'
-      ];
-
-      scheduleFields.forEach(fieldId => {
-        document.getElementById(fieldId).value = '';
-      });
-    }
-
-    function createNewCohort(event) {
-      event.preventDefault();
-      
-      // 기본 정보
-      const cohortName = document.getElementById('cohortName').value;
-      const startDate = document.getElementById('startDate').value;
-      const endDate = document.getElementById('endDate').value;
-      const mentoringDay = document.getElementById('mentoringDay').value;
-      
-      // 자동 생성된 주요 일정
-      const orientationDate = document.getElementById('orientationDate').value;
-      const deepLearning1Date = document.getElementById('deepLearning1Date').value;
-      const deepLearning2Date = document.getElementById('deepLearning2Date').value;
-      const courseInfoDate = document.getElementById('courseInfoDate').value;
-      const careerLectureDate = document.getElementById('careerLectureDate').value;
-      const miniProjectDate = document.getElementById('miniProjectDate').value;
-      const planningPresentationDate = document.getElementById('planningPresentationDate').value;
-      const collaborationLectureDate = document.getElementById('collaborationLectureDate').value;
-      const midPresentationDate = document.getElementById('midPresentationDate').value;
-      const industryLectureDate = document.getElementById('industryLectureDate').value;
-      const finalPresentationDate = document.getElementById('finalPresentationDate').value;
-      
-      // 추가 설정
-      const expectedStudents = document.getElementById('expectedStudents').value;
-      const operationMode = document.getElementById('operationMode').value;
-      const cohortStatus = document.getElementById('cohortStatus').value;
-
-      // 필수 정보 확인
-      if (!cohortName || !startDate || !endDate || !mentoringDay) {
-        alert('과정 이름, 과정 시작일, 과정 종료일, 멘토링 요일을 모두 입력해주세요.');
-        return;
-      }
-
-      // 자동 생성된 일정 확인
-      if (!orientationDate || !deepLearning1Date || !deepLearning2Date) {
-        alert('일정이 제대로 생성되지 않았습니다. 입력 정보를 다시 확인해주세요.');
-        return;
-      }
-      
-      // 주요 일정 요약 생성 (자동 생성된 일정만)
-      const scheduleItems = [];
-      if (orientationDate) scheduleItems.push(`• OT: ${orientationDate}`);
-      if (deepLearning1Date && deepLearning2Date) scheduleItems.push(`• 딥러닝 특강: ${deepLearning1Date} ~ ${deepLearning2Date}`);
-      if (courseInfoDate) scheduleItems.push(`• 과정안내: ${courseInfoDate}`);
-      if (careerLectureDate) scheduleItems.push(`• 취업 특강: ${careerLectureDate}`);
-      if (miniProjectDate) scheduleItems.push(`• 미니 발표: ${miniProjectDate}`);
-      if (planningPresentationDate) scheduleItems.push(`• 기획 발표: ${planningPresentationDate}`);
-      if (collaborationLectureDate) scheduleItems.push(`• 협업 특강: ${collaborationLectureDate}`);
-      if (midPresentationDate) scheduleItems.push(`• 중간 발표: ${midPresentationDate}`);
-      if (industryLectureDate) scheduleItems.push(`• 현직자 특강: ${industryLectureDate}`);
-      if (finalPresentationDate) scheduleItems.push(`• 최종발표: ${finalPresentationDate}`);
-      
-      const scheduleText = scheduleItems.length > 0 ? `\n\n📅 자동 생성된 주요 일정:\n${scheduleItems.join('\n')}` : '';
-      
-      const operationModeText = {
-        'hybrid': '하이브리드',
-        'online': '온라인', 
-        'offline': '오프라인'
-      }[operationMode];
-      
-      const statusText = {
-        'planning': '기획 중',
-        'recruiting': '모집 중',
-        'ready': '시작 대기'
-      }[cohortStatus];
-
-      const mentoringDayText = document.querySelector('#mentoringDay option:checked').textContent;
-      
-      const confirmMessage = `${cohortName}을(를) 생성하시겠습니까?
-
-📋 기본 정보:
-• 과정 기간: ${startDate} ~ ${endDate}
-• 멘토링 요일: ${mentoringDayText}
-• 예상 수강생: ${expectedStudents || '미정'}명
-• 운영 방식: ${operationModeText}
-• 상태: ${statusText}${scheduleText}`;
-      
-      if (confirm(confirmMessage)) {
-        // 실제 시스템에서는 서버로 데이터 전송
-        const cohortData = {
-          name: cohortName,
-          startDate,
-          endDate,
-          mentoringDay,
-          generatedSchedule: {
-            orientation: orientationDate,
-            deepLearning1: deepLearning1Date,
-            deepLearning2: deepLearning2Date,
-            courseInfo: courseInfoDate,
-            careerLecture: careerLectureDate,
-            miniProject: miniProjectDate,
-            planningPresentation: planningPresentationDate,
-            collaborationLecture: collaborationLectureDate,
-            midPresentation: midPresentationDate,
-            industryLecture: industryLectureDate,
-            finalPresentation: finalPresentationDate
-          },
-          settings: {
-            expectedStudents: expectedStudents || null,
-            operationMode,
-            status: cohortStatus
-          },
-          createdAt: new Date().toISOString()
-        };
-        
-        console.log('🎯 새 과정 데이터 (룰 베이스 자동 생성):', cohortData);
-        alert(`🎉 ${cohortName}이(가) 성공적으로 생성되었습니다!\n\n룰 베이스로 모든 일정이 자동 계산되었습니다.\n해당 과정 페이지로 이동합니다.`);
-        
-        // 새로 생성된 과정의 ID 생성 (예시)
-        const cohortId = cohortName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-        window.location.href = `main.html?cohort=${cohortId}`;
-      }
-    }
-
-    // 폼 전환 함수들
-    function showSignupForm() {
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('signupForm').classList.remove('hidden');
-      document.getElementById('signupForm').style.display = 'block';
-    }
-
-    function showLoginForm() {
-      document.getElementById('signupForm').style.display = 'none';
-      document.getElementById('loginForm').style.display = 'block';
-    }
-
-    // 회원가입 처리
-    function handleSignup(event) {
-      event.preventDefault();
-      
-      const signupId = document.getElementById('signupId').value;
-      const signupPassword = document.getElementById('signupPassword').value;
-      const signupPasswordConfirm = document.getElementById('signupPasswordConfirm').value;
-      const signupName = document.getElementById('signupName').value;
-      const signupEmail = document.getElementById('signupEmail').value;
-      const signupRole = document.getElementById('signupRole').value;
-      
-      // 비밀번호 확인
-      if (signupPassword !== signupPasswordConfirm) {
-        alert('비밀번호가 일치하지 않습니다.');
-        return;
-      }
-      
-      // 기존 사용자와 중복 확인 (실제로는 서버에서 처리)
-      const existingUsers = JSON.parse(localStorage.getItem('aixUsers') || '[]');
-      if (existingUsers.some(user => user.id === signupId)) {
-        alert('이미 존재하는 아이디입니다.');
-        return;
-      }
-      
-      if (existingUsers.some(user => user.email === signupEmail)) {
-        alert('이미 등록된 이메일입니다.');
-        return;
-      }
-      
-      // 새 사용자 저장
-      const newUser = {
-        id: signupId,
-        password: signupPassword, // 실제로는 해시화 필요
-        name: signupName,
-        email: signupEmail,
-        role: signupRole,
-        createdAt: new Date().toISOString()
-      };
-      
-      existingUsers.push(newUser);
-      localStorage.setItem('aixUsers', JSON.stringify(existingUsers));
-      
-      alert(`${signupName}님, 회원가입이 완료되었습니다!\n로그인 화면으로 이동합니다.`);
-      
-      // 회원가입 성공 후 로그인 폼으로 전환
-      showLoginForm();
-      
-      // 로그인 폼에 새로 가입한 아이디 자동 입력
-      document.getElementById('adminId').value = signupId;
-      document.getElementById('adminPassword').focus();
-    }
-
     // 로그인 처리 (기존 사용자 + 새 사용자 지원)
     function handleLogin(event) {
       event.preventDefault();
@@ -813,6 +153,29 @@
       }
     }
 
+    // 사용자 역할에 따른 UI 조정
+    function checkUserRoleAndAdjustUI() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
+      
+      if (currentUser.type) {
+        // 헤더에 사용자 이름 업데이트
+        const userGreeting = document.querySelector('header p');
+        if (userGreeting) {
+          const roleText = currentUser.type === 'operator' ? '운영자' : 
+                          currentUser.type === 'coach' ? '코치' : currentUser.type;
+          userGreeting.textContent = `${roleText} ${currentUser.name} 님, 안녕하세요:)`;
+        }
+        
+        // 코치인 경우 관리자 도구 버튼 숨기기
+        if (currentUser.type === 'coach') {
+          const adminBtn = document.getElementById('adminToolBtn');
+          if (adminBtn) {
+            adminBtn.style.display = 'none';
+          }
+        }
+      }
+    }
+
     // 로그인 성공 처리
     function loginSuccess(userName, userRole) {
       // 사용자 정보를 세션에 저장
@@ -827,11 +190,8 @@
       document.getElementById('mainContent').classList.remove('hidden');
       document.getElementById('mainContent').classList.add('block');
       
-      // 헤더에 사용자 이름 업데이트
-      const userGreeting = document.querySelector('header p');
-      if (userGreeting) {
-        userGreeting.textContent = `운영자 ${userName} 님, 총 3개 과정를 관리 중입니다.`;
-      }
+      // 사용자 역할에 따른 UI 조정
+      checkUserRoleAndAdjustUI();
     }
 
     // 로그아웃
@@ -839,148 +199,11 @@
       if (confirm('로그아웃하시겠습니까?')) {
         // 사용자 세션 정보 제거
         localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
         
-        // 메인 콘텐츠 숨기고 로그인 화면 표시
-        document.getElementById('mainContent').classList.add('hidden');
-        document.getElementById('mainContent').classList.remove('block');
-        document.getElementById('loginScreen').style.display = 'flex';
-        
-        // 로그인 폼으로 돌아가기
-        showLoginForm();
-        
-        // 입력 필드 초기화
-        document.getElementById('adminId').value = '';
-        document.getElementById('adminPassword').value = '';
-        
-        // 회원가입 폼 필드도 초기화
-        const signupForm = document.getElementById('signupForm');
-        if (signupForm) {
-          signupForm.querySelectorAll('input, select').forEach(field => {
-            field.value = '';
-          });
-        }
+        // 로그인 페이지로 이동
+        window.location.href = 'login.html';
       }
-    }
-
-    /**
-     * 수정 저장
-     */
-    function saveEdit(itemId, originalValue) {
-      const input = document.getElementById(itemId);
-      const newValue = input.value;
-      
-      if (!newValue) {
-        alert('날짜를 입력해주세요.');
-        input.value = originalValue;
-        return;
-      }
-      
-      // 읽기 전용 모드로 복원
-      input.readOnly = true;
-      input.classList.remove('bg-yellow-50', 'border-yellow-400', 'ring-2', 'ring-yellow-200');
-      input.classList.add('bg-white', 'hover:bg-blue-50');
-      input.title = '클릭하여 수정';
-      input.onkeydown = null;
-      input.onblur = null;
-      
-      if (newValue !== originalValue) {
-        const container = input.parentElement;
-        const itemName = container.querySelector('label').textContent;
-        console.log(`📅 일정 수정됨: ${itemName} ${originalValue} → ${newValue}`);
-      }
-    }
-
-    /**
-     * 수정 취소
-     */
-    function cancelEdit(itemId, originalValue) {
-      const input = document.getElementById(itemId);
-      input.value = originalValue;
-      input.readOnly = true;
-      input.classList.remove('bg-yellow-50', 'border-yellow-400', 'ring-2', 'ring-yellow-200');
-      input.classList.add('bg-white', 'hover:bg-blue-50');
-      input.title = '클릭하여 수정';
-      input.onkeydown = null;
-      input.onblur = null;
-    }
-
-    /**
-     * 간단한 일정 삭제 기능
-     */
-    function quickDelete(itemId, itemName) {
-      const input = document.getElementById(itemId);
-      const currentValue = input.value;
-      
-      if (!currentValue) {
-        alert('이미 삭제된 일정입니다.');
-        return;
-      }
-      
-      if (confirm(`${itemName} 일정을 삭제하시겠습니까?`)) {
-        const container = input.parentElement;
-        const actionButtons = container.querySelector('.absolute');
-        
-        // 일정 삭제
-        input.value = '';
-        container.classList.remove('bg-gray-50');
-        container.classList.add('bg-red-100', 'opacity-60');
-        
-        // 버튼을 복원 버튼으로 변경
-        actionButtons.innerHTML = `
-          <button type="button" onclick="quickRestore('${itemId}', '${currentValue}', '${itemName}')" class="text-blue-600 hover:text-blue-800 text-sm" title="복원">
-            🔄
-          </button>
-        `;
-        
-        console.log(`🗑️ 일정 삭제됨: ${itemName}`);
-      }
-    }
-
-    /**
-     * 간단한 일정 복원 기능
-     */
-    function quickRestore(itemId, originalValue, itemName) {
-      const input = document.getElementById(itemId);
-      const container = input.parentElement;
-      const actionButtons = container.querySelector('.absolute');
-      
-      // 일정 복원
-      input.value = originalValue;
-      container.classList.remove('bg-red-100', 'opacity-60');
-      container.classList.add('bg-gray-50', 'hover:bg-blue-50');
-      
-      // 원래 버튼으로 복원
-      actionButtons.innerHTML = `
-        <button type="button" onclick="quickDelete('${itemId}', '${itemName}')" class="text-red-600 hover:text-red-800 text-sm opacity-70 hover:opacity-100" title="삭제">
-          🗑️
-        </button>
-      `;
-      
-      // 입력 필드 클릭 이벤트 다시 설정
-      input.classList.add('bg-white', 'hover:bg-blue-50', 'cursor-pointer', 'transition-colors');
-      input.title = '클릭하여 수정';
-      
-      // 기존 이벤트 리스너 제거 후 새로 추가
-      input.removeEventListener('click', input.clickHandler);
-      input.clickHandler = function() {
-        enableEditMode(itemId);
-      };
-      input.addEventListener('click', input.clickHandler);
-      
-      // 호버 이벤트도 다시 설정
-      input.addEventListener('mouseenter', function() {
-        if (input.readOnly) {
-          input.classList.add('border-blue-300');
-        }
-      });
-      
-      input.addEventListener('mouseleave', function() {
-        if (input.readOnly) {
-          input.classList.remove('border-blue-300');
-        }
-      });
-      
-      console.log(`🔄 일정 복원됨: ${itemName}`);
     }
   </script>
 </body>

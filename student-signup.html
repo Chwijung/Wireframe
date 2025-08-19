@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학생 회원가입 - AI-X 과정</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+  
+  <!-- 헤더 -->
+  <header class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-bold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors" onclick="goToPreview()">AI-X 과정</h1>
+          <span class="ml-2 text-sm text-gray-500">학생 회원가입</span>
+        </div>
+        <div class="flex space-x-4">
+          <button onclick="goBack()" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+            돌아가기
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 -->
+  <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <div>
+        <div class="mx-auto h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
+          <span class="text-2xl">🎓</span>
+        </div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          학생 회원가입
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+          AI-X 과정에 학생으로 참여하기 위한 회원가입입니다
+        </p>
+      </div>
+
+      <!-- 현재 모집 중인 기수 정보 -->
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h3 class="font-semibold text-blue-900 mb-2">현재 진행 과정</h3>
+        <div class="text-sm text-blue-800">
+          <p class="font-medium">AI-X 4기</p>
+          <p>과정 기간: 2025.03.03 ~ 2025.05.16</p>
+          <p>상태: <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">모집 중</span></p>
+        </div>
+      </div>
+
+      <form class="mt-8 space-y-6" onsubmit="handleStudentSignup(event)">
+        <div class="space-y-4">
+          <!-- 이름 -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">이름 *</label>
+            <input id="name" name="name" type="text" required 
+                   class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                   placeholder="실명을 입력하세요">
+          </div>
+
+          <!-- 이메일 -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">노션 이메일 *</label>
+            <input id="email" name="email" type="email" required 
+                   class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                   placeholder="이메일 주소">
+          </div>
+
+          <!-- 비밀번호 -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">비밀번호 *</label>
+            <input id="password" name="password" type="password" required minlength="6"
+                   class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                   placeholder="6자 이상">
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" 
+                  class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            학생 회원가입 완료
+          </button>
+        </div>
+
+        <div class="text-center">
+          <p class="text-sm text-gray-600">
+            이미 계정이 있으신가요? 
+            <a href="login.html" class="font-medium text-blue-600 hover:text-blue-500">
+              로그인하기
+            </a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    function goToPreview() {
+      window.location.href = 'preview.html';
+    }
+
+    function handleStudentSignup(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+        passwordConfirm: formData.get('passwordConfirm'),
+        phone: formData.get('phone'),
+        experience: formData.get('experience'),
+        interests: formData.getAll('interests'),
+        motivation: formData.get('motivation'),
+        agreeTerms: formData.get('agreeTerms'),
+        agreeMarketing: formData.get('agreeMarketing'),
+        userType: 'student',
+        cohort: 'ai-x-4th',
+        createdAt: new Date().toISOString()
+      };
+
+      // 비밀번호 확인
+      if (data.password !== data.passwordConfirm) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
+      // 필수 약관 동의 확인
+      if (!data.agreeTerms) {
+        alert('이용약관 및 개인정보처리방침에 동의해주세요.');
+        return;
+      }
+
+      // 실제로는 서버로 전송
+      console.log('학생 회원가입 데이터:', data);
+      
+      // 회원가입 성공 처리
+      alert(`${data.name}님, 학생 회원가입이 완료되었습니다!\n\nAI-X 4기에 자동으로 지원되었습니다.\n승인 결과는 이메일로 안내드리겠습니다.`);
+      
+      // 로그인 페이지로 이동
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>

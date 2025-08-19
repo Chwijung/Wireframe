@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-X 과정 - 인공지능 개발자 양성 프로그램</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  
+  <!-- 네비게이션 헤더 -->
+  <nav class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-bold text-gray-900">AI-X 과정</h1>
+          <span class="ml-2 text-sm text-gray-500">인공지능 개발자 양성</span>
+        </div>
+        <div class="flex space-x-4">
+          <button onclick="scrollToSection('projects')" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+            포트폴리오
+          </button>
+          <button onclick="scrollToSection('about')" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+            과정 소개
+          </button>
+          <button onclick="showLoginOptions()" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+            로그인/가입
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 히어로 섹션 -->
+  <section class="gradient-bg text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6">
+        두달 동안 AI를 활용한<br/>
+        <span class="text-yellow-300">서비스 개발 프로젝트</span>에<br/>
+        미쳐 볼 사람 구합니다
+      </h1>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <button onclick="scrollToSection('projects')" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+          수강생 포트폴리오 보기
+        </button>
+        <button onclick="showLoginOptions()" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+          로그인 하기
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 수강생 포트폴리오 섹션 -->
+  <section id="projects" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">수강생 포트폴리오</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Flowy Pro 프로젝트 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border card-hover">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 mb-2">Flowy Pro</h3>
+              <p class="text-gray-600 mb-3">회의 자동화 지원 에이전트 서비스</p>
+              <p class="text-sm text-gray-500 mb-4">HighFive 팀 | 2025년</p>
+            </div>
+            <div class="flex-shrink-0">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                Well-received
+              </span>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">Conversation Analysis</span>
+              <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">LLM</span>
+              <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">AI Agent</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              <span class="font-medium">분야:</span> Social networks
+            </p>
+          </div>
+
+          <div class="flex gap-3">
+            <a href="https://yummy-griffin-f83.notion.site/5_-HighFive-1f053652d379804d990af44f1d38cd6a?pvs=74" 
+               target="_blank" 
+               class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors text-center">
+              📖 Notion 문서
+            </a>
+            <a href="https://github.com/highfiveAI/flowypro" 
+               target="_blank" 
+               class="flex-1 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors text-center">
+              💻 GitHub
+            </a>
+          </div>
+        </div>
+
+        <!-- 요약의 불시착 프로젝트 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border card-hover">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 mb-2">요약의 불시착</h3>
+              <p class="text-gray-600 mb-3">AI 기반의 개인 관심사 맞춤형 뉴스 요약 브리핑 서비스</p>
+              <p class="text-sm text-gray-500 mb-4">Deep Learners 팀 | 2025년</p>
+            </div>
+            <div class="flex-shrink-0">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                Well-received
+              </span>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Audio</span>
+              <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">LLM</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">
+              <span class="font-medium">분야:</span> Education
+            </p>
+          </div>
+
+          <div class="flex gap-3">
+            <a href="https://yummy-griffin-f83.notion.site/4-1053652d379803d94ccc2d772e1f270?pvs=74" 
+               target="_blank" 
+               class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors text-center">
+              📖 Notion 문서
+            </a>
+            <a href="https://github.com/briefing1" 
+               target="_blank" 
+               class="flex-1 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors text-center">
+              💻 GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 과정 소개 섹션 -->
+  <section id="about" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- 왜 AI 프로젝트 경험이 필요한가? -->
+      <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl p-8 mb-12">
+        <h3 class="text-2xl font-bold mb-6 text-center">왜 AI 프로젝트 경험이 필요한가?</h3>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="text-center">
+            <h4 class="font-semibold mb-2">AI서비스 집중 취업시장</h4>
+            <p class="text-sm opacity-90">시장의 니즈에 맞는 포트폴리오 제작</p>
+          </div>
+          <div class="text-center">
+            <h4 class="font-semibold mb-2">1인 기업 시대 준비</h4>
+            <p class="text-sm opacity-90">AI를 활용한 개인 서비스 개발 역량</p>
+          </div>
+          <div class="text-center">
+            <h4 class="font-semibold mb-2">빠른 AI 적용</h4>
+            <p class="text-sm opacity-90">실무에서 바로 활용 가능한 기술</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 과정의 특장점 -->
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+        <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">과정의 핵심 가치</h3>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <h4 class="text-xl font-semibold mb-2">문제해결력 향상</h4>
+            <p class="text-gray-600">스스로 문제를 정의하고 해결하는 역량 개발</p>
+          </div>
+          <div class="text-center">
+            <h4 class="text-xl font-semibold mb-2">협업 경험</h4>
+            <p class="text-gray-600">다양한 배경의 팀원들과 협업하는 경험</p>
+          </div>
+          <div class="text-center">
+            <h4 class="text-xl font-semibold mb-2">실무 중심 학습</h4>
+            <p class="text-gray-600">현직자 멘토링과 실제 프로젝트 완성</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 과정 소개 섹션 -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">과정 소개</h2>
+        <p class="text-lg text-gray-600">9주간의 체계적인 AI 프로젝트 경험</p>
+      </div>
+
+      <!-- 프로젝트 과정 -->
+      <div class="grid md:grid-cols-2 gap-8 mb-12">
+        <div class="bg-blue-50 rounded-xl p-8">
+          <h3 class="text-xl font-bold text-blue-800 mb-4">미니프로젝트 (1-2주차)</h3>
+          <ul class="space-y-2 text-gray-700">
+            <li>• 딥러닝 모델을 활용한 개인 프로젝트</li>
+            <li>• AI 기본 기술 습득 및 이해</li>
+            <li>• 프로젝트 발표 및 피드백</li>
+          </ul>
+        </div>
+
+        <div class="bg-green-50 rounded-xl p-8">
+          <h3 class="text-xl font-bold text-green-800 mb-4">최종프로젝트 (3-9주차)</h3>
+          <ul class="space-y-2 text-gray-700">
+            <li>• AI를 활용한 실제 서비스 개발</li>
+            <li>• 기획부터 배포까지 전 과정 경험</li>
+            <li>• 기업 초청 프로젝트 발표회</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 지원 프로그램 -->
+      <div class="bg-gray-50 rounded-xl p-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">지원 프로그램</h3>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <h4 class="font-semibold text-lg mb-4">특강 및 멘토링</h4>
+            <ul class="space-y-2 text-gray-600">
+              <li>• 딥러닝 기초 및 FastAPI 특강</li>
+              <li>• 개발 방법론 및 협업 특강</li>
+              <li>• 현직자 창업 경험 공유</li>
+              <li>• 주 2회 팀별 멘토링 (2시간)</li>
+              <li>• 개인별 포트폴리오 멘토링 (2회)</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-lg mb-4">운영 방식</h4>
+            <ul class="space-y-2 text-gray-600">
+              <li>• 자기주도적 학습 및 기술 스택 강화</li>
+              <li>• 다양한 배경의 개발자들과 팀 빌딩</li>
+              <li>• 오픈소스, API 활용 AI 서비스 제작</li>
+              <li>• 체계적인 멘토링 및 피드백</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 가입 유형 선택 모달 -->
+  <div id="loginOptionsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+    <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold mb-2">🎯 가입 유형을 선택하세요</h2>
+        <p class="text-gray-600">참여하고자 하는 역할에 따라 가입 방법이 다릅니다</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- 학생 가입 -->
+        <div class="border rounded-lg p-4 hover:bg-blue-50 transition-colors cursor-pointer" onclick="selectSignupType('student')">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">🎓</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg">학생으로 참여</h3>
+              <p class="text-sm text-gray-600">현재 모집 중인 기수에 지원 (즉시 승인)</p>
+            </div>
+            <div class="text-blue-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 멘토/코치/운영자 가입 -->
+        <div class="border rounded-lg p-4 hover:bg-green-50 transition-colors cursor-pointer" onclick="selectSignupType('staff')">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">👨‍🏫</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg">멘토/코치/운영자</h3>
+              <p class="text-sm text-gray-600">초대 코드로 가입 (관리자 승인 필요)</p>
+            </div>
+            <div class="text-green-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 기존 회원 로그인 -->
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors cursor-pointer" onclick="goToLogin()">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mr-4">
+              <span class="text-xl">🔐</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg">기존 회원 로그인</h3>
+              <p class="text-sm text-gray-600">이미 계정이 있으신가요?</p>
+            </div>
+            <div class="text-gray-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 text-center">
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-sm underline">
+          나중에 하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 푸터 -->
+  <footer class="bg-gray-900 text-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-gray-400">&copy; 2025 AI-X 과정. 모든 권리 보유.</p>
+      <p class="text-gray-500 text-sm mt-2">인공지능 개발자 양성을 위한 실전 프로젝트 기반 교육 프로그램</p>
+    </div>
+  </footer>
+
+  <script>
+    // 스크롤 함수
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+
+    // 가입 옵션 모달 표시
+    function showLoginOptions() {
+      document.getElementById('loginOptionsModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // 모달 닫기
+    function closeModal() {
+      document.getElementById('loginOptionsModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    // 가입 유형 선택
+    function selectSignupType(type) {
+      if (type === 'student') {
+        // 학생 회원가입 페이지로 이동
+        window.location.href = 'student-signup.html';
+      } else if (type === 'staff') {
+        // 멘토/코치 회원가입 페이지로 이동
+        window.location.href = 'mentor-signup.html';
+      }
+    }
+
+
+
+    // 기존 회원 로그인
+    function goToLogin() {
+      window.location.href = 'login.html';
+    }
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // 모달 배경 클릭으로 닫기
+    document.getElementById('loginOptionsModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // 페이지 로드 시 URL 파라미터 확인
+    window.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const fromMain = urlParams.get('from');
+      
+      if (fromMain === 'main') {
+        // main.html에서 왔을 때 특별한 동작 (필요시)
+        console.log('메인 페이지에서 이동');
+      }
+    });
+  </script>
+</body>
+</html>
