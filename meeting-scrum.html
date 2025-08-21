@@ -18,9 +18,14 @@
       <div class="flex items-center justify-between h-14">
         <div class="flex items-center gap-3">
           <button onclick="goBackToMain()" class="text-blue-600 hover:text-blue-700">← 메인으로</button>
-          <h1 class="text-xl font-bold text-gray-800">관리자 페이지 · 스크럼/노션 대시보드</h1>
+          <h1 id="pageTitle" class="text-xl font-bold text-gray-800">관리자 페이지 · 스크럼/노션 대시보드</h1>
         </div>
-        <span class="text-sm text-gray-500">데이터: 목업(샘플) · UI 검증 용</span>
+        <div class="flex items-center space-x-4">
+          <span id="userRoleDisplay" class="text-gray-600"></span>
+          <span id="userNameDisplay" class="text-gray-600"></span>
+          <span class="text-sm text-gray-500">데이터: 목업(샘플) · UI 검증 용</span>
+          <button onclick="logout()" class="text-red-600 hover:text-red-700 text-sm">로그아웃</button>
+        </div>
       </div>
     </div>
   </nav>
@@ -38,7 +43,7 @@
       <div id="content-dashboard" class="pt-4 space-y-6">
         <div class="grid md:grid-cols-4 gap-3">
           <div class="bg-blue-50 rounded-lg p-4">
-            <p class="text-xs text-gray-600">이번 주 총 작성</p>
+            <p class="text-xs text-gray-600" id="kpi-total-label">이번 주 총 작성</p>
             <p id="kpi-total" class="text-2xl font-bold">-</p>
           </div>
           <div class="bg-green-50 rounded-lg p-4">
@@ -46,7 +51,7 @@
             <p id="kpi-rate" class="text-2xl font-bold text-green-700">-</p>
           </div>
           <div class="bg-purple-50 rounded-lg p-4">
-            <p class="text-xs text-gray-600">최다 작성</p>
+            <p class="text-xs text-gray-600" id="kpi-top-label">최다 작성</p>
             <p id="kpi-top" class="text-2xl font-bold text-purple-700">-</p>
           </div>
           <div class="bg-yellow-50 rounded-lg p-4">
@@ -57,8 +62,8 @@
 
         <div class="grid lg:grid-cols-2 gap-6">
           <div class="bg-white border rounded-xl p-4">
-            <h3 class="font-semibold mb-3">학생별 작성일수(최근 7일)</h3>
-            <div class="flex items-center justify-end gap-2 mb-2">
+            <h3 id="chartStudentTitle" class="font-semibold mb-3">학생별 작성일수(최근 7일)</h3>
+            <div class="flex items-center justify-end gap-2 mb-2" id="chartLimitControls">
               <label class="text-xs text-gray-500">표시</label>
               <select id="chartLimit" class="border px-2 py-1 rounded text-xs">
                 <option value="10">Top 10</option>
@@ -70,7 +75,7 @@
           </div>
           <div class="bg-white border rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
-              <h3 class="font-semibold">일자별 작성률(%)</h3>
+              <h3 id="chartDailyTitle" class="font-semibold">일자별 작성률(%)</h3>
               <select id="weekSelect" class="border px-2 py-1 rounded text-sm"></select>
             </div>
             <div style="height:320px"><canvas id="chartDailyRate"></canvas></div>
@@ -188,6 +193,53 @@
   </main>
 
   <script>
+    // 사용자 인증 및 역할 확인
+    function getCurrentUser() {
+      const user = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
+      return user;
+    }
+
+    function getCurrentUserRole() {
+      const user = getCurrentUser();
+      return user.type || 'guest';
+    }
+
+    function checkAuthentication() {
+      const user = getCurrentUser();
+      if (!user.type) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'login.html';
+        return false;
+      }
+      return true;
+    }
+
+    function displayUserInfo() {
+      const user = getCurrentUser();
+      const roleDisplay = document.getElementById('userRoleDisplay');
+      const nameDisplay = document.getElementById('userNameDisplay');
+      
+      if (user.type) {
+        const roleNames = {
+          'operator': '운영자',
+          'coach': '코치',
+          'mentor': '멘토',
+          'student': '학생'
+        };
+        
+        roleDisplay.textContent = `[${roleNames[user.type] || user.type}]`;
+        nameDisplay.textContent = user.name || user.email;
+      }
+    }
+
+    function logout() {
+      if (confirm('로그아웃 하시겠습니까?')) {
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+        window.location.href = 'login.html';
+      }
+    }
+
     function goBackToMain() {
       const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
       window.location.href = `main.html?cohort=${currentCohort}`;
@@ -195,6 +247,52 @@
 
     // 대량 학생 스케일을 위한 페이지 사이즈
     const PAGE_SIZE = 10;
+
+    // 역할별 데이터 필터링
+    function filterDataByRole(userRole, userName) {
+      if (userRole === 'student') {
+        // 학생은 본인 데이터만 볼 수 있음
+        if (userName === 'Seulgi Lee' || userName === '이학생') {
+          // Seulgi Lee 학생으로 가정
+          return {
+            studentName: 'Seulgi Lee',
+            teamName: 'AI혁신팀',
+            teamNumber: 1
+          };
+        }
+      }
+      return null; // 운영자/코치는 모든 데이터 접근 가능
+    }
+
+    function filterUIByRole(userRole) {
+      const pageTitle = document.getElementById('pageTitle');
+      
+      if (userRole === 'student') {
+        pageTitle.textContent = '나의 스크럼 대시보드 - 1팀 AI혁신팀';
+        document.title = '나의 스크럼 대시보드';
+        
+        // 학생용 탭 제한 (대시보드와 일별 스크럼만)
+        const weeklyTab = document.getElementById('tab-weekly');
+        const studentTab = document.getElementById('tab-student');
+        if (weeklyTab) weeklyTab.style.display = 'none';
+        if (studentTab) studentTab.style.display = 'none';
+        
+        // KPI 라벨 변경
+        const totalLabel = document.getElementById('kpi-total-label');
+        const topLabel = document.getElementById('kpi-top-label');
+        if (totalLabel) totalLabel.textContent = '나의 이번 주 작성';
+        if (topLabel) topLabel.textContent = '팀 내 순위';
+        
+        // 차트 제목 변경
+        const chartStudentTitle = document.getElementById('chartStudentTitle');
+        const chartDailyTitle = document.getElementById('chartDailyTitle');
+        const chartLimitControls = document.getElementById('chartLimitControls');
+        
+        if (chartStudentTitle) chartStudentTitle.textContent = '나의 작성 현황(최근 7일)';
+        if (chartDailyTitle) chartDailyTitle.textContent = '나의 일별 작성률(%)';
+        if (chartLimitControls) chartLimitControls.style.display = 'none'; // 학생은 필터 옵션 불필요
+      }
+    }
 
     // 목업 데이터: 노션 주간 로그 + 일별 스크럼
     let STUDENTS = [
@@ -325,6 +423,38 @@
 
     // 초기 렌더
     document.addEventListener('DOMContentLoaded', () => {
+      // 인증 체크
+      if (!checkAuthentication()) {
+        return;
+      }
+
+      // 사용자 정보 표시
+      displayUserInfo();
+      
+      // 역할별 UI 필터링
+      const userRole = getCurrentUserRole();
+      const user = getCurrentUser();
+      filterUIByRole(userRole);
+
+      // 학생일 경우 데이터 필터링
+      if (userRole === 'student') {
+        const studentFilter = filterDataByRole(userRole, user.name);
+        if (studentFilter) {
+          // Seulgi Lee 학생 데이터만 표시하도록 STUDENTS 배열 필터링
+          STUDENTS = STUDENTS.filter(s => s.name === 'Seulgi Lee');
+          
+          // 주간 로그도 Seulgi Lee만 필터링
+          WEEKLY_LOGS.forEach(week => {
+            week.items = week.items.filter(item => item.name === 'Seulgi Lee');
+          });
+          
+          // 일별 스크럼도 Seulgi Lee만 필터링
+          Object.keys(DAILY).forEach(date => {
+            DAILY[date] = DAILY[date].filter(item => item.name === 'Seulgi Lee');
+          });
+        }
+      }
+
       initSelectors();
       renderDashboard();
       renderWeeklyTable(WEEKLY_LOGS[0].weekKey);

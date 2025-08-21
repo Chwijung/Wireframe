@@ -88,7 +88,6 @@
           <h3 class="font-semibold text-gray-900 mb-2">테스트 계정</h3>
           <div class="text-sm text-gray-600 space-y-1">
             <p><strong>운영자:</strong> admin@aix.com / admin123</p>
-            <p><strong>멘토:</strong> mentor@aix.com / mentor123</p>
             <p><strong>코치:</strong> coach@aix.com / coach123</p>
             <p><strong>학생:</strong> student@aix.com / student123</p>
           </div>
@@ -102,10 +101,10 @@
                class="w-full inline-flex justify-center py-2 px-4 border border-blue-300 rounded-md shadow-sm bg-white text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
               학생으로 회원가입
             </a>
-            <a href="mentor-signup.html" 
+            <!-- <a href="mentor-signup.html" 
                class="w-full inline-flex justify-center py-2 px-4 border border-green-300 rounded-md shadow-sm bg-white text-sm font-medium text-green-700 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
               멘토/코치로 회원가입
-            </a>
+            </a> -->
           </div>
         </div>
       </form>
@@ -198,7 +197,7 @@
           window.location.href = 'index.html?authenticated=true';
         } else if (account.type === 'student') {
           alert(`${account.name}님, 환영합니다!\n학생 대시보드로 이동합니다.`);
-          window.location.href = 'student/index.html';
+          window.location.href = 'main.html';
         }
       } else {
         // 실제 시스템에서는 서버 인증

@@ -35,7 +35,7 @@
           <button onclick="scrollToSection('about')" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
             과정 소개
           </button>
-          <button onclick="showLoginOptions()" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+          <button onclick="goToLogin()" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
             로그인/가입
           </button>
         </div>
@@ -55,7 +55,7 @@
         <button onclick="scrollToSection('projects')" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
           수강생 포트폴리오 보기
         </button>
-        <button onclick="showLoginOptions()" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+        <button onclick="goToLogin()" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
           로그인 하기
         </button>
       </div>
@@ -281,7 +281,7 @@
         </div>
 
         <!-- 멘토/코치/운영자 가입 -->
-        <div class="border rounded-lg p-4 hover:bg-green-50 transition-colors cursor-pointer" onclick="selectSignupType('staff')">
+        <!-- <div class="border rounded-lg p-4 hover:bg-green-50 transition-colors cursor-pointer" onclick="selectSignupType('staff')">
           <div class="flex items-center">
             <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
               <span class="text-xl">👨‍🏫</span>
@@ -296,7 +296,7 @@
               </svg>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- 기존 회원 로그인 -->
         <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors cursor-pointer" onclick="goToLogin()">
