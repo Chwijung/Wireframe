@@ -51,28 +51,33 @@ flowchart TD
 flowchart TD
     ADMIN_DASH[운영자 대시보드] --> ADMIN_MENU{관리 영역}
     
-    ADMIN_MENU -->|시스템 관리| SYS_MGMT[시스템 설정<br/>사이트 전체 제어]
-    ADMIN_MENU -->|사용자 관리| USER_MGMT[사용자 권한 관리<br/>역할/승인/계정 상태]
-    ADMIN_MENU -->|코호트 관리| COHORT_MGMT[코호트 관리<br/>생성/모집 상태/정원]
-    ADMIN_MENU -->|초대 관리| INVITE_MGMT[초대 코드 관리<br/>생성/설정/통계]
-    ADMIN_MENU -->|교육 운영| EDU_MGMT[교육 과정 선택<br/>코치 업무로 전환]
+    ADMIN_MENU -->|시스템 관리| SYS_MGMT[시스템 관리<br/>백업·복원 체크]
+    ADMIN_MENU -->|사용자 관리| USER_MGMT[사용자 관리<br/>가입·권한·계정 상태<br/>초대 코드 관리]
+    ADMIN_MENU -->|코호트 관리| COHORT_MGMT[코호트 관리<br/>개설·정원·매핑<br/>일정 관리]
     
-    SYS_MGMT --> SYS_SETTING[전체 설정<br/>공개 콘텐츠<br/>알림 관리]
-    USER_MGMT --> USER_APPROVAL[승인 대기 처리<br/>역할 변경<br/>계정 관리]
-    COHORT_MGMT --> COHORT_SETTING[코호트 생성<br/>모집 제어<br/>학생 배정]
-    INVITE_MGMT --> INVITE_SETTING[코드 생성<br/>유효기간 설정<br/>사용 현황]
+    SYS_MGMT --> SYS_DETAIL[백업·복원 체크<br/>데이터 백업 상태<br/>시스템 복원 기능]
     
-    EDU_MGMT --> COACH_FLOW[코치 모드로 전환<br/>교육 운영 업무]
+    USER_MGMT --> USER_APPROVAL[가입 승인/거절<br/>학생: 자동 승인<br/>코치·멘토: 초대+승인]
+    USER_MGMT --> USER_PERMISSION[권한 변경<br/>역할 부여/회수<br/>계정 상태 관리]
+    USER_MGMT --> USER_ACCOUNT[계정 상태 관리<br/>휴면, 탈퇴 처리]
+    USER_MGMT --> USER_INVITE[초대 코드 발급<br/>만료 관리]
+    
+    COHORT_MGMT --> COHORT_OPEN[코호트 개설<br/>모집 열고 닫기]
+    COHORT_MGMT --> COHORT_SETTING[정원·팀 수 세팅<br/>인원 제한 관리]
+    COHORT_MGMT --> COHORT_MAPPING[코치·멘토 매핑<br/>담당자 배정]
+    COHORT_MGMT --> COHORT_SCHEDULE[시작/종료일 등<br/>공통 일정 등록]
     
     classDef admin fill:#d32f2f,stroke:#b71c1c,stroke-width:2px,color:#ffffff
     classDef mgmt fill:#ff7043,stroke:#d84315,stroke-width:2px,color:#ffffff
-    classDef setting fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#ffffff
-    classDef coach fill:#7b1fa2,stroke:#4a148c,stroke-width:2px,color:#ffffff
+    classDef sys fill:#795548,stroke:#3e2723,stroke-width:2px,color:#ffffff
+    classDef user fill:#2196f3,stroke:#0d47a1,stroke-width:2px,color:#ffffff
+    classDef cohort fill:#4caf50,stroke:#1b5e20,stroke-width:2px,color:#ffffff
     
     class ADMIN_DASH,ADMIN_MENU admin
-    class SYS_MGMT,USER_MGMT,COHORT_MGMT,INVITE_MGMT,EDU_MGMT mgmt
-    class SYS_SETTING,USER_APPROVAL,COHORT_SETTING,INVITE_SETTING setting
-    class COACH_FLOW coach
+    class SYS_MGMT,USER_MGMT,COHORT_MGMT mgmt
+    class SYS_DETAIL sys
+    class USER_APPROVAL,USER_PERMISSION,USER_ACCOUNT,USER_INVITE user
+    class COHORT_OPEN,COHORT_SETTING,COHORT_MAPPING,COHORT_SCHEDULE cohort
 ```
 
 ## 코치 교육 운영 플로우

@@ -20,8 +20,8 @@
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <a href="index.html?authenticated=true" class="text-indigo-600 hover:text-indigo-800">← 전체 과정 목록으로</a>
-          <h1 class="text-2xl font-bold text-indigo-700" id="headerTitle">🎓 AI-X 통합 운영 시스템</h1>
+          <a href="index.html?authenticated=true" class="text-indigo-600 hover:text-indigo-800">전체 과정 목록으로</a>
+          <h1 class="text-2xl font-bold text-indigo-700" id="headerTitle">AI-X</h1>
         </div>
       </div>
     </div>
@@ -30,8 +30,8 @@
   <div class="max-w-7xl mx-auto p-6 space-y-8">
     <!-- 메인 헤더 -->
     <header class="text-center py-8">
-      <h2 class="text-4xl font-bold text-gray-800 mb-4" id="cohortMainTitle">AI-X 교육과정 운영 관리 시스템</h2>
-      <p class="text-xl text-gray-600" id="cohortSubtitle">운영진·코치를 위한 통합 관리 플랫폼</p>
+      <h2 class="text-4xl font-bold text-gray-800 mb-4" id="cohortMainTitle">AI-X</h2>
+      <p class="text-xl text-gray-600" id="cohortSubtitle">운영진·코치</p>
     </header>
 
     <!-- 핵심 기능 카드 -->
@@ -74,14 +74,14 @@
           </div>
           <span class="text-sm font-medium text-orange-600">7개 대기</span>
         </div>
-        <h3 class="font-semibold text-gray-800">과제 출제·평가</h3>
-        <p class="text-sm text-gray-600 mt-2">과제 등록, 제출 현황, 채점 관리</p>
+        <h3 class="font-semibold text-gray-800">산출물</h3>
+        <p class="text-sm text-gray-600 mt-2">산출물 관리</p>
       </div>
     </section>
 
     <!-- 추가 기능 카드 -->
     <section class="grid md:grid-cols-3 gap-6">
-      <!-- 수강생 설문 -->
+      <!-- 수강생 사전 설문 -->
       <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='student-onboarding.html'">
         <div class="flex items-center justify-between mb-4">
           <div class="bg-indigo-100 p-3 rounded-lg">
@@ -94,8 +94,8 @@
             <span class="text-xs text-orange-600">3명 미완료</span>
           </div>
         </div>
-        <h3 class="font-semibold text-gray-800">📝 수강생 설문</h3>
-        <p class="text-sm text-gray-600 mt-2">팀 편성용 정보 수집, 설문 관리</p>
+        <h3 class="font-semibold text-gray-800">수강생 사전설문</h3>
+        <p class="text-sm text-gray-600 mt-2">팀 편성용 정보 수집</p>
       </div>
 
       <!-- 회의 스크럼 -->
@@ -147,7 +147,7 @@
       </div>
 
       <!-- 멘토링 일지 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='mentoring-log.html'">
+      <!-- <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='mentoring-log.html'">
         <div class="flex items-center justify-between mb-4">
           <div class="bg-indigo-100 p-3 rounded-lg">
             <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,7 +161,7 @@
         </div>
         <h3 class="font-semibold text-gray-800">📋 멘토링 일지</h3>
         <p class="text-sm text-gray-600 mt-2">조별 멘토링 기록, 진행 상황 관리</p>
-      </div>
+      </div> -->
 
       <!-- 상담일정 관리 -->
       <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='counseling-schedule.html'">
@@ -299,14 +299,14 @@
 
       const cohort = cohortData[cohortId];
       if (cohort) {
-        document.getElementById('headerTitle').textContent = `🎓 ${cohort.name} 통합 운영 시스템`;
-        document.getElementById('cohortMainTitle').textContent = `${cohort.name} 교육과정 운영 관리 시스템`;
-        document.getElementById('cohortSubtitle').textContent = `${cohort.name} 운영진·코치를 위한 통합 관리 플랫폼`;
+        document.getElementById('headerTitle').textContent = `${cohort.name}`;
+        document.getElementById('cohortMainTitle').textContent = `${cohort.name} `;
+        document.getElementById('cohortSubtitle').textContent = `운영진·코치`;
         document.getElementById('cohortNumber').textContent = cohort.number;
-        document.getElementById('cohortCardTitle').textContent = `${cohort.number} 과정 운영 관리`;
+        document.getElementById('cohortCardTitle').textContent = `${cohort.number} `;
         document.getElementById('studentCount').textContent = cohort.students;
         document.getElementById('chartTitle').textContent = `${cohort.name} 진행 현황`;
-        document.title = `${cohort.name} 운영 시스템`;
+        document.title = `${cohort.name}`;
         
         // 과정 운영 관리 카드 클릭 이벤트 설정
         document.getElementById('cohortManagementCard').onclick = function() {

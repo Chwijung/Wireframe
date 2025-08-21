@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>설문 관리 - AI-X 시스템</title>
+  <title>사전 설문 - AI-X 시스템</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
   <!-- 네비게이션 -->
@@ -13,316 +14,1071 @@
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
           <a href="#" onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
-          <h1 class="text-2xl font-bold text-green-700">🎓 학습자 온보딩 시스템</h1>
+          <h1 class="text-2xl font-bold text-green-700">🎓 AI-X 과정 사전 설문</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <select id="userRole" onchange="changeUserRole()" class="px-3 py-1 border rounded-lg">
+            <option value="student">수강생</option>
+            <option value="coach">코치</option>
+          </select>
+          <span id="currentUser" class="text-sm text-gray-600"></span>
         </div>
       </div>
     </div>
   </nav>
 
-  <div class="max-w-4xl mx-auto p-6">
-    <!-- 관리자 대시보드 헤더 -->
-    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-      <div class="flex items-start justify-between">
-        <div class="flex items-start">
-          <svg class="w-8 h-8 text-indigo-600 mr-4 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
-          <div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">설문 관리 시스템</h2>
-            <p class="text-gray-600">설문을 활성화하고 응답 현황을 확인할 수 있습니다.</p>
+  <div class="max-w-6xl mx-auto p-6">
+    <!-- 수강생 뷰: 설문 참여 -->
+    <div id="studentView" class="hidden">
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <svg class="w-8 h-8 text-indigo-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-800 mb-2">AI-X 과정 개강 설문 조사</h2>
+              <p class="text-gray-600">AI-X 과정을 위한 개인 정보, 기술 역량 및 목표를 입력해주세요.</p>
+            </div>
+          </div>
+          <div id="surveyStatus" class="text-center">
+            <div class="text-lg font-semibold text-gray-700">설문 상태</div>
+            <div id="studentStatus" class="text-sm text-orange-600">미완료</div>
           </div>
         </div>
-        <div class="text-right">
-          <div class="text-sm text-gray-500">총 등록된 설문</div>
-          <div class="text-2xl font-bold text-indigo-600">4개</div>
+      </div>
+
+      <div id="surveyForm" class="bg-white rounded-xl shadow-lg p-8">
+        <form id="preSurveyForm" onsubmit="submitSurvey(event)">
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-indigo-200 pb-2">기본 정보</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">이름 *</label>
+                <input type="text" id="name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">성별</label>
+                <div class="flex space-x-4">
+                  <label><input type="radio" name="gender" value="male" class="mr-2">남</label>
+                  <label><input type="radio" name="gender" value="female" class="mr-2">여</label>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">노션 이메일 *</label>
+                <input type="email" id="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">MBTI *</label>
+                <input type="text" id="mbti" required class="w-full px-3 py-2 border border-gray-300 rounded-lg" maxlength="4">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">이전 수료 과정명/개강일 *</label>
+                <input type="text" id="previousCourse" required class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="예시: 하이미디어 강남점 자바풀스택 6개월/25.03.14">
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-indigo-200 pb-2">1. 기술 역량 및 경험</h3>
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">설명 (선택사항)</label>
+              <textarea id="skillDescription" class="w-full px-3 py-2 border border-gray-300 rounded-lg" rows="3" placeholder="자신의 기술 역량과 경험에 대해 간단히 설명해주세요"></textarea>
+            </div>
+            
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">파이썬 강의 사전 수강 *</label>
+              <div class="flex space-x-4">
+                <label><input type="radio" name="pythonPreLearning" value="completed" required class="mr-2">수강</label>
+                <label><input type="radio" name="pythonPreLearning" value="not_completed" required class="mr-2">미수강</label>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">AI는 내 친구? *</label>
+              <div class="space-y-2">
+                <label class="flex items-center"><input type="radio" name="aiExperience" value="none" required class="mr-2">전혀 모른다</label>
+                <label class="flex items-center"><input type="radio" name="aiExperience" value="chatgpt_basic" required class="mr-2">chatGPT가 익숙하다</label>
+                <label class="flex items-center"><input type="radio" name="aiExperience" value="chatgpt_dev" required class="mr-2">chatGPT, Claude, Cursor랑 개발한다</label>
+                <label class="flex items-center"><input type="radio" name="aiExperience" value="opensource" required class="mr-2">HuggingFace, Github 오픈소스 쓰는게 편하다</label>
+                <label class="flex items-center"><input type="radio" name="aiExperience" value="expert" required class="mr-2">매우 익숙하다</label>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">컴퓨터 관련 전공 *</label>
+              <div class="flex space-x-4">
+                <label><input type="radio" name="computerMajor" value="major" required class="mr-2">전공</label>
+                <label><input type="radio" name="computerMajor" value="non_major" required class="mr-2">비전공</label>
+                <label><input type="radio" name="computerMajor" value="other" required class="mr-2">기타</label>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">경력 사항</label>
+              <textarea id="careerDetails" class="w-full px-3 py-2 border border-gray-300 rounded-lg" rows="3" placeholder="관련 경력이나 프로젝트 경험을 작성해주세요"></textarea>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">익숙한 프로그래밍 언어 *</label>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="languages" value="Python" required class="mr-2">Python</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="languages" value="JavaScript" class="mr-2">JavaScript</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="languages" value="Java" class="mr-2">Java</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="languages" value="other" class="mr-2">기타</label>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">다룰 수 있는 기술 스택 *</label>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="techStack" value="frontend" class="mr-2">프론트엔드 (React, Vue 등)</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="techStack" value="backend" class="mr-2">백엔드 (Node.js, Spring 등)</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="techStack" value="database" class="mr-2">데이터베이스 (MySQL, MongoDB 등)</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="techStack" value="infrastructure" class="mr-2">인프라 (Docker, AWS 등)</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="techStack" value="ai" class="mr-2">AI (HuggingFace, API서비스 등)</label>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">가장 최근 프로젝트에서 맡은 역할 *</label>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="radio" name="recentRole" value="team_leader" required class="mr-2">팀 리더</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="radio" name="recentRole" value="frontend_dev" required class="mr-2">개발자 (프론트)</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="radio" name="recentRole" value="backend_dev" required class="mr-2">개발자 (백엔드)</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="radio" name="recentRole" value="ai_dev" required class="mr-2">개발자 (AI)</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="radio" name="recentRole" value="data_analyst" required class="mr-2">데이터 분석</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="radio" name="recentRole" value="designer" required class="mr-2">디자이너</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-indigo-200 pb-2">2. 목표 및 관심사</h3>
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">설명 (선택사항)</label>
+              <textarea id="goalDescription" class="w-full px-3 py-2 border border-gray-300 rounded-lg" rows="3" placeholder="이번 과정을 통한 목표나 관심사를 작성해주세요"></textarea>
+            </div>
+            
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">선호 프로젝트 유형 *</label>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="radio" name="projectType" value="lecture" required class="mr-2">강의 형식</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="radio" name="projectType" value="company" required class="mr-2">기업 플젝</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="radio" name="projectType" value="self_directed" required class="mr-2">자율 플젝</label>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">이번 프로젝트에서 학습하고 싶은 분야</label>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="learningFields" value="backend" class="mr-2">백엔드</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="learningFields" value="frontend" class="mr-2">프론트엔드</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="learningFields" value="ai" class="mr-2">AI</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="learningFields" value="data_analysis" class="mr-2">데이터 분석</label>
+                <label class="flex items-center p-2 border rounded cursor-pointer"><input type="checkbox" name="learningFields" value="infrastructure" class="mr-2">인프라</label>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">희망직무 *</label>
+              <input type="text" id="desiredJob" required class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="희망하는 직무를 입력해주세요">
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">과정에 대한 질문 사항</label>
+              <textarea id="courseQuestions" class="w-full px-3 py-2 border border-gray-300 rounded-lg" rows="4" placeholder="과정에 대한 궁금한 점이나 질문사항을 작성해주세요"></textarea>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+              <h4 class="font-semibold text-blue-800 mb-2">📚 참고 자료</h4>
+              <p class="text-blue-700 text-sm mb-2">과정 참고 자료:</p>
+              <p class="text-blue-700 text-sm">선수학습용 자료: <a href="https://www.youtube.com/watch?v=kWiCuklohdY" target="_blank" class="underline hover:text-blue-900">https://www.youtube.com/watch?v=kWiCuklohdY</a></p>
+            </div>
+          </div>
+
+          <div class="flex justify-center">
+            <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 font-semibold">설문 제출하기</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="surveyResult" class="hidden bg-white rounded-xl shadow-lg p-8">
+        <div class="text-center">
+          <div class="text-6xl mb-4">✅</div>
+          <h3 class="text-2xl font-bold text-green-600 mb-2">설문이 완료되었습니다!</h3>
+          <p class="text-gray-600 mb-6">제출하신 정보는 팀 빌딩에 활용됩니다.</p>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-800 mb-2">제출된 정보</h4>
+            <div id="submittedData" class="text-left text-sm text-gray-600"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 설문 관리 목록 -->
-    <div class="space-y-6">
-      <!-- 설문 1 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">1</span>
-            <div>
-              <h3 class="text-xl font-bold text-gray-800">팀 빌딩을 위한 사전설문</h3>
-              <p class="text-gray-600 text-sm">최적의 팀 편성을 위한 개인 정보와 기술 수준, 협업 스타일을 파악합니다.</p>
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-blue-600" id="count-team-building">27</div>
-              <div class="text-sm text-gray-500">응답자</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="toggle-team-building" class="sr-only peer" checked onchange="toggleSurvey('team-building')">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-            </label>
-          </div>
-        </div>
+
+    <!-- 코치 뷰: 통계 및 관리 -->
+    <div id="coachView" class="hidden">
+      <!-- 통계 대시보드 헤더 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
         <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4 text-sm text-gray-500">
-            <span>⏱️ 예상 소요: 10-15분</span>
-            <span>📅 생성일: 2024-01-15</span>
-            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">활성화</span>
+          <div class="flex items-center">
+            <svg class="w-8 h-8 text-indigo-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-800 mb-2">사전 설문 관리</h2>
+              <p class="text-gray-600">수강생들의 설문 응답을 확인하고 통계를 분석할 수 있습니다.</p>
+            </div>
           </div>
-          <div class="flex space-x-2">
-            <button onclick="editSurvey('team-building')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-              설문 편집
-            </button>
-            <button onclick="viewResponses('team-building')" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
-              응답 보기
-            </button>
-            <button onclick="downloadResults('team-building')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-              다운로드
-            </button>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-indigo-600" id="totalResponses">30</div>
+            <div class="text-sm text-gray-500">총 응답자</div>
           </div>
         </div>
       </div>
 
-      <!-- 설문 2 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <span class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">2</span>
-            <div>
-              <h3 class="text-xl font-bold text-gray-800">슬기로운 프로젝트 생활 Part 1</h3>
-              <p class="text-gray-600 text-sm">프로젝트 초기 단계에서의 목표 설정과 계획 수립에 대한 설문입니다.</p>
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-green-600" id="count-project-life-1">89</div>
-              <div class="text-sm text-gray-500">응답자</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="toggle-project-life-1" class="sr-only peer" checked onchange="toggleSurvey('project-life-1')">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-            </label>
-          </div>
+      <!-- 탭 메뉴 -->
+      <div class="mb-6">
+        <div class="border-b border-gray-200">
+          <nav class="-mb-px flex space-x-8">
+            <button onclick="showTab('overview')" id="tab-overview" class="tab-button active border-indigo-500 text-indigo-600 py-2 px-1 border-b-2 font-medium text-sm">
+              통계 개요
+            </button>
+            <button onclick="showTab('responses')" id="tab-responses" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 py-2 px-1 border-b-2 font-medium text-sm">
+              개별 응답
+            </button>
+            <!-- <button onclick="showTab('analysis')" id="tab-analysis" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 py-2 px-1 border-b-2 font-medium text-sm">
+              팀 구성 분석
+            </button> -->
+            <button onclick="showTab('export')" id="tab-export" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 py-2 px-1 border-b-2 font-medium text-sm">
+              데이터 내보내기
+            </button>
+          </nav>
         </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4 text-sm text-gray-500">
-            <span>⏱️ 예상 소요: 8-12분</span>
-            <span>📅 생성일: 2024-01-20</span>
-            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">활성화</span>
+      </div>
+
+      <!-- 통계 개요 탭 -->
+      <div id="overview-tab" class="tab-content">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <!-- 성별 분포 -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">성별 분포</h3>
+            <div class="h-64 relative">
+              <canvas id="genderChart"></canvas>
+            </div>
           </div>
-          <div class="flex space-x-2">
-            <button onclick="editSurvey('project-life-1')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-              설문 편집
-            </button>
-            <button onclick="viewResponses('project-life-1')" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
-              응답 보기
-            </button>
-            <button onclick="downloadResults('project-life-1')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-              다운로드
-            </button>
+
+          <!-- AI 경험 분포 -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">AI 경험 수준</h3>
+            <div class="h-64 relative">
+              <canvas id="languageChart"></canvas>
+            </div>
+          </div>
+
+          <!-- MBTI 분포 -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">MBTI 분포</h3>
+            <div class="h-64 relative">
+              <canvas id="mbtiChart"></canvas>
+            </div>
+          </div>
+
+          <!-- 희망직무 분포 -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">희망직무 분포</h3>
+            <div class="h-64 relative">
+              <canvas id="experienceChart"></canvas>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 설문 3 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <span class="bg-purple-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">3</span>
-            <div>
-              <h3 class="text-xl font-bold text-gray-800">슬기로운 프로젝트 생활 Part 2</h3>
-              <p class="text-gray-600 text-sm">프로젝트 진행 중 발생하는 문제 해결과 팀워크에 관한 설문입니다.</p>
+      <!-- 개별 응답 탭 -->
+      <div id="responses-tab" class="tab-content hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-gray-800">개별 응답 목록</h3>
+            <div class="flex space-x-2">
+              <input type="text" id="searchInput" placeholder="이름으로 검색..." class="px-3 py-1 border rounded-lg text-sm">
+              <button onclick="searchResponses()" class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">검색</button>
             </div>
           </div>
-          <div class="flex items-center space-x-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600" id="count-project-life-2">45</div>
-              <div class="text-sm text-gray-500">응답자</div>
+          
+          <!-- 필터링 옵션 -->
+          <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">AI 경험</label>
+                <select id="filterAiExperience" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm">
+                  <option value="">전체</option>
+                  <option value="none">전혀 모른다</option>
+                  <option value="chatgpt_basic">chatGPT 익숙</option>
+                  <option value="chatgpt_dev">개발 도구 사용</option>
+                  <option value="opensource">오픈소스 활용</option>
+                  <option value="expert">매우 익숙</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">전공 여부</label>
+                <select id="filterMajor" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm">
+                  <option value="">전체</option>
+                  <option value="major">전공</option>
+                  <option value="non_major">비전공</option>
+                  <option value="other">기타</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">최근 역할</label>
+                <select id="filterRole" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm">
+                  <option value="">전체</option>
+                  <option value="team_leader">팀 리더</option>
+                  <option value="frontend_dev">프론트엔드</option>
+                  <option value="backend_dev">백엔드</option>
+                  <option value="ai_dev">AI 개발</option>
+                  <option value="data_analyst">데이터 분석</option>
+                  <option value="designer">디자이너</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">프로젝트 선호</label>
+                <select id="filterProject" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm">
+                  <option value="">전체</option>
+                  <option value="lecture">강의 형식</option>
+                  <option value="company">기업 플젝</option>
+                  <option value="self_directed">자율 플젝</option>
+                </select>
+              </div>
             </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="toggle-project-life-2" class="sr-only peer" onchange="toggleSurvey('project-life-2')">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-            </label>
+            <div class="mt-2 text-right">
+              <button onclick="resetFilters()" class="px-3 py-1 bg-gray-500 text-white rounded-lg text-sm hover:bg-gray-600">필터 초기화</button>
+            </div>
           </div>
-        </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4 text-sm text-gray-500">
-            <span>⏱️ 예상 소요: 7-10분</span>
-            <span>📅 생성일: 2024-01-25</span>
-            <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">비활성화</span>
-          </div>
-          <div class="flex space-x-2">
-            <button onclick="editSurvey('project-life-2')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-              설문 편집
-            </button>
-            <button onclick="viewResponses('project-life-2')" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors">
-              응답 보기
-            </button>
-            <button onclick="downloadResults('project-life-2')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-              다운로드
-            </button>
+          <div class="overflow-x-auto">
+            <table class="min-w-full table-auto">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이름</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이메일</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MBTI</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AI 경험</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">주요 언어</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">최근 역할</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">희망직무</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">액션</th>
+                </tr>
+              </thead>
+              <tbody id="responsesTableBody" class="bg-white divide-y divide-gray-200">
+                <!-- 동적으로 생성될 내용 -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      <!-- 설문 4 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <span class="bg-orange-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">4</span>
-            <div>
-              <h3 class="text-xl font-bold text-gray-800">슬기로운 프로젝트 생활 Part 3</h3>
-              <p class="text-gray-600 text-sm">프로젝트 완료 및 결과 평가, 향후 개선 방안에 대한 설문입니다.</p>
+      <!-- 팀 구성 분석 탭 -->
+      <!-- <div id="analysis-tab" class="tab-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">자동 팀 구성 추천</h3>
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">팀 수</label>
+              <select id="teamCount" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                <option value="3">3팀</option>
+                <option value="4">4팀</option>
+                <option value="5" selected>5팀</option>
+                <option value="6">6팀</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">구성 기준</label>
+              <div class="space-y-2">
+                <label class="flex items-center">
+                  <input type="checkbox" id="balanceAI" checked class="mr-2">AI 경험 균형
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" id="balanceRole" checked class="mr-2">역할 다양성
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" id="balanceMBTI" class="mr-2">MBTI 균형
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" id="balanceMajor" class="mr-2">전공/비전공 균형
+                </label>
+              </div>
+            </div>
+            <button onclick="generateTeams()" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-semibold">
+              팀 구성 생성
+            </button>
+          </div> -->
+
+          <!-- 스킬 매트릭스 -->
+          <!-- <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">스킬 분포 매트릭스</h3>
+            <div class="h-64 relative">
+              <canvas id="skillMatrix"></canvas>
             </div>
           </div>
-          <div class="flex items-center space-x-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-orange-600" id="count-project-life-3">12</div>
-              <div class="text-sm text-gray-500">응답자</div>
+        </div> -->
+
+        <!-- 생성된 팀 구성 -->
+        <!-- <div id="generatedTeams" class="hidden">
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-bold text-gray-800">추천 팀 구성</h3>
+              <button onclick="exportTeams()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                팀 구성 내보내기
+              </button>
             </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="toggle-project-life-3" class="sr-only peer" onchange="toggleSurvey('project-life-3')">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-            </label>
+            <div id="teamsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            </div>
           </div>
-        </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4 text-sm text-gray-500">
-            <span>⏱️ 예상 소요: 5-8분</span>
-            <span>📅 생성일: 2024-01-30</span>
-            <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">비활성화</span>
+        </div> -->
+
+        <!-- 분석 인사이트 -->
+        <!-- <div class="mt-6 bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">분석 인사이트</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h4 class="font-semibold text-blue-800 mb-2">🤖 AI 경험 분석</h4>
+              <div id="aiInsight" class="text-sm text-blue-700">
+                AI 경험이 다양한 수강생들로 구성되어 있어 서로 학습할 수 있는 환경이 조성됩니다.
+              </div>
+            </div>
+            <div class="bg-green-50 p-4 rounded-lg">
+              <h4 class="font-semibold text-green-800 mb-2">👥 팀 밸런스</h4>
+              <div id="teamInsight" class="text-sm text-green-700">
+                전공자와 비전공자가 적절히 분배되어 있어 지식 공유가 활발할 것으로 예상됩니다.
+              </div>
+            </div>
+            <div class="bg-purple-50 p-4 rounded-lg">
+              <h4 class="font-semibold text-purple-800 mb-2">🎯 학습 목표</h4>
+              <div id="goalInsight" class="text-sm text-purple-700">
+                다양한 학습 목표를 가진 수강생들이 함께 협력하여 시너지 효과를 낼 수 있습니다.
+              </div>
+            </div>
           </div>
-          <div class="flex space-x-2">
-            <button onclick="editSurvey('project-life-3')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-              설문 편집
-            </button>
-            <button onclick="viewResponses('project-life-3')" class="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors">
-              응답 보기
-            </button>
-            <button onclick="downloadResults('project-life-3')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-              다운로드
-            </button>
-          </div>
-        </div>
+        </div> -->
       </div>
 
-      <!-- 설문 추가 버튼 -->
-      <div class="flex justify-center">
-        <button onclick="addSurvey()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-          설문 추가
-        </button>
+      <!-- 데이터 내보내기 탭 -->
+      <div id="export-tab" class="tab-content hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">데이터 내보내기</h3>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-4 border rounded-lg">
+              <div>
+                <h4 class="font-semibold text-gray-800">Excel 파일로 내보내기</h4>
+                <p class="text-sm text-gray-600">모든 응답 데이터를 Excel 형식으로 다운로드합니다.</p>
+              </div>
+              <button onclick="exportToExcel()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                Excel 다운로드
+              </button>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 border rounded-lg">
+              <div>
+                <h4 class="font-semibold text-gray-800">Google Sheets로 내보내기</h4>
+                <p class="text-sm text-gray-600">Google Sheets에서 실시간으로 확인할 수 있습니다.</p>
+              </div>
+              <button onclick="exportToGoogleSheets()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                Sheets 연동
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between p-4 border rounded-lg">
+              <div>
+                <h4 class="font-semibold text-gray-800">통계 리포트 생성</h4>
+                <p class="text-sm text-gray-600">설문 결과를 분석한 리포트를 PDF로 생성합니다.</p>
+              </div>
+              <button onclick="generateReport()" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                리포트 생성
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
   </div>
 
+  </div>
+
   <script>
-    // 설문 상태 데이터
-    const surveyData = {
-      'team-building': {
-        title: '팀 빌딩을 위한 사전설문',
-        active: true,
-        responseCount: 127,
-        createdDate: '2024-01-15'
-      },
-      'project-life-1': {
-        title: '슬기로운 프로젝트 생활 Part 1',
-        active: true,
-        responseCount: 89,
-        createdDate: '2024-01-20'
-      },
-      'project-life-2': {
-        title: '슬기로운 프로젝트 생활 Part 2',
-        active: false,
-        responseCount: 45,
-        createdDate: '2024-01-25'
-      },
-      'project-life-3': {
-        title: '슬기로운 프로젝트 생활 Part 3',
-        active: false,
-        responseCount: 12,
-        createdDate: '2024-01-30'
-      }
-    };
+    // 전역 변수
+    let currentUserRole = 'student';
+    let currentUserId = 'student_001'; // 실제로는 로그인 정보에서 가져옴
+    let surveyResponses = [];
+    let mockData = [];
 
-    // 설문 활성화/비활성화 토글
-    function toggleSurvey(surveyId) {
-      const toggle = document.getElementById(`toggle-${surveyId}`);
-      const isActive = toggle.checked;
+    // 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeApp();
+      generateMockData();
+      updateUserInterface();
+    });
+
+    // 앱 초기화
+    function initializeApp() {
+      // URL 파라미터에서 역할 확인
+      const urlParams = new URLSearchParams(window.location.search);
+      const roleParam = urlParams.get('role');
+      if (roleParam) {
+        currentUserRole = roleParam;
+        document.getElementById('userRole').value = currentUserRole;
+      }
       
-      surveyData[surveyId].active = isActive;
-      
-      // 상태 업데이트
-      updateSurveyStatus(surveyId);
-      
-      // 로그 출력 (실제 구현에서는 서버로 전송)
-      console.log(`설문 ${surveyId} 상태 변경:`, isActive ? '활성화' : '비활성화');
-      
-      // 알림 메시지
-      const action = isActive ? '활성화' : '비활성화';
-      showNotification(`${surveyData[surveyId].title}가 ${action}되었습니다.`, isActive ? 'success' : 'warning');
+      // 사용자 정보 표시
+      updateCurrentUser();
     }
 
-    // 설문 상태 업데이트
-    function updateSurveyStatus(surveyId) {
-      const statusElements = document.querySelectorAll(`[data-survey="${surveyId}"] .status-badge`);
-      const isActive = surveyData[surveyId].active;
+    // 사용자 역할 변경
+    function changeUserRole() {
+      currentUserRole = document.getElementById('userRole').value;
       
-      // 상태 뱃지 찾기 (다른 방법으로 접근)
-      const surveyCard = document.getElementById(`toggle-${surveyId}`).closest('.bg-white');
-      const statusBadge = surveyCard.querySelector('.px-2.py-1');
+      if (currentUserRole === 'student') {
+        currentUserId = 'student_001';
+      } else {
+        currentUserId = 'coach_001';
+      }
       
-      if (statusBadge) {
-        if (isActive) {
-          statusBadge.className = 'px-2 py-1 bg-green-100 text-green-800 rounded-full';
-          statusBadge.textContent = '활성화';
-        } else {
-          statusBadge.className = 'px-2 py-1 bg-red-100 text-red-800 rounded-full';
-          statusBadge.textContent = '비활성화';
-        }
+      updateUserInterface();
+      updateCurrentUser();
+    }
+
+    // 현재 사용자 정보 업데이트
+    function updateCurrentUser() {
+      const userElement = document.getElementById('currentUser');
+      if (currentUserRole === 'student') {
+        userElement.textContent = '수강생: 김수강';
+      } else {
+        userElement.textContent = '코치: 이코치';
       }
     }
 
-    // 응답 보기
-    function viewResponses(surveyId) {
-      const survey = surveyData[surveyId];
-      alert(`📊 ${survey.title} 응답 현황\n\n` +
-            `• 총 응답자: ${survey.responseCount}명\n` +
-            `• 설문 상태: ${survey.active ? '활성화' : '비활성화'}\n` +
-            `• 생성일: ${survey.createdDate}\n\n` +
-            `상세 응답 내용을 보려면 별도 페이지로 이동합니다.`);
+    // 인터페이스 업데이트
+    function updateUserInterface() {
+      const studentView = document.getElementById('studentView');
+      const coachView = document.getElementById('coachView');
       
-      // 실제 구현에서는 응답 상세 페이지로 이동
-      console.log(`응답 보기: ${surveyId}`);
+      if (currentUserRole === 'student') {
+        studentView.classList.remove('hidden');
+        coachView.classList.add('hidden');
+        
+        // 수강생의 설문 상태 확인
+        checkStudentSurveyStatus();
+      } else {
+        studentView.classList.add('hidden');
+        coachView.classList.remove('hidden');
+        
+        // 코치 뷰 초기화
+        initializeCoachView();
+      }
     }
 
-    // 결과 다운로드
-    function downloadResults(surveyId) {
-      const survey = surveyData[surveyId];
+    // 수강생 설문 상태 확인
+    function checkStudentSurveyStatus() {
+      const userResponse = surveyResponses.find(r => r.userId === currentUserId);
+      const statusElement = document.getElementById('studentStatus');
+      const formElement = document.getElementById('surveyForm');
+      const resultElement = document.getElementById('surveyResult');
       
-      if (survey.responseCount === 0) {
-        showNotification('응답자가 없어서 다운로드할 데이터가 없습니다.', 'warning');
+      if (userResponse) {
+        statusElement.textContent = '완료';
+        statusElement.className = 'text-sm text-green-600';
+        formElement.classList.add('hidden');
+        resultElement.classList.remove('hidden');
+        
+        // 제출된 데이터 표시
+        displaySubmittedData(userResponse);
+      } else {
+        statusElement.textContent = '미완료';
+        statusElement.className = 'text-sm text-orange-600';
+        formElement.classList.remove('hidden');
+        resultElement.classList.add('hidden');
+      }
+    }
+
+    // 설문 제출
+    function submitSurvey(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      const surveyData = {
+        userId: currentUserId,
+        name: formData.get('name') || document.getElementById('name').value,
+        email: formData.get('email') || document.getElementById('email').value,
+        gender: formData.get('gender'),
+        mbti: formData.get('mbti') || document.getElementById('mbti').value,
+        previousCourse: document.getElementById('previousCourse').value,
+        skillDescription: document.getElementById('skillDescription').value,
+        pythonPreLearning: formData.get('pythonPreLearning'),
+        aiExperience: formData.get('aiExperience'),
+        computerMajor: formData.get('computerMajor'),
+        careerDetails: document.getElementById('careerDetails').value,
+        languages: Array.from(document.querySelectorAll('input[name="languages"]:checked')).map(cb => cb.value),
+        techStack: Array.from(document.querySelectorAll('input[name="techStack"]:checked')).map(cb => cb.value),
+        recentRole: formData.get('recentRole'),
+        goalDescription: document.getElementById('goalDescription').value,
+        projectType: formData.get('projectType'),
+        learningFields: Array.from(document.querySelectorAll('input[name="learningFields"]:checked')).map(cb => cb.value),
+        desiredJob: document.getElementById('desiredJob').value,
+        courseQuestions: document.getElementById('courseQuestions').value,
+        submitDate: new Date().toISOString()
+      };
+      
+      // 필수 필드 검증
+      if (!surveyData.name || !surveyData.email || !surveyData.mbti || !surveyData.previousCourse || 
+          !surveyData.pythonPreLearning || !surveyData.aiExperience || !surveyData.computerMajor ||
+          !surveyData.recentRole || !surveyData.projectType || !surveyData.desiredJob) {
+        showNotification('필수 항목을 모두 입력해주세요.', 'error');
+        return;
+      }
+
+      // 체크박스 필수 검증
+      if (surveyData.languages.length === 0) {
+        showNotification('익숙한 프로그래밍 언어를 최소 1개 이상 선택해주세요.', 'error');
+        return;
+      }
+
+      if (surveyData.techStack.length === 0) {
+        showNotification('다룰 수 있는 기술 스택을 최소 1개 이상 선택해주세요.', 'error');
         return;
       }
       
-      // 실제 구현에서는 서버에서 파일 생성 및 다운로드
-      showNotification(`${survey.title} 결과를 다운로드 중입니다...`, 'info');
+      // 응답 저장
+      surveyResponses.push(surveyData);
+      localStorage.setItem('surveyResponses', JSON.stringify(surveyResponses));
       
-      // 시뮬레이션: 2초 후 다운로드 완료
+      showNotification('설문이 성공적으로 제출되었습니다!', 'success');
+      checkStudentSurveyStatus();
+    }
+
+    // 제출된 데이터 표시
+    function displaySubmittedData(data) {
+      const container = document.getElementById('submittedData');
+      container.innerHTML = `
+        <div class="space-y-2">
+          <h5 class="font-semibold text-gray-800 mb-2">기본 정보</h5>
+          <div><strong>이름:</strong> ${data.name}</div>
+          <div><strong>노션 이메일:</strong> ${data.email}</div>
+          <div><strong>성별:</strong> ${data.gender || '미선택'}</div>
+          <div><strong>MBTI:</strong> ${data.mbti}</div>
+          <div><strong>이전 수료 과정:</strong> ${data.previousCourse}</div>
+          
+          <h5 class="font-semibold text-gray-800 mt-4 mb-2">기술 역량 및 경험</h5>
+          <div><strong>파이썬 사전 수강:</strong> ${data.pythonPreLearning === 'completed' ? '수강' : '미수강'}</div>
+          <div><strong>AI 경험:</strong> ${getAiExperienceText(data.aiExperience)}</div>
+          <div><strong>컴퓨터 전공:</strong> ${getComputerMajorText(data.computerMajor)}</div>
+          <div><strong>익숙한 언어:</strong> ${data.languages.join(', ') || '없음'}</div>
+          <div><strong>기술 스택:</strong> ${data.techStack.join(', ') || '없음'}</div>
+          <div><strong>최근 역할:</strong> ${getRecentRoleText(data.recentRole)}</div>
+          
+          <h5 class="font-semibold text-gray-800 mt-4 mb-2">목표 및 관심사</h5>
+          <div><strong>선호 프로젝트:</strong> ${getProjectTypeText(data.projectType)}</div>
+          <div><strong>학습 희망 분야:</strong> ${data.learningFields.join(', ') || '없음'}</div>
+          <div><strong>희망직무:</strong> ${data.desiredJob}</div>
+          
+          <div class="mt-4"><strong>제출일:</strong> ${new Date(data.submitDate).toLocaleDateString('ko-KR')}</div>
+        </div>
+      `;
+    }
+
+    // 헬퍼 함수들
+    function getAiExperienceText(value) {
+      const options = {
+        'none': '전혀 모른다',
+        'chatgpt_basic': 'chatGPT가 익숙하다',
+        'chatgpt_dev': 'chatGPT, Claude, Cursor랑 개발한다',
+        'opensource': 'HuggingFace, Github 오픈소스 쓰는게 편하다',
+        'expert': '매우 익숙하다'
+      };
+      return options[value] || value;
+    }
+
+    function getComputerMajorText(value) {
+      const options = {
+        'major': '전공',
+        'non_major': '비전공',
+        'other': '기타'
+      };
+      return options[value] || value;
+    }
+
+    function getRecentRoleText(value) {
+      const options = {
+        'team_leader': '팀 리더',
+        'frontend_dev': '개발자 (프론트)',
+        'backend_dev': '개발자 (백엔드)',
+        'ai_dev': '개발자 (AI)',
+        'data_analyst': '데이터 분석',
+        'designer': '디자이너'
+      };
+      return options[value] || value;
+    }
+
+    function getProjectTypeText(value) {
+      const options = {
+        'lecture': '강의 형식',
+        'company': '기업 플젝',
+        'self_directed': '자율 플젝'
+      };
+      return options[value] || value;
+    }
+
+    // 코치 뷰 초기화
+    function initializeCoachView() {
+      updateTotalResponses();
+      showTab('overview');
+      loadResponsesTable();
+      initializeCharts();
+    }
+
+    // 총 응답자 수 업데이트
+    function updateTotalResponses() {
+      document.getElementById('totalResponses').textContent = mockData.length;
+    }
+
+    // 탭 전환
+    function showTab(tabName) {
+      // 모든 탭 숨기기
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+      });
+      
+      // 모든 탭 버튼 비활성화
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active', 'border-indigo-500', 'text-indigo-600');
+        btn.classList.add('border-transparent', 'text-gray-500');
+      });
+      
+      // 선택된 탭 표시
+      document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-${tabName}`);
+      activeBtn.classList.add('active', 'border-indigo-500', 'text-indigo-600');
+      activeBtn.classList.remove('border-transparent', 'text-gray-500');
+    }
+
+    // 응답 테이블 로드
+    function loadResponsesTable() {
+      const tbody = document.getElementById('responsesTableBody');
+      tbody.innerHTML = '';
+      
+      mockData.forEach((response, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${response.name}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.email}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.mbti}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${getAiExperienceText(response.aiExperience)}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.languages.slice(0,2).join(', ')}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${getRecentRoleText(response.recentRole)}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.desiredJob}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
+            <button onclick="viewDetailResponse(${index})" class="text-indigo-600 hover:text-indigo-900">상세보기</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // 상세 응답 보기
+    function viewDetailResponse(index) {
+      const response = mockData[index];
+      alert(`📋 ${response.name}님의 상세 응답\n\n` +
+            `기본 정보:\n` +
+            `- 이메일: ${response.email}\n` +
+            `- 성별: ${response.gender || '미선택'}\n` +
+            `- MBTI: ${response.mbti}\n` +
+            `- 이전 과정: ${response.previousCourse}\n\n` +
+            `기술 역량:\n` +
+            `- 파이썬 사전 수강: ${response.pythonPreLearning === 'completed' ? '수강' : '미수강'}\n` +
+            `- AI 경험: ${getAiExperienceText(response.aiExperience)}\n` +
+            `- 컴퓨터 전공: ${getComputerMajorText(response.computerMajor)}\n` +
+            `- 주요 언어: ${response.languages.join(', ')}\n` +
+            `- 기술 스택: ${response.techStack.join(', ')}\n` +
+            `- 최근 역할: ${getRecentRoleText(response.recentRole)}\n\n` +
+            `목표 및 관심사:\n` +
+            `- 선호 프로젝트: ${getProjectTypeText(response.projectType)}\n` +
+            `- 학습 희망 분야: ${response.learningFields.join(', ')}\n` +
+            `- 희망직무: ${response.desiredJob}`);
+    }
+
+    // 응답 검색
+    function searchResponses() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const filteredData = mockData.filter(response => 
+        response.name.toLowerCase().includes(searchTerm)
+      );
+      
+      const tbody = document.getElementById('responsesTableBody');
+      tbody.innerHTML = '';
+      
+      filteredData.forEach((response, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${response.name}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.email}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.mbti}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${getAiExperienceText(response.aiExperience)}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.languages.slice(0,2).join(', ')}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${getRecentRoleText(response.recentRole)}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.desiredJob}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
+            <button onclick="viewDetailResponse(${mockData.indexOf(response)})" class="text-indigo-600 hover:text-indigo-900">상세보기</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // 차트 초기화
+    function initializeCharts() {
       setTimeout(() => {
-        showNotification('다운로드가 완료되었습니다!', 'success');
-        console.log(`다운로드 완료: ${surveyId}_results.xlsx`);
+        createGenderChart();
+        createLanguageChart();
+        createMBTIChart();
+        createExperienceChart();
+        createSkillMatrix();
+      }, 100);
+    }
+
+    // 성별 분포 차트
+    function createGenderChart() {
+      const ctx = document.getElementById('genderChart').getContext('2d');
+      const genderCounts = mockData.reduce((acc, curr) => {
+        acc[curr.gender || '미선택'] = (acc[curr.gender || '미선택'] || 0) + 1;
+        return acc;
+      }, {});
+      
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(genderCounts),
+          datasets: [{
+            data: Object.values(genderCounts),
+            backgroundColor: ['#3B82F6', '#EF4444', '#6B7280']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+
+    // AI 경험 분포 차트
+    function createLanguageChart() {
+      const ctx = document.getElementById('languageChart').getContext('2d');
+      const aiExperienceCounts = mockData.reduce((acc, curr) => {
+        const experience = getAiExperienceText(curr.aiExperience);
+        acc[experience] = (acc[experience] || 0) + 1;
+        return acc;
+      }, {});
+      
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(aiExperienceCounts),
+          datasets: [{
+            label: '응답자 수',
+            data: Object.values(aiExperienceCounts),
+            backgroundColor: '#3B82F6'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 10
+                }
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // MBTI 분포 차트
+    function createMBTIChart() {
+      const ctx = document.getElementById('mbtiChart').getContext('2d');
+      const mbtiCounts = mockData.reduce((acc, curr) => {
+        acc[curr.mbti] = (acc[curr.mbti] || 0) + 1;
+        return acc;
+      }, {});
+      
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(mbtiCounts),
+          datasets: [{
+            label: '응답자 수',
+            data: Object.values(mbtiCounts),
+            backgroundColor: '#10B981'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // 희망직무 분포 차트
+    function createExperienceChart() {
+      const ctx = document.getElementById('experienceChart').getContext('2d');
+      const jobCounts = mockData.reduce((acc, curr) => {
+        const job = curr.desiredJob || '미선택';
+        acc[job] = (acc[job] || 0) + 1;
+        return acc;
+      }, {});
+      
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(jobCounts),
+          datasets: [{
+            data: Object.values(jobCounts),
+            backgroundColor: ['#8B5CF6', '#F59E0B', '#EF4444', '#10B981', '#EC4899', '#06B6D4', '#84CC16', '#F97316']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 10
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // 데이터 내보내기 함수들
+    function exportToExcel() {
+      showNotification('Excel 파일을 생성하고 있습니다...', 'info');
+      setTimeout(() => {
+        showNotification('Excel 파일 다운로드가 완료되었습니다!', 'success');
       }, 2000);
+    }
+
+    function exportToGoogleSheets() {
+      showNotification('Google Sheets와 연동하고 있습니다...', 'info');
+      setTimeout(() => {
+        showNotification('Google Sheets 연동이 완료되었습니다!', 'success');
+      }, 2000);
+    }
+
+    function generateReport() {
+      showNotification('통계 리포트를 생성하고 있습니다...', 'info');
+      setTimeout(() => {
+        showNotification('PDF 리포트 생성이 완료되었습니다!', 'success');
+      }, 3000);
+    }
+
+    // 목 데이터 생성
+    function generateMockData() {
+      // 로컬 스토리지에서 기존 응답 로드
+      const saved = localStorage.getItem('surveyResponses');
+      if (saved) {
+        surveyResponses = JSON.parse(saved);
+      }
+      
+      // 목 데이터 생성
+      const names = ['김철수', '이영희', '박민수', '정지현', '최동호', '한수연', '임태경', '오지영', '윤상혁', '배수진'];
+      const mbtiTypes = ['ENFP', 'INTJ', 'ESFJ', 'ISTP', 'ENFJ', 'INTP', 'ESFP', 'ISTJ', 'ENTP', 'ISFJ'];
+      const languages = ['Python', 'JavaScript', 'Java'];
+      const techStacks = ['frontend', 'backend', 'database', 'infrastructure', 'ai'];
+      const aiExperiences = ['none', 'chatgpt_basic', 'chatgpt_dev', 'opensource', 'expert'];
+      const computerMajors = ['major', 'non_major', 'other'];
+      const recentRoles = ['team_leader', 'frontend_dev', 'backend_dev', 'ai_dev', 'data_analyst', 'designer'];
+      const projectTypes = ['lecture', 'company', 'self_directed'];
+      const learningFields = ['backend', 'frontend', 'ai', 'data_analysis', 'infrastructure'];
+      const pythonPreLearning = ['completed', 'not_completed'];
+      const genders = ['male', 'female'];
+      const previousCourses = [
+        '하이미디어 강남점 자바풀스택 6개월/25.03.14',
+        '이젠아카데미 파이썬 데이터분석 3개월/25.01.15',
+        '그린컴퓨터학원 웹개발 4개월/24.12.10',
+        'KH정보교육원 AI개발자 6개월/25.02.20'
+      ];
+      const desiredJobs = [
+        'AI 개발자', 'Web 풀스택 개발자', '데이터 사이언티스트', 'ML 엔지니어', 
+        '백엔드 개발자', '프론트엔드 개발자', 'DevOps 엔지니어', 'AI 연구원'
+      ];
+      
+      mockData = [];
+      for (let i = 0; i < 30; i++) {
+        mockData.push({
+          userId: `student_${i.toString().padStart(3, '0')}`,
+          name: names[i % names.length] + (i > 9 ? i : ''),
+          email: `student${i}@notion.so`,
+          gender: genders[Math.floor(Math.random() * genders.length)],
+          mbti: mbtiTypes[Math.floor(Math.random() * mbtiTypes.length)],
+          previousCourse: previousCourses[Math.floor(Math.random() * previousCourses.length)],
+          skillDescription: `${Math.floor(Math.random() * 3) + 1}년차 개발 경험`,
+          pythonPreLearning: pythonPreLearning[Math.floor(Math.random() * pythonPreLearning.length)],
+          aiExperience: aiExperiences[Math.floor(Math.random() * aiExperiences.length)],
+          computerMajor: computerMajors[Math.floor(Math.random() * computerMajors.length)],
+          careerDetails: '웹 개발 프로젝트 및 AI 모델 구현 경험',
+          languages: languages.slice(0, Math.floor(Math.random() * 2) + 1),
+          techStack: techStacks.slice(0, Math.floor(Math.random() * 3) + 1),
+          recentRole: recentRoles[Math.floor(Math.random() * recentRoles.length)],
+          goalDescription: 'AI 기술을 활용한 실무 프로젝트 경험 쌓기',
+          projectType: projectTypes[Math.floor(Math.random() * projectTypes.length)],
+          learningFields: learningFields.slice(0, Math.floor(Math.random() * 3) + 1),
+          desiredJob: desiredJobs[Math.floor(Math.random() * desiredJobs.length)],
+          courseQuestions: '실무 프로젝트는 어떤 형태로 진행되나요?',
+          submitDate: new Date(2024, 0, Math.floor(Math.random() * 30) + 1).toISOString()
+        });
+      }
     }
 
     // 알림 메시지 표시
     function showNotification(message, type = 'info') {
-      // 기존 알림이 있으면 제거
       const existingNotification = document.querySelector('.notification');
       if (existingNotification) {
         existingNotification.remove();
       }
       
-      // 알림 색상 설정
       let bgColor, textColor;
       switch (type) {
         case 'success':
@@ -342,15 +1098,12 @@
           textColor = 'text-blue-800';
       }
       
-      // 알림 요소 생성
       const notification = document.createElement('div');
       notification.className = `notification fixed top-4 right-4 ${bgColor} ${textColor} px-6 py-4 rounded-lg shadow-lg z-50 transition-all duration-300`;
       notification.textContent = message;
       
-      // 페이지에 추가
       document.body.appendChild(notification);
       
-      // 3초 후 자동 제거
       setTimeout(() => {
         notification.style.opacity = '0';
         setTimeout(() => {
@@ -361,30 +1114,213 @@
       }, 3000);
     }
 
-    // 실시간 응답자 수 업데이트 시뮬레이션
-    function simulateResponseUpdates() {
-      setInterval(() => {
-        // 활성화된 설문의 응답자 수를 랜덤하게 증가
-        Object.keys(surveyData).forEach(surveyId => {
-          if (surveyData[surveyId].active && Math.random() < 0.1) { // 10% 확률
-            surveyData[surveyId].responseCount += Math.floor(Math.random() * 3) + 1;
-            const countElement = document.getElementById(`count-${surveyId}`);
-            if (countElement) {
-              countElement.textContent = surveyData[surveyId].responseCount;
+    // 필터링 기능
+    function applyFilters() {
+      const aiFilter = document.getElementById('filterAiExperience').value;
+      const majorFilter = document.getElementById('filterMajor').value;
+      const roleFilter = document.getElementById('filterRole').value;
+      const projectFilter = document.getElementById('filterProject').value;
+      
+      let filteredData = mockData.filter(response => {
+        return (!aiFilter || response.aiExperience === aiFilter) &&
+               (!majorFilter || response.computerMajor === majorFilter) &&
+               (!roleFilter || response.recentRole === roleFilter) &&
+               (!projectFilter || response.projectType === projectFilter);
+      });
+      
+      displayFilteredData(filteredData);
+    }
+
+    function resetFilters() {
+      document.getElementById('filterAiExperience').value = '';
+      document.getElementById('filterMajor').value = '';
+      document.getElementById('filterRole').value = '';
+      document.getElementById('filterProject').value = '';
+      loadResponsesTable();
+    }
+
+    function displayFilteredData(data) {
+      const tbody = document.getElementById('responsesTableBody');
+      tbody.innerHTML = '';
+      
+      data.forEach((response, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${response.name}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.email}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.mbti}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${getAiExperienceText(response.aiExperience)}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.languages.slice(0,2).join(', ')}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${getRecentRoleText(response.recentRole)}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${response.desiredJob}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm font-medium">
+            <button onclick="viewDetailResponse(${mockData.indexOf(response)})" class="text-indigo-600 hover:text-indigo-900">상세보기</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // 스킬 매트릭스 차트
+    function createSkillMatrix() {
+      const ctx = document.getElementById('skillMatrix');
+      if (!ctx) return;
+      
+      const skillData = {
+        labels: ['Python', 'JavaScript', 'Java', 'Frontend', 'Backend', 'AI', 'Database'],
+        datasets: [{
+          label: '보유 인원',
+          data: [
+            mockData.filter(r => r.languages.includes('Python')).length,
+            mockData.filter(r => r.languages.includes('JavaScript')).length,
+            mockData.filter(r => r.languages.includes('Java')).length,
+            mockData.filter(r => r.techStack.includes('frontend')).length,
+            mockData.filter(r => r.techStack.includes('backend')).length,
+            mockData.filter(r => r.techStack.includes('ai')).length,
+            mockData.filter(r => r.techStack.includes('database')).length
+          ],
+          backgroundColor: 'rgba(59, 130, 246, 0.6)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 1
+        }]
+      };
+
+      new Chart(ctx, {
+        type: 'radar',
+        data: skillData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            r: {
+              beginAtZero: true,
+              max: Math.ceil(mockData.length / 2),
+              ticks: {
+                stepSize: 1
+              }
             }
           }
+        }
+      });
+    }
+
+    // 팀 구성 생성
+    function generateTeams() {
+      const teamCount = parseInt(document.getElementById('teamCount').value);
+      const balanceAI = document.getElementById('balanceAI').checked;
+      const balanceRole = document.getElementById('balanceRole').checked;
+      const balanceMBTI = document.getElementById('balanceMBTI').checked;
+      const balanceMajor = document.getElementById('balanceMajor').checked;
+
+      // 팀 구성 알고리즘 (간단한 버전)
+      const teams = [];
+      const availableStudents = [...mockData];
+      const studentsPerTeam = Math.floor(availableStudents.length / teamCount);
+
+      for (let i = 0; i < teamCount; i++) {
+        teams.push({
+          id: i + 1,
+          name: `Team ${i + 1}`,
+          members: []
         });
-      }, 30000); // 30초마다 업데이트
+      }
+
+      // 균형 잡힌 팀 구성
+      while (availableStudents.length > 0) {
+        for (let i = 0; i < teamCount && availableStudents.length > 0; i++) {
+          if (teams[i].members.length < studentsPerTeam + (i < availableStudents.length % teamCount ? 1 : 0)) {
+            const studentIndex = selectBestStudent(teams[i], availableStudents, {
+              balanceAI, balanceRole, balanceMBTI, balanceMajor
+            });
+            teams[i].members.push(availableStudents.splice(studentIndex, 1)[0]);
+          }
+        }
+      }
+
+      displayTeams(teams);
+      document.getElementById('generatedTeams').classList.remove('hidden');
+      showNotification('팀 구성이 생성되었습니다!', 'success');
+    }
+
+    function selectBestStudent(team, availableStudents, criteria) {
+      // 간단한 선택 알고리즘 - 실제로는 더 복잡한 로직이 필요
+      let bestIndex = 0;
+      let bestScore = -1;
+
+      availableStudents.forEach((student, index) => {
+        let score = Math.random(); // 기본 랜덤 점수
+        
+        if (criteria.balanceAI) {
+          const aiLevels = team.members.map(m => m.aiExperience);
+          if (!aiLevels.includes(student.aiExperience)) score += 0.3;
+        }
+        
+        if (criteria.balanceRole) {
+          const roles = team.members.map(m => m.recentRole);
+          if (!roles.includes(student.recentRole)) score += 0.3;
+        }
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestIndex = index;
+        }
+      });
+
+      return bestIndex;
+    }
+
+    function displayTeams(teams) {
+      const container = document.getElementById('teamsContainer');
+      container.innerHTML = '';
+
+      teams.forEach(team => {
+        const teamCard = document.createElement('div');
+        teamCard.className = 'bg-white border-2 border-gray-200 rounded-lg p-4';
+        teamCard.innerHTML = `
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-lg font-bold text-gray-800">${team.name}</h4>
+            <span class="text-sm text-gray-500">${team.members.length}명</span>
+          </div>
+          <div class="space-y-2">
+            ${team.members.map(member => `
+              <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                <div>
+                  <div class="font-medium text-sm">${member.name}</div>
+                  <div class="text-xs text-gray-500">${getRecentRoleText(member.recentRole)}</div>
+                </div>
+                <div class="text-xs">
+                  <div>${getAiExperienceText(member.aiExperience).split(' ')[0]}</div>
+                  <div class="text-gray-400">${member.mbti}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="mt-3 pt-3 border-t border-gray-200">
+            <div class="text-xs text-gray-600">
+              <div>AI 경험: ${[...new Set(team.members.map(m => getAiExperienceText(m.aiExperience).split(' ')[0]))].join(', ')}</div>
+              <div>역할: ${[...new Set(team.members.map(m => getRecentRoleText(m.recentRole)))].join(', ')}</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(teamCard);
+      });
+    }
+
+    function exportTeams() {
+      showNotification('팀 구성 데이터를 내보내고 있습니다...', 'info');
+      setTimeout(() => {
+        showNotification('팀 구성 Excel 파일이 생성되었습니다!', 'success');
+      }, 1500);
     }
 
     function goBackToMain() {
       const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
       window.location.href = `main.html?cohort=${currentCohort}`;
-    }
-
-    function addSurvey() {
-      // 설문 추가 로직을 구현해야 합니다.
-      console.log('설문 추가 로직을 구현해야 합니다.');
     }
   </script>
 </body>

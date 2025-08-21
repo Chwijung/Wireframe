@@ -13,22 +13,220 @@
       scroll-behavior: smooth;
       position: relative;
     }
+    
     * {
       box-sizing: border-box;
     }
-    canvas {
-      max-width: 100% !important;
-      height: auto !important;
+    
+    .tab-button {
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 2px solid transparent;
     }
-    .chart-container {
-      position: relative;
-      height: 250px;
+    
+    .tab-button:hover {
+      opacity: 0.8;
+      transform: translateY(-1px);
+    }
+    
+    .tab-button.active {
+      border-color: currentColor;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .tab-content {
+      animation: fadeIn 0.3s ease-in-out;
+      min-height: 400px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .input-group {
+      margin-bottom: 16px;
+    }
+    
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #374151;
+    }
+    
+    .input-group input, .input-group select {
       width: 100%;
-      overflow: hidden;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+    
+    .input-group input:focus, .input-group select:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+    
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-primary {
+      background-color: #6366f1;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #5145db;
+    }
+    
+    .btn-success {
+      background-color: #10b981;
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background-color: #059669;
+    }
+    
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+    
+    .btn-warning {
+      background-color: #f59e0b;
+      color: white;
+    }
+    
+    .btn-warning:hover {
+      background-color: #d97706;
+    }
+    
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .status-active {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+    
+    .status-inactive {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+    
+    .status-pending {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+    
+    .grid-responsive {
+      display: grid;
+      gap: 16px;
+    }
+    
+    @media (min-width: 768px) {
+      .grid-responsive {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .grid-responsive {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    .team-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: #f9fafb;
+    }
+    
+    .team-member {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    
+    @keyframes fadeIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+    
+    .schedule-item {
+      transition: all 0.3s ease;
+    }
+    
+    .schedule-item:hover {
+      background-color: #f3f4f6;
+    }
+    
+    .form-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    
+    @media (min-width: 768px) {
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .form-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
   </style>
 </head>
-<body class="bg-gray-100" style="overflow-x: hidden;">
+<body class="bg-gray-100">
   <!-- 네비게이션 -->
   <nav class="bg-white shadow-lg mb-6">
     <div class="max-w-7xl mx-auto px-4">
@@ -47,424 +245,1238 @@
 
   <div class="max-w-7xl mx-auto px-4 space-y-8">
     
-    <!-- 시스템 상태 모니터링 -->
+    <!-- 운영자 관리 탭 네비게이션 -->
     <section class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold mb-6 flex items-center">
-        <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        시스템 상태 모니터링
-      </h2>
-      <div class="grid md:grid-cols-4 gap-6">
-        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-green-600 font-medium">시스템 상태</p>
-              <p class="text-2xl font-bold text-green-800">정상</p>
-            </div>
-            <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-          </div>
-        </div>
-        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-blue-600 font-medium">활성 사용자</p>
-              <p class="text-2xl font-bold text-blue-800">24</p>
-            </div>
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-            </svg>
-          </div>
-        </div>
-        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-yellow-600 font-medium">저장 용량</p>
-              <p class="text-2xl font-bold text-yellow-800">78%</p>
-            </div>
-            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
-            </svg>
-          </div>
-        </div>
-        <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-purple-600 font-medium">백업 상태</p>
-              <p class="text-2xl font-bold text-purple-800">최신</p>
-            </div>
-            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
-            </svg>
-          </div>
-        </div>
+      <div class="flex space-x-4 border-b border-gray-200 pb-4 mb-6">
+        <button onclick="showTab('system')" id="tab-system" class="tab-button active px-4 py-2 font-medium rounded-lg text-red-800 bg-red-100">
+          🔧 시스템 관리
+        </button>
+        <button onclick="showTab('users')" id="tab-users" class="tab-button px-4 py-2 font-medium rounded-lg text-purple-800 bg-purple-100">
+          👥 사용자 관리
+        </button>
+        <button onclick="showTab('cohorts')" id="tab-cohorts" class="tab-button px-4 py-2 font-medium rounded-lg text-blue-800 bg-blue-100">
+          📚 코호트 관리
+        </button>
+
       </div>
     </section>
 
-    <!-- 데이터 관리 -->
-    <section class="grid md:grid-cols-2 gap-8">
-      <!-- 백업 및 복원 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- 시스템 관리 -->
+    <section id="section-system" class="tab-content">
+      <!-- 백업·복원 관리 -->
+      <div class="card">
+        <h2 class="text-2xl font-bold mb-6 flex items-center text-gray-800">
+          <svg class="w-6 h-6 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path>
           </svg>
-          데이터 백업 관리
-        </h3>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p class="font-medium">전체 시스템 백업</p>
-              <p class="text-sm text-gray-600">마지막 백업: 2시간 전</p>
+          시스템 백업 및 복원
+        </h2>
+        
+        <!-- 시스템 상태 대시보드 -->
+        <div class="grid-responsive mb-8">
+          <div class="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-xl border border-green-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-green-700 font-medium mb-1">백업 상태</p>
+                <p class="text-3xl font-bold text-green-800 mb-1">최신</p>
+                <p class="text-sm text-green-600">마지막: 2시간 전</p>
+              </div>
+              <div class="bg-green-200 p-3 rounded-full">
+                <svg class="w-8 h-8 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                </svg>
+              </div>
             </div>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          </div>
+          
+          <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-blue-700 font-medium mb-1">시스템 상태</p>
+                <p class="text-3xl font-bold text-blue-800 mb-1">정상</p>
+                <p class="text-sm text-blue-600">24명 온라인</p>
+              </div>
+              <div class="bg-blue-200 p-3 rounded-full">
+                <div class="w-8 h-8 bg-blue-500 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-6 rounded-xl border border-yellow-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-yellow-700 font-medium mb-1">저장 용량</p>
+                <p class="text-3xl font-bold text-yellow-800 mb-1">78%</p>
+                <p class="text-sm text-yellow-600">3.2GB / 4.1GB</p>
+              </div>
+              <div class="bg-yellow-200 p-3 rounded-full">
+                <svg class="w-8 h-8 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 백업 관리 액션 -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-6 bg-gray-50 rounded-xl border border-gray-200 hover:bg-gray-100 transition-colors">
+            <div class="flex items-center space-x-4">
+              <div class="bg-blue-100 p-3 rounded-lg">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">전체 시스템 백업</p>
+                <p class="text-sm text-gray-600">데이터베이스, 파일 시스템, 설정 포함</p>
+              </div>
+            </div>
+            <button onclick="performBackup()" class="btn btn-primary">
               백업 실행
             </button>
           </div>
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p class="font-medium">Google Drive 동기화</p>
-              <p class="text-sm text-gray-600">자동 동기화 활성화됨</p>
+          
+          <div class="flex items-center justify-between p-6 bg-gray-50 rounded-xl border border-gray-200 hover:bg-gray-100 transition-colors">
+            <div class="flex items-center space-x-4">
+              <div class="bg-orange-100 p-3 rounded-lg">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">백업 파일 복원</p>
+                <p class="text-sm text-gray-600">백업 파일에서 시스템 복원 (주의 필요)</p>
+              </div>
             </div>
-            <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-              설정
-            </button>
-          </div>
-          <div class="border-t pt-4">
-            <p class="font-medium mb-2">백업 복원</p>
-            <input type="file" class="border p-2 rounded w-full mb-2" accept=".zip,.json">
-            <button class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 w-full">
-              백업 파일 복원
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 사용자 관리 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-          </svg>
-          사용자 권한 관리
-        </h3>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p class="font-medium">권회은 (운영자)</p>
-              <p class="text-sm text-gray-600">전체 관리자 권한</p>
+            <div class="flex gap-3">
+              <input type="file" id="restoreFile" class="hidden" accept=".zip,.json" onchange="handleRestoreFile()">
+              <button onclick="document.getElementById('restoreFile').click()" class="btn btn-warning">
+                파일 선택
+              </button>
             </div>
-            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">관리자</span>
-          </div>
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p class="font-medium">정기수 (멘토)</p>
-              <p class="text-sm text-gray-600">멘토링 및 과제 관리</p>
-            </div>
-            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">멘토</span>
-          </div>
-          <div class="border-t pt-4">
-            <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 w-full">
-              새 사용자 추가
-            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 시스템 설정 -->
-    <section class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold mb-6 flex items-center">
-        <svg class="w-6 h-6 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-        </svg>
-        시스템 설정
-      </h2>
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="space-y-4">
-          <h4 class="font-semibold text-gray-800">알림 설정</h4>
-          <div class="space-y-3">
-            <label class="flex items-center">
-              <input type="checkbox" checked class="mr-2">
-              <span class="text-sm">과제 마감 알림</span>
-            </label>
-            <label class="flex items-center">
-              <input type="checkbox" checked class="mr-2">
-              <span class="text-sm">멘토링 일지 미작성 알림</span>
-            </label>
-            <label class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <span class="text-sm">시스템 업데이트 알림</span>
-            </label>
-          </div>
+    <!-- 사용자 관리 -->
+    <section id="section-users" class="tab-content hidden">
+      <!-- 가입 승인/거절 -->
+      <div class="card">
+        <h2 class="text-xl font-bold mb-4 flex items-center text-gray-800">
+          <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          가입 승인 관리
+        </h2>
+        <div class="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-200">
+          <p class="text-sm text-blue-800 font-medium">
+            📋 승인 정책: 학생은 자동 승인 | 코치·멘토는 초대 코드 + 수동 승인
+          </p>
         </div>
         
         <div class="space-y-4">
-          <h4 class="font-semibold text-gray-800">외부 연동</h4>
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Google Drive</span>
-              <button class="bg-green-100 text-green-800 px-3 py-1 rounded text-sm">연결됨</button>
+          <div class="flex items-center justify-between p-5 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl border border-yellow-200">
+            <div class="flex items-center space-x-4">
+              <div class="bg-yellow-200 p-3 rounded-full">
+                <svg class="w-6 h-6 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">김강사 (코치)</p>
+                <p class="text-sm text-gray-600">초대 코드: COACH_2024_01 | 신청일: 2024-01-15</p>
+              </div>
             </div>
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Slack 알림</span>
-              <button class="bg-gray-100 text-gray-800 px-3 py-1 rounded text-sm">연결</button>
+            <div class="flex space-x-3">
+              <button onclick="approveUser('coach_kim')" class="btn btn-success text-sm">승인</button>
+              <button onclick="rejectUser('coach_kim')" class="btn btn-danger text-sm">거부</button>
             </div>
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Notion 연동</span>
-              <button class="bg-gray-100 text-gray-800 px-3 py-1 rounded text-sm">연결</button>
+          </div>
+          
+          <div class="flex items-center justify-between p-5 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl border border-yellow-200">
+            <div class="flex items-center space-x-4">
+              <div class="bg-yellow-200 p-3 rounded-full">
+                <svg class="w-6 h-6 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">박멘토 (멘토)</p>
+                <p class="text-sm text-gray-600">초대 코드: MENTOR_2024_03 | 신청일: 2024-01-14</p>
+              </div>
+            </div>
+            <div class="flex space-x-3">
+              <button onclick="approveUser('mentor_park')" class="btn btn-success text-sm">승인</button>
+              <button onclick="rejectUser('mentor_park')" class="btn btn-danger text-sm">거부</button>
             </div>
           </div>
         </div>
+      </div>
 
+
+
+
+      <!-- 계정 상태 관리 -->
+      <div class="card">
+        <h2 class="text-xl font-bold mb-4 flex items-center text-gray-800">
+          <svg class="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+          계정 상태 관리
+        </h2>
+        <div class="bg-purple-50 p-4 rounded-lg mb-6 border border-purple-200">
+          <p class="text-sm text-purple-800 font-medium">
+            ⚠️ 계정 비활성화는 즉시 적용되며, 사용자는 로그인할 수 없게 됩니다.
+          </p>
+        </div>
+        
         <div class="space-y-4">
-          <h4 class="font-semibold text-gray-800">시스템 관리</h4>
-          <div class="space-y-3">
-            <button class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 w-full text-sm">
-              캐시 초기화
-            </button>
-            <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full text-sm">
-              시스템 재시작
-            </button>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full text-sm">
-              데이터베이스 최적화
-            </button>
+          <div class="flex items-center justify-between p-5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
+            <div class="flex items-center space-x-4">
+              <div class="bg-blue-200 p-3 rounded-full">
+                <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">박참여 (학생)</p>
+                <p class="text-sm text-gray-600">AI-X 3기 1팀 | 최근 접속: 10분 전</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-3">
+              <span class="status-badge status-active">활성화</span>
+              <button onclick="deactivateUser('student_park')" class="btn btn-danger text-sm">비활성화</button>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between p-5 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border border-red-200">
+            <div class="flex items-center space-x-4">
+              <div class="bg-red-200 p-3 rounded-full">
+                <svg class="w-6 h-6 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">최학생 (학생)</p>
+                <p class="text-sm text-gray-600">AI-X 3기 | 계정 비활성화됨</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-3">
+              <span class="status-badge status-inactive">비활성화</span>
+              <button onclick="activateUser('student_choi')" class="btn btn-success text-sm">활성화</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 초대 코드 발급·만료 관리 -->
+      <div class="card">
+        <h2 class="text-xl font-bold mb-4 flex items-center text-gray-800">
+          <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m0 0a2 2 0 012 2m-2-2a2 2 0 00-2 2m2-2a2 2 0 002 2M9 5a2 2 0 012 2v0m0 0a2 2 0 012 2m-2-2a2 2 0 00-2 2m0 0V9a2 2 0 012-2m0 0V7a2 2 0 012-2"></path>
+          </svg>
+          초대 코드 관리
+        </h2>
+        
+        <!-- 코드 생성 폼 -->
+        <div class="bg-gray-50 p-6 rounded-xl mb-6 border border-gray-200">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">새 초대 코드 생성</h3>
+          <form class="form-grid" onsubmit="generateInviteCode(event)">
+            <div class="input-group">
+              <label>역할 선택</label>
+              <select id="inviteRole" required>
+                <option value="">선택하세요</option>
+                <option value="coach">코치</option>
+                <option value="mentor">멘토</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>유효기간</label>
+              <select id="inviteExpiry" required>
+                <option value="14" selected>14일</option>
+                <option value="30">30일</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>사용 횟수</label>
+              <input type="number" id="inviteLimit" value="1" min="1" max="5" required>
+            </div>
+            <div class="flex items-end">
+              <button type="submit" class="btn btn-success w-full">
+                📋 코드 생성
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 코드 현황 -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-semibold text-gray-800">활성 초대 코드</h3>
+          
+          <div class="flex items-center justify-between p-5 bg-gradient-to-r from-green-50 to-green-100 rounded-xl border border-green-200">
+            <div class="flex items-center space-x-4">
+              <div class="bg-green-200 p-3 rounded-full">
+                <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">COACH_2024_01</p>
+                <p class="text-sm text-gray-600">코치 초대 | 만료: 2024-01-24 | 사용 가능: 1회</p>
+              </div>
+            </div>
+            <div class="flex space-x-3">
+              <span class="status-badge status-active">활성화</span>
+              <button onclick="deactivateInvite('COACH_2024_01')" class="btn btn-danger text-sm">비활성화</button>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between p-5 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border border-red-200">
+            <div class="flex items-center space-x-4">
+              <div class="bg-red-200 p-3 rounded-full">
+                <svg class="w-6 h-6 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">MENTOR_2024_02</p>
+                <p class="text-sm text-gray-600">멘토 초대 | 만료: 2024-01-19</p>
+              </div>
+            </div>
+            <div class="flex space-x-3">
+              <span class="status-badge status-inactive">만료됨</span>
+              <button onclick="extendInvite('MENTOR_2024_02')" class="btn btn-success text-sm">연장</button>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 통계 및 리포트 -->
-    <section class="grid md:grid-cols-2 gap-8">
-      <!-- 사용 통계 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+    <!-- 코호트 관리 -->
+    <section id="section-cohorts" class="tab-content hidden">
+      <!-- 코호트 개설 -->
+      <div class="card">
+        <h2 class="text-xl font-bold mb-4 flex items-center text-gray-800">
+          <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
           </svg>
-          사용 통계
-        </h3>
-        <div class="chart-container">
-          <canvas id="usageChart"></canvas>
-        </div>
-        <div class="mt-4 grid grid-cols-2 gap-4 text-center">
-          <div>
-            <p class="text-2xl font-bold text-blue-600">156</p>
-            <p class="text-sm text-gray-600">총 과제 제출</p>
+          새 코호트 개설
+        </h2>
+        
+        <!-- 기본 정보 입력 -->
+        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+          <h3 class="text-base font-semibold mb-3 text-gray-800">기본 정보</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="input-group mb-0">
+              <label class="text-xs">과정명</label>
+              <input type="text" id="cohortName" placeholder="AI-X 4기" class="text-sm py-2" required>
+            </div>
+            <div class="input-group mb-0">
+              <label class="text-xs">시작일</label>
+              <input type="date" id="startDate" class="text-sm py-2" required onchange="generateSchedule()">
+            </div>
+            <div class="input-group mb-0">
+              <label class="text-xs">종료일</label>
+              <input type="date" id="endDate" class="text-sm py-2" required onchange="generateSchedule()">
+            </div>
+            <div class="input-group mb-0">
+              <label class="text-xs">멘토링 요일</label>
+              <select id="mentoringDay" class="text-sm py-2" required onchange="generateSchedule()">
+                <option value="">선택</option>
+                <option value="화,금">화, 금</option>
+                <option value="월,수">월, 수</option>
+                <option value="월,목">월, 목</option>
+                <option value="토">토</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <p class="text-2xl font-bold text-green-600">89%</p>
-            <p class="text-sm text-gray-600">평균 제출률</p>
-          </div>
         </div>
-      </div>
 
-      <!-- 로그 모니터링 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-          시스템 로그
-        </h3>
-        <div class="space-y-2 max-h-48 overflow-y-auto">
-          <div class="flex items-center justify-between p-2 bg-green-50 rounded text-sm">
-            <span>✅ AI-X 3기 백업 완료</span>
-            <span class="text-gray-500">14:32</span>
+        <!-- 자동 생성 일정 -->
+        <div class="bg-blue-50 p-5 rounded-lg border border-blue-200 mb-6">
+          <h3 class="text-base font-semibold mb-4 text-blue-800 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            📅 자동 생성 일정
+          </h3>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div data-schedule-item="orientationDate" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">OT</label>
+              <input type="date" id="orientationDate" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="deepLearning1Date" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">딥러닝 1일차</label>
+              <input type="date" id="deepLearning1Date" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="deepLearning2Date" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">딥러닝 2일차</label>
+              <input type="date" id="deepLearning2Date" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="courseInfoDate" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">과정 안내</label>
+              <input type="date" id="courseInfoDate" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="miniProjectDate" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">미니 발표</label>
+              <input type="date" id="miniProjectDate" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="careerLectureDate" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">취업 특강</label>
+              <input type="date" id="careerLectureDate" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="planningPresentationDate" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">기획 발표</label>
+              <input type="date" id="planningPresentationDate" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="collaborationLectureDate" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">협업 특강</label>
+              <input type="date" id="collaborationLectureDate" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="midPresentationDate" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">중간 발표</label>
+              <input type="date" id="midPresentationDate" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="industryLectureDate" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">현직자 특강</label>
+              <input type="date" id="industryLectureDate" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
+            <div data-schedule-item="finalPresentationDate" class="schedule-item">
+              <label class="block text-xs font-medium mb-1 text-gray-700">최종발표</label>
+              <input type="date" id="finalPresentationDate" class="w-full border border-blue-300 p-2 rounded text-xs bg-white" readonly>
+            </div>
           </div>
-          <div class="flex items-center justify-between p-2 bg-blue-50 rounded text-sm">
-            <span>ℹ️ 새 사용자 로그인: 배경관</span>
-            <span class="text-gray-500">13:45</span>
-          </div>
-          <div class="flex items-center justify-between p-2 bg-yellow-50 rounded text-sm">
-            <span>⚠️ 과제 제출 마감 알림 발송</span>
-            <span class="text-gray-500">12:00</span>
-          </div>
-          <div class="flex items-center justify-between p-2 bg-gray-50 rounded text-sm">
-            <span>📁 멘토링 일지 업데이트</span>
-            <span class="text-gray-500">11:23</span>
+          <div class="mt-3 text-xs text-blue-700 bg-blue-100 p-2 rounded">
+            💡 시작일, 종료일, 멘토링 요일을 입력하면 자동으로 일정이 생성됩니다.
           </div>
         </div>
-        <div class="mt-4">
-          <button class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full text-sm">
-            전체 로그 다운로드
+
+        <!-- 생성 버튼 -->
+        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+          <button type="submit" class="btn btn-success w-full py-3 text-base font-semibold">
+            🎯 새 코호트 생성하기
           </button>
+          <p class="text-xs text-green-700 mt-2 text-center">
+            모든 정보를 확인한 후 생성 버튼을 클릭하세요
+          </p>
         </div>
-      </div>
-    </section>
-
-    <!-- 새 과정 생성 -->
-    <section class="bg-white shadow rounded-xl p-4">
-      <h2 class="text-lg font-semibold mb-3">➕ 새 과정 생성</h2>
-      <form class="space-y-4" onsubmit="createNewCohort(event)">
-        <!-- 기본 정보 -->
-        <div class="grid md:grid-cols-4 gap-3">
-          <div>
-            <label class="block text-xs font-medium mb-1">과정명</label>
-            <input type="text" id="cohortName" placeholder="예: AI-X 4기" class="w-full border p-2 rounded text-sm" required>
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1">과정 시작일</label>
-            <input type="date" id="startDate" class="w-full border p-2 rounded text-sm" required onchange="generateSchedule()">
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1">과정 종료일</label>
-            <input type="date" id="endDate" class="w-full border p-2 rounded text-sm" required onchange="generateSchedule()">
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1">멘토링 요일</label>
-            <select id="mentoringDay" class="w-full border p-2 rounded text-sm" required onchange="generateSchedule()">
-              <option value="">선택하세요</option>
-              <option value="화,금">화, 금</option>
-              <option value="월,수">월, 수</option>
-              <option value="월,목">월, 목</option>
-              <option value="토">토</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- 자동 생성된 주요 일정 -->
-        <div class="border-t pt-4">
-          <h3 class="text-base font-semibold mb-3">📅 주요 일정</h3>
-          <div class="grid md:grid-cols-3 gap-3">
-            <div data-schedule-item="orientationDate">
-              <label class="block text-xs font-medium mb-1">OT (오리엔테이션)</label>
-              <input type="date" id="orientationDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="deepLearning1Date">
-              <label class="block text-xs font-medium mb-1">딥러닝 특강 1일차</label>
-              <input type="date" id="deepLearning1Date" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="deepLearning2Date">
-              <label class="block text-xs font-medium mb-1">딥러닝 특강 2일차</label>
-              <input type="date" id="deepLearning2Date" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="courseInfoDate">
-              <label class="block text-xs font-medium mb-1">과정 안내</label>
-              <input type="date" id="courseInfoDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="miniProjectDate">
-              <label class="block text-xs font-medium mb-1">미니 발표 (3회차)</label>
-              <input type="date" id="miniProjectDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="careerLectureDate">
-              <label class="block text-xs font-medium mb-1">취업 특강 (4회차)</label>
-              <input type="date" id="careerLectureDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="planningPresentationDate">
-              <label class="block text-xs font-medium mb-1">기획 발표 (5회차)</label>
-              <input type="date" id="planningPresentationDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="collaborationLectureDate">
-              <label class="block text-xs font-medium mb-1">협업 특강</label>
-              <input type="date" id="collaborationLectureDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="midPresentationDate">
-              <label class="block text-xs font-medium mb-1">중간 발표 (10회차)</label>
-              <input type="date" id="midPresentationDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="industryLectureDate">
-              <label class="block text-xs font-medium mb-1">현직자 특강</label>
-              <input type="date" id="industryLectureDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-            <div data-schedule-item="finalPresentationDate">
-              <label class="block text-xs font-medium mb-1">최종발표</label>
-              <input type="date" id="finalPresentationDate" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
-            </div>
-          </div>
-        </div>
-
-        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-semibold text-sm">
-          📝 과정 생성하기
-        </button>
       </form>
-    </section>
+      </div>
 
-    <!-- 리포트 생성 -->
-    <section class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold mb-6 flex items-center">
-        <svg class="w-6 h-6 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
-        </svg>
-        리포트 생성
-      </h2>
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="p-4 border rounded-lg">
-          <h4 class="font-semibold mb-2">과정별 진행 리포트</h4>
-          <p class="text-sm text-gray-600 mb-4">과제 제출률, 멘토링 현황 등 종합 리포트</p>
-          <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">
-            PDF 생성
-          </button>
+      <!-- 팀 관리 -->
+      <div class="card">
+        <h2 class="text-xl font-bold mb-4 flex items-center text-gray-800">
+          <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          팀 관리
+        </h2>
+        
+        <!-- 코호트 선택 및 기본 설정 -->
+        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-base font-semibold text-gray-800">코호트 기본 설정</h3>
+            <div class="flex gap-2">
+              <button id="editModeBtn" onclick="toggleEditMode()" class="btn btn-primary text-sm">
+                수정
+              </button>
+              <button id="saveModeBtn" onclick="saveAllChanges()" class="btn btn-success text-sm hidden">
+                저장
+              </button>
+              <button id="cancelModeBtn" onclick="cancelEditMode()" class="btn btn-danger text-sm hidden">
+                취소
+              </button>
+            </div>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="input-group mb-0">
+              <label class="text-sm">관리할 코호트 선택</label>
+              <select id="cohortSelect" onchange="loadCohortTeams()">
+                <option value="">코호트를 선택하세요</option>
+                <option value="ai-x-3" data-coach="coach_park">AI-X 3기</option>
+                <option value="ai-x-4" data-coach="coach_kim">AI-X 4기</option>
+              </select>
+            </div>
+            <div class="input-group mb-0">
+              <label class="text-sm">담당 코치</label>
+              <select id="cohortCoach" disabled>
+                <option value="">코치를 선택하세요</option>
+                <option value="coach_kim">김코치</option>
+                <option value="coach_lee">이코치</option>
+                <option value="coach_park">박코치</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="input-group mb-0">
+              <label class="text-sm">코호트 노션 API 키</label>
+              <div class="flex gap-2">
+                <input type="text" id="cohortNotionApi" value="secret_***********" class="flex-1" readonly>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="p-4 border rounded-lg">
-          <h4 class="font-semibold mb-2">멘토링 통계</h4>
-          <p class="text-sm text-gray-600 mb-4">멘토별 활동 현황 및 수강생 피드백</p>
-          <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">
-            Excel 생성
-          </button>
-        </div>
-        <div class="p-4 border rounded-lg">
-          <h4 class="font-semibold mb-2">시스템 사용 분석</h4>
-          <p class="text-sm text-gray-600 mb-4">기능별 사용률 및 개선점 분석</p>
-          <button class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 w-full">
-            데이터 추출
-          </button>
+        <div id="teamDetails" class="space-y-6">
+          <!-- 1팀 상세 -->
+          <div class="team-card">
+            <div class="flex justify-between items-center mb-4">
+              <h4 class="font-semibold text-lg text-gray-800">1팀 (AI-X 3기)</h4>
+              <div class="flex items-center space-x-3">
+                <div class="input-group mb-0 min-w-0">
+                  <label class="text-xs">담당 멘토</label>
+                  <select id="mentor_1" class="text-sm py-1" disabled onchange="assignMentor('team_1')">
+                    <option value="">멘토 선택</option>
+                    <option value="mentor_kim" selected>김멘토</option>
+                    <option value="mentor_park">박멘토</option>
+                    <option value="mentor_jung">정멘토</option>
+                    <option value="mentor_choi">최멘토</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+              <!-- 팀원 정보 -->
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">👥 팀원 정보</h5>
+                <div class="space-y-2">
+                  <div class="team-member">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      </div>
+                      <div class="flex gap-2">
+                        <input type="text" id="student1" value="박참여 - @park_chamdol" class="flex-1 text-sm" readonly>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="team-member">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <span class="text-xs font-semibold text-green-600">정</span>
+                      </div>
+                      <div class="flex gap-2">
+                        <input type="text" id="student2" value="정학습 - @jung_study" class="flex-1 text-sm" readonly>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="team-member">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                        <span class="text-xs font-semibold text-purple-600">최</span>
+                      </div>
+                      <div class="flex gap-2">
+                        <input type="text" id="student3" value="최도전 - @choi_challenge" class="flex-1 text-sm" readonly>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 팀 설정 -->
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">⚙️ 팀 설정</h5>
+                <div class="space-y-3">
+                  <div class="input-group mb-0">
+                    <label class="text-xs">데일리스크럼 DB ID</label>
+                    <div class="flex gap-2">
+                      <input type="text" id="dailyscrumId_1" value="team1_db_id" class="flex-1 text-sm" readonly>
+                    </div>
+                  </div>
+                  <div class="input-group mb-0">
+                    <label class="text-xs">GitHub Repository</label>
+                    <div class="flex gap-2">
+                      <input type="text" id="githubRepo_1" value="ai-x-team1/project" class="flex-1 text-sm" readonly>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2팀 상세 -->
+          <div class="team-card">
+            <div class="flex justify-between items-center mb-4">
+              <h4 class="font-semibold text-lg text-gray-800">2팀 (AI-X 3기)</h4>
+              <div class="flex items-center space-x-3">
+                <div class="input-group mb-0 min-w-0">
+                  <label class="text-xs">담당 멘토</label>
+                  <select id="mentor_2" class="text-sm py-1" disabled onchange="assignMentor('team_2')">
+                    <option value="">멘토 선택</option>
+                    <option value="mentor_kim">김멘토</option>
+                    <option value="mentor_park" selected>박멘토</option>
+                    <option value="mentor_jung">정멘토</option>
+                    <option value="mentor_choi">최멘토</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+              <!-- 팀원 정보 -->
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">👥 팀원 정보</h5>
+                <div class="space-y-2">
+                  <div class="team-member">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                        <span class="text-xs font-semibold text-orange-600">안</span>
+                      </div>
+                      <div class="flex gap-2">
+                        <input type="text" id="student4" value="안코딩 - @ahn_coding" class="flex-1 text-sm" readonly>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="team-member">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center">
+                        <span class="text-xs font-semibold text-cyan-600">윤</span>
+                      </div>
+                      <div class="flex gap-2">
+                        <input type="text" id="student5" value="윤개발 - @yoon_dev" class="flex-1 text-sm" readonly>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="team-member">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
+                        <span class="text-xs font-semibold text-pink-600">장</span>
+                      </div>
+                      <div class="flex gap-2">
+                        <input type="text" id="student6" value="장프론트 - @jang_frontend" class="flex-1 text-sm" readonly>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="team-member">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <span class="text-xs font-semibold text-indigo-600">조</span>
+                      </div>
+                      <div class="flex gap-2">
+                        <input type="text" id="student7" value="조백엔드 - @jo_backend" class="flex-1 text-sm" readonly>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 팀 설정 -->
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">⚙️ 팀 설정</h5>
+                <div class="space-y-3">
+                  <div class="input-group mb-0">
+                    <label class="text-xs">데일리스크럼 DB ID</label>
+                    <div class="flex gap-2">
+                      <input type="text" id="dailyscrumId_2" value="team2_db_id" class="flex-1 text-sm" readonly>
+                    </div>
+                  </div>
+                  <div class="input-group mb-0">
+                    <label class="text-xs">GitHub Repository</label>
+                    <div class="flex gap-2">
+                      <input type="text" id="githubRepo_2" value="ai-x-team2/project" class="flex-1 text-sm" readonly>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-
   </div>
 
   <script>
+    // 유틸리티 함수들
+    function showConfirmDialog(title, message, onConfirm) {
+      if (confirm(`${title}\n\n${message}`)) {
+        onConfirm();
+      }
+    }
+
+    function showSuccessMessage(message) {
+      alert(`✅ ${message}`);
+    }
+
+    function showErrorMessage(message) {
+      alert(`❌ ${message}`);
+    }
+
+    function showInfoMessage(message) {
+      alert(`ℹ️ ${message}`);
+    }
+
     function goBackToMain() {
       const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
       window.location.href = `main.html?cohort=${currentCohort}`;
     }
 
-    function saveSettings() {
-      // 현재 함수는 비어있습니다. 필요한 경우 구현할 수 있습니다.
+    // 탭 기능
+    function showTab(tabName) {
+      // 모든 탭 버튼의 active 클래스 제거
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+        btn.classList.remove('text-red-800', 'bg-red-100', 'text-purple-800', 'bg-purple-100', 'text-blue-800', 'bg-blue-100', 'text-green-800', 'bg-green-100');
+        btn.classList.add('text-gray-600', 'bg-gray-100');
+      });
+      
+      // 모든 탭 콘텐츠 숨기기
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      
+      // 선택된 탭 버튼 활성화
+      const activeTab = document.getElementById(`tab-${tabName}`);
+      activeTab.classList.add('active');
+      activeTab.classList.remove('text-gray-600', 'bg-gray-100');
+      
+      // 탭별 색상 설정
+      switch(tabName) {
+        case 'system':
+          activeTab.classList.add('text-red-800', 'bg-red-100');
+          break;
+        case 'users':
+          activeTab.classList.add('text-purple-800', 'bg-purple-100');
+          break;
+        case 'cohorts':
+          activeTab.classList.add('text-blue-800', 'bg-blue-100');
+          break;
+      }
+      
+      // 선택된 탭 콘텐츠 표시
+      document.getElementById(`section-${tabName}`).classList.remove('hidden');
     }
 
-    // 페이지 로드 후 차트 초기화
-    document.addEventListener('DOMContentLoaded', function() {
-      try {
-        // 사용 통계 차트
-        const ctx2 = document.getElementById('usageChart');
-        if (ctx2) {
-          const usageChart = new Chart(ctx2, {
-            type: 'line',
-            data: {
-              labels: ['1주', '2주', '3주', '4주', '5주', '6주'],
-              datasets: [{
-                label: '과제 제출',
-                data: [20, 25, 22, 28, 26, 30],
-                borderColor: '#3B82F6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                tension: 0.4
-              }, {
-                label: '멘토링 세션',
-                data: [15, 18, 20, 22, 19, 24],
-                borderColor: '#10B981',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                tension: 0.4
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          });
+    // 사용자 관리 함수들
+    function approveUser(userId) {
+      showConfirmDialog(
+        '사용자 승인',
+        '이 사용자를 승인하시겠습니까?',
+        () => {
+          console.log(`사용자 승인: ${userId}`);
+          showSuccessMessage('사용자가 승인되었습니다.');
+          // 실제 구현시 서버 호출 후 UI 업데이트
         }
-      } catch (error) {
-        console.error('차트 초기화 오류:', error);
+      );
+    }
+
+    function rejectUser(userId) {
+      showConfirmDialog(
+        '사용자 거부',
+        '이 사용자 신청을 거부하시겠습니까?\n거부된 사용자는 다시 신청할 수 없습니다.',
+        () => {
+          console.log(`사용자 거부: ${userId}`);
+          showSuccessMessage('사용자 신청이 거부되었습니다.');
+          // 실제 구현시 서버 호출 후 UI 업데이트
+        }
+      );
+    }
+
+    function activateUser(userId) {
+      showConfirmDialog(
+        '계정 활성화',
+        '이 계정을 활성화하시겠습니까?',
+        () => {
+          console.log(`계정 활성화: ${userId}`);
+          showSuccessMessage('계정이 활성화되었습니다.');
+          // 실제 구현시 서버 호출 후 UI 업데이트
+        }
+      );
+    }
+
+    function deactivateUser(userId) {
+      showConfirmDialog(
+        '계정 비활성화',
+        '이 계정을 비활성화하시겠습니까?\n비활성화된 사용자는 로그인할 수 없습니다.',
+        () => {
+          console.log(`계정 비활성화: ${userId}`);
+          showSuccessMessage('계정이 비활성화되었습니다.');
+          // 실제 구현시 서버 호출 후 UI 업데이트
+        }
+      );
+    }
+
+    // 시스템 관리 함수들
+    function performBackup() {
+      showConfirmDialog(
+        '시스템 백업',
+        '전체 시스템 백업을 실행하시겠습니까?\n백업 중에는 시스템 성능이 저하될 수 있습니다.',
+        () => {
+          console.log('시스템 백업 시작');
+          showInfoMessage('백업이 시작되었습니다. 완료되면 알림을 드리겠습니다.');
+          // 실제 구현시 백업 API 호출
+          
+          // 시뮬레이션: 3초 후 완료 메시지
+          setTimeout(() => {
+            showSuccessMessage('시스템 백업이 완료되었습니다.');
+          }, 3000);
+        }
+      );
+    }
+
+    function handleRestoreFile() {
+      const fileInput = document.getElementById('restoreFile');
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        showErrorMessage('복원할 파일을 선택해주세요.');
+        return;
       }
-    });
+
+      showConfirmDialog(
+        '시스템 복원',
+        `선택된 파일: ${file.name}\n\n⚠️ 주의: 복원 작업은 현재 데이터를 덮어씁니다.\n정말로 복원하시겠습니까?`,
+        () => {
+          console.log(`파일 복원 시작: ${file.name}`);
+          showInfoMessage('복원이 시작되었습니다. 완료될 때까지 기다려주세요.');
+          // 실제 구현시 복원 API 호출
+          
+          // 파일 입력 초기화
+          fileInput.value = '';
+        }
+      );
+    }
+
+    // 코호트 관리 함수들
+    function toggleRecruitment(cohortId) {
+      showConfirmDialog(
+        '모집 중단',
+        '모집을 중단하시겠습니까?\n중단된 모집은 다시 시작할 수 있습니다.',
+        () => {
+          console.log(`모집 중단: ${cohortId}`);
+          showSuccessMessage('모집이 중단되었습니다.');
+          // 실제 구현시 서버 호출
+        }
+      );
+    }
+
+    function startRecruitment(cohortId) {
+      showConfirmDialog(
+        '모집 시작',
+        '모집을 시작하시겠습니까?\n모집이 시작되면 학생들이 지원할 수 있습니다.',
+        () => {
+          console.log(`모집 시작: ${cohortId}`);
+          showSuccessMessage('모집이 시작되었습니다.');
+          // 실제 구현시 서버 호출
+        }
+      );
+    }
+
+    // 초대 관리 함수들
+    function generateInviteCode(event) {
+      event.preventDefault();
+      const role = document.getElementById('inviteRole').value;
+      const expiry = document.getElementById('inviteExpiry').value;
+      const limit = document.getElementById('inviteLimit').value;
+      
+      if (!role) {
+        showErrorMessage('역할을 선택해주세요.');
+        return;
+      }
+      
+      const code = `${role.toUpperCase()}_${new Date().getFullYear()}_${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + parseInt(expiry));
+      
+      console.log(`초대 코드 생성: ${code}, 역할: ${role}, 유효기간: ${expiry}일, 사용횟수: ${limit}회`);
+      showSuccessMessage(`초대 코드가 생성되었습니다!\n\n코드: ${code}\n만료일: ${expiryDate.toLocaleDateString()}\n사용 가능 횟수: ${limit}회`);
+      
+      // 폼 초기화
+      event.target.reset();
+      document.getElementById('inviteExpiry').value = '14';
+      document.getElementById('inviteLimit').value = '1';
+      
+      // 실제 구현시 서버에 저장 후 UI 업데이트
+    }
+
+    function deactivateInvite(code) {
+      showConfirmDialog(
+        '초대 코드 비활성화',
+        `초대 코드 "${code}"를 비활성화하시겠습니까?\n비활성화된 코드는 더 이상 사용할 수 없습니다.`,
+        () => {
+          console.log(`초대 코드 비활성화: ${code}`);
+          showSuccessMessage('초대 코드가 비활성화되었습니다.');
+          // 실제 구현시 서버 호출 후 UI 업데이트
+        }
+      );
+    }
+
+    function extendInvite(code) {
+      showConfirmDialog(
+        '초대 코드 연장',
+        `초대 코드 "${code}"의 유효기간을 14일 연장하시겠습니까?`,
+        () => {
+          console.log(`초대 코드 연장: ${code}`);
+          showSuccessMessage('초대 코드 유효기간이 14일 연장되었습니다.');
+          // 실제 구현시 서버 호출 후 UI 업데이트
+        }
+      );
+    }
+
+    // 전역 변수
+    let isEditMode = false;
+    let originalData = {};
+
+    // 팀 관리 함수들
+    function loadCohortTeams() {
+      const cohortSelect = document.getElementById('cohortSelect');
+      const cohortCoach = document.getElementById('cohortCoach');
+      const selectedOption = cohortSelect.options[cohortSelect.selectedIndex];
+      
+      if (cohortSelect.value) {
+        // 기본 코치 설정
+        const defaultCoach = selectedOption.getAttribute('data-coach');
+        if (defaultCoach) {
+          cohortCoach.value = defaultCoach;
+        }
+        
+        console.log(`코호트 팀 목록 로드: ${cohortSelect.value}`);
+        showSuccessMessage(`${selectedOption.text} 정보를 로드했습니다.`);
+        // 실제 구현시 서버에서 해당 코호트의 팀 정보를 로드
+      }
+    }
+
+    // 편집 모드 토글
+    function toggleEditMode() {
+      const cohortSelect = document.getElementById('cohortSelect');
+      
+      if (!cohortSelect.value) {
+        showErrorMessage('먼저 코호트를 선택해주세요.');
+        return;
+      }
+      
+      isEditMode = true;
+      
+      // 현재 데이터 백업
+      backupCurrentData();
+      
+      // UI 변경
+      document.getElementById('editModeBtn').classList.add('hidden');
+      document.getElementById('saveModeBtn').classList.remove('hidden');
+      document.getElementById('cancelModeBtn').classList.remove('hidden');
+      
+      // 모든 편집 가능한 요소 활성화
+      enableAllEditing();
+      
+      showInfoMessage('편집 모드가 활성화되었습니다. 수정 후 저장 버튼을 눌러주세요.');
+    }
+
+    // 현재 데이터 백업
+    function backupCurrentData() {
+      originalData = {
+        cohortCoach: document.getElementById('cohortCoach').value,
+        cohortNotionApi: document.getElementById('cohortNotionApi').value,
+        mentor_1: document.getElementById('mentor_1').value,
+        mentor_2: document.getElementById('mentor_2').value,
+        student1: document.getElementById('student1').value,
+        student2: document.getElementById('student2').value,
+        student3: document.getElementById('student3').value,
+        student4: document.getElementById('student4').value,
+        student5: document.getElementById('student5').value,
+        student6: document.getElementById('student6').value,
+        student7: document.getElementById('student7').value,
+        dailyscrumId_1: document.getElementById('dailyscrumId_1').value,
+        dailyscrumId_2: document.getElementById('dailyscrumId_2').value,
+        githubRepo_1: document.getElementById('githubRepo_1').value,
+        githubRepo_2: document.getElementById('githubRepo_2').value
+      };
+    }
+
+    // 모든 편집 요소 활성화
+    function enableAllEditing() {
+      // 코치 선택 활성화
+      document.getElementById('cohortCoach').disabled = false;
+      
+      // 노션 API 키 편집 가능
+      document.getElementById('cohortNotionApi').readOnly = false;
+      
+      // 멘토 선택 활성화
+      document.getElementById('mentor_1').disabled = false;
+      document.getElementById('mentor_2').disabled = false;
+      
+      // 팀원 정보 편집 가능
+      document.getElementById('student1').readOnly = false;
+      document.getElementById('student2').readOnly = false;
+      document.getElementById('student3').readOnly = false;
+      document.getElementById('student4').readOnly = false;
+      document.getElementById('student5').readOnly = false;
+      document.getElementById('student6').readOnly = false;
+      document.getElementById('student7').readOnly = false;
+      
+      // 팀 설정 입력 필드 활성화
+      document.getElementById('dailyscrumId_1').readOnly = false;
+      document.getElementById('dailyscrumId_2').readOnly = false;
+      document.getElementById('githubRepo_1').readOnly = false;
+      document.getElementById('githubRepo_2').readOnly = false;
+      
+      // 모든 편집 버튼 활성화
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.disabled = false;
+      });
+    }
+
+    // 모든 편집 요소 비활성화
+    function disableAllEditing() {
+      // 코치 선택 비활성화
+      document.getElementById('cohortCoach').disabled = true;
+      
+      // 노션 API 키 읽기 전용
+      document.getElementById('cohortNotionApi').readOnly = true;
+      
+      // 멘토 선택 비활성화
+      document.getElementById('mentor_1').disabled = true;
+      document.getElementById('mentor_2').disabled = true;
+      
+      // 팀원 정보 읽기 전용
+      document.getElementById('student1').readOnly = true;
+      document.getElementById('student2').readOnly = true;
+      document.getElementById('student3').readOnly = true;
+      document.getElementById('student4').readOnly = true;
+      document.getElementById('student5').readOnly = true;
+      document.getElementById('student6').readOnly = true;
+      document.getElementById('student7').readOnly = true;
+      
+      // 팀 설정 입력 필드 읽기 전용
+      document.getElementById('dailyscrumId_1').readOnly = true;
+      document.getElementById('dailyscrumId_2').readOnly = true;
+      document.getElementById('githubRepo_1').readOnly = true;
+      document.getElementById('githubRepo_2').readOnly = true;
+      
+      // 모든 편집 버튼 비활성화
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.disabled = true;
+      });
+    }
+
+    // 전체 저장
+    function saveAllChanges() {
+      showConfirmDialog(
+        '변경 사항 저장',
+        '모든 변경 사항을 저장하시겠습니까?',
+        () => {
+          const cohortSelect = document.getElementById('cohortSelect');
+          const cohortName = cohortSelect.options[cohortSelect.selectedIndex].text;
+          
+          // 변경된 데이터 수집
+          const updatedData = {
+            cohort: cohortSelect.value,
+            cohortCoach: document.getElementById('cohortCoach').value,
+            cohortNotionApi: document.getElementById('cohortNotionApi').value,
+            mentor_1: document.getElementById('mentor_1').value,
+            mentor_2: document.getElementById('mentor_2').value,
+            students: {
+              student1: document.getElementById('student1').value,
+              student2: document.getElementById('student2').value,
+              student3: document.getElementById('student3').value,
+              student4: document.getElementById('student4').value,
+              student5: document.getElementById('student5').value,
+              student6: document.getElementById('student6').value,
+              student7: document.getElementById('student7').value
+            },
+            dailyscrumId_1: document.getElementById('dailyscrumId_1').value,
+            dailyscrumId_2: document.getElementById('dailyscrumId_2').value,
+            githubRepo_1: document.getElementById('githubRepo_1').value,
+            githubRepo_2: document.getElementById('githubRepo_2').value
+          };
+          
+          console.log('저장할 데이터:', updatedData);
+          
+          // 편집 모드 종료
+          exitEditMode();
+          
+          showSuccessMessage(`${cohortName}의 모든 변경 사항이 저장되었습니다.`);
+          
+          // 실제 구현시 서버로 데이터 전송
+        }
+      );
+    }
+
+    // 편집 취소
+    function cancelEditMode() {
+      showConfirmDialog(
+        '편집 취소',
+        '변경 사항을 취소하고 원래 상태로 되돌리시겠습니까?',
+        () => {
+          // 원래 데이터로 복원
+          restoreOriginalData();
+          
+          // 편집 모드 종료
+          exitEditMode();
+          
+          showInfoMessage('변경 사항이 취소되었습니다.');
+        }
+      );
+    }
+
+    // 원래 데이터 복원
+    function restoreOriginalData() {
+      document.getElementById('cohortCoach').value = originalData.cohortCoach;
+      document.getElementById('cohortNotionApi').value = originalData.cohortNotionApi;
+      document.getElementById('mentor_1').value = originalData.mentor_1;
+      document.getElementById('mentor_2').value = originalData.mentor_2;
+      document.getElementById('student1').value = originalData.student1;
+      document.getElementById('student2').value = originalData.student2;
+      document.getElementById('student3').value = originalData.student3;
+      document.getElementById('student4').value = originalData.student4;
+      document.getElementById('student5').value = originalData.student5;
+      document.getElementById('student6').value = originalData.student6;
+      document.getElementById('student7').value = originalData.student7;
+      document.getElementById('dailyscrumId_1').value = originalData.dailyscrumId_1;
+      document.getElementById('dailyscrumId_2').value = originalData.dailyscrumId_2;
+      document.getElementById('githubRepo_1').value = originalData.githubRepo_1;
+      document.getElementById('githubRepo_2').value = originalData.githubRepo_2;
+    }
+
+    // 편집 모드 종료
+    function exitEditMode() {
+      isEditMode = false;
+      
+      // UI 원래대로
+      document.getElementById('editModeBtn').classList.remove('hidden');
+      document.getElementById('saveModeBtn').classList.add('hidden');
+      document.getElementById('cancelModeBtn').classList.add('hidden');
+      
+      // 모든 편집 요소 비활성화
+      disableAllEditing();
+    }
+
+    function addTeamMember(teamId) {
+      const emailInput = document.getElementById(`newMemberEmail_${teamId.split('_')[1]}`);
+      const email = emailInput.value.trim();
+      
+      if (!email) {
+        alert('이메일을 입력해주세요.');
+        return;
+      }
+      
+      if (!email.includes('@')) {
+        alert('올바른 이메일 형식을 입력해주세요.');
+        return;
+      }
+      
+      if (confirm(`${email}을 ${teamId}에 추가하시겠습니까?`)) {
+        console.log(`팀원 추가: ${teamId} - ${email}`);
+        alert('팀원이 추가되었습니다.');
+        emailInput.value = '';
+        // 실제 구현시 서버 호출 후 UI 업데이트
+      }
+    }
+
+    function removeTeamMember(teamId, memberId) {
+      if (confirm('이 팀원을 제거하시겠습니까?')) {
+        console.log(`팀원 제거: ${teamId} - ${memberId}`);
+        alert('팀원이 제거되었습니다.');
+        // 실제 구현시 서버 호출 후 UI 업데이트
+      }
+    }
+
+    // 코호트 노션 API 키 관리
+    function editCohortNotionApi() {
+      const currentApi = document.getElementById('cohortNotionApi').value;
+      const cohortSelect = document.getElementById('cohortSelect');
+      const cohortName = cohortSelect.options[cohortSelect.selectedIndex].text;
+      
+      if (!cohortSelect.value) {
+        showErrorMessage('먼저 코호트를 선택해주세요.');
+        return;
+      }
+      
+      const newApi = prompt(`${cohortName} 노션 API 키를 입력하세요:`, currentApi);
+      
+      if (newApi && newApi !== currentApi) {
+        showConfirmDialog(
+          '노션 API 키 변경',
+          `${cohortName}의 노션 API 키를 변경하시겠습니까?`,
+          () => {
+            document.getElementById('cohortNotionApi').value = newApi;
+            console.log(`코호트 노션 API 키 변경: ${cohortSelect.value} - ${newApi}`);
+            showSuccessMessage('코호트 노션 API 키가 변경되었습니다.');
+            // 실제 구현시 서버 호출
+          }
+        );
+      }
+    }
+
+    // 멘토 배정
+    function assignMentor(teamId) {
+      const mentorSelect = document.getElementById(`mentor_${teamId.split('_')[1]}`);
+      const mentorName = mentorSelect.options[mentorSelect.selectedIndex].text;
+      const teamName = teamId.split('_')[1] + '팀';
+      
+      if (mentorSelect.value) {
+        console.log(`멘토 배정: ${teamName} <- ${mentorName}`);
+        showSuccessMessage(`${teamName}에 ${mentorName}이 배정되었습니다.`);
+        // 실제 구현시 서버 호출
+      }
+    }
+
+    // 팀원 정보 수정
+    function editTeamMember(teamId, memberId) {
+      const memberElement = document.querySelector(`[onclick="editTeamMember('${teamId}', '${memberId}')"]`).parentElement.parentElement;
+      const currentInfo = memberElement.querySelector('span').textContent;
+      const [currentName, currentNotionId] = currentInfo.split(' - ');
+      
+      const newName = prompt('본명을 입력하세요:', currentName);
+      if (!newName) return;
+      
+      const newNotionId = prompt('노션 아이디를 입력하세요 (@포함):', currentNotionId);
+      if (!newNotionId) return;
+      
+      if (newName !== currentName || newNotionId !== currentNotionId) {
+        showConfirmDialog(
+          '팀원 정보 수정',
+          `${currentName}의 정보를 수정하시겠습니까?\n새 정보: ${newName} - ${newNotionId}`,
+          () => {
+            memberElement.querySelector('span').textContent = `${newName} - ${newNotionId}`;
+            // 이름 첫 글자로 아바타도 업데이트
+            const avatar = memberElement.querySelector('.rounded-full span');
+            avatar.textContent = newName.charAt(0);
+            
+            console.log(`팀원 정보 수정: ${teamId} - ${memberId} -> ${newName} - ${newNotionId}`);
+            showSuccessMessage('팀원 정보가 수정되었습니다.');
+            // 실제 구현시 서버 호출
+          }
+        );
+      }
+    }
+
+    function editDailyscrumId(teamId) {
+      const currentId = document.getElementById(`dailyscrumId_${teamId.split('_')[1]}`).value;
+      const newId = prompt('새 데일리스크럼 DB ID를 입력하세요:', currentId);
+      
+      if (newId && newId !== currentId) {
+        showConfirmDialog(
+          '데일리스크럼 DB ID 변경',
+          '데일리스크럼 DB ID를 변경하시겠습니까?',
+          () => {
+            document.getElementById(`dailyscrumId_${teamId.split('_')[1]}`).value = newId;
+            console.log(`데일리스크럼 DB ID 변경: ${teamId} - ${newId}`);
+            showSuccessMessage('데일리스크럼 DB ID가 변경되었습니다.');
+            // 실제 구현시 서버 호출
+          }
+        );
+      }
+    }
+
+    function editGithubRepo(teamId) {
+      const currentRepo = document.getElementById(`githubRepo_${teamId.split('_')[1]}`).value;
+      const newRepo = prompt('새 GitHub Repository를 입력하세요:', currentRepo);
+      
+      if (newRepo && newRepo !== currentRepo) {
+        if (confirm('GitHub Repository를 변경하시겠습니까?')) {
+          document.getElementById(`githubRepo_${teamId.split('_')[1]}`).value = newRepo;
+          console.log(`GitHub Repository 변경: ${teamId} - ${newRepo}`);
+          alert('GitHub Repository가 변경되었습니다.');
+          // 실제 구현시 서버 호출
+        }
+      }
+    }
+
+    function editTeam(teamId) {
+      alert(`${teamId} 상세 편집 모드로 전환합니다.`);
+      // 실제 구현시 모달이나 편집 모드 활성화
+    }
 
     /**
      * 날짜 유틸리티 함수들
