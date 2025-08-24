@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>산출물</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     html, body {
       overflow-x: hidden;
@@ -95,6 +95,44 @@
       window.location.href = `main.html?cohort=${currentCohort}`;
     }
 
+    // 과제별 산출물 정의 (유지보수용 상수)
+    const PROJECT_DELIVERABLES = {
+      'mini': {
+        title: '미니프로젝트',
+        files: [
+          { name: '코드 산출물 (GitHub 링크)', required: true, type: 'github', description: 'GitHub 링크가 담긴 TXT 또는 DOC 파일' },
+          { name: '시연영상', required: true, type: 'video', description: '프로젝트 기능을 보여주는 데모 영상' },
+          { name: 'PPT 발표자료', required: true, type: 'presentation', description: 'PDF 형태로 변환하여 제출' },
+          { name: '발표 영상', required: true, type: 'video', description: '프로젝트 발표회 영상' }
+        ]
+      },
+      'plan': {
+        title: '기획발표',
+        files: [
+          { name: 'PPT 발표자료', required: true, type: 'presentation', description: 'PDF 형태로 변환하여 제출' }
+        ]
+      },
+      'mid': {
+        title: '중간발표',
+        files: [
+          { name: 'PPT 발표자료', required: true, type: 'presentation', description: 'PDF 형태로 변환하여 제출' }
+        ]
+      },
+      'final': {
+        title: '최종발표',
+        files: [
+          { name: '코드 산출물 (GitHub 링크)', required: true, type: 'github', description: 'GitHub 링크가 담긴 TXT 또는 DOC 파일' },
+          { name: '시연영상', required: true, type: 'video', description: '프로젝트 기능을 보여주는 데모 영상' },
+          { name: 'PPT 발표자료', required: true, type: 'presentation', description: 'PDF 형태로 변환하여 제출' },
+          { name: '프로젝트 계획서', required: true, type: 'document', description: '프로젝트 개요, 목표, 일정 등을 포함한 계획서' },
+          { name: '요구사항 정의서', required: true, type: 'document', description: '기능적/비기능적 요구사항 정의 문서' },
+          { name: 'WBS', required: true, type: 'capture', description: 'GitHub Project 캡처본 또는 Notion WBS 캡처본' },
+          { name: '시스템/인프라 구성도', required: true, type: 'diagram', description: '아키텍처 다이어그램 및 인프라 설계도' },
+          { name: '협업이력', required: true, type: 'capture', description: '회의록 목록 캡처본' }
+        ]
+      }
+    };
+
     // 팀별 제출 현황 데이터
     const TEAMS_DATA = {
       teams: [
@@ -151,49 +189,39 @@
         },
         {
           id: 2,
-          title: '미니발표',
+          title: '미니프로젝트',
           type: 'presentation',
+          projectType: 'mini',
           status: 'completed',
           dueDate: '2025-07-22',
-          files: [
-            { name: 'PPT 발표자료', required: true },
-            { name: '발표영상', required: true }
-          ]
+          files: PROJECT_DELIVERABLES.mini.files
         },
         {
           id: 3,
           title: '기획발표',
           type: 'presentation',
+          projectType: 'plan',
           status: 'completed',
           dueDate: '2025-07-29',
-          files: [
-            { name: 'PPT 발표자료', required: true },
-            { name: '발표영상', required: false }
-          ]
+          files: PROJECT_DELIVERABLES.plan.files
         },
         {
           id: 4,
           title: '중간발표',
           type: 'presentation',
+          projectType: 'mid',
           status: 'pending',
           dueDate: '2025-08-15',
-          files: [
-            { name: 'PPT 발표자료', required: true },
-            { name: '발표영상', required: false }
-          ]
+          files: PROJECT_DELIVERABLES.mid.files
         },
         {
           id: 5,
           title: '최종발표',
           type: 'presentation',
+          projectType: 'final',
           status: 'upcoming',
           dueDate: '2025-09-04',
-          files: [
-            { name: 'PPT 발표자료', required: true },
-            { name: '최종보고서', required: true },
-            { name: '포트폴리오', required: true },
-            { name: '발표영상', required: true }
-          ]
+          files: PROJECT_DELIVERABLES.final.files
         }
       ]
     };
@@ -274,25 +302,15 @@
               
               if (submitted) {
                 // 파일 타입에 따른 첨부파일 생성
-                if (file.name.includes('PPT')) {
-                  attachments.push({
-                    name: `${team.name}_${task.title}_발표자료.pdf`,
-                    size: Math.floor(Math.random() * 5000) + 2000 + 'KB',
-                    uploadDate: new Date().toISOString().split('T')[0]
-                  });
-                } else if (file.name.includes('영상')) {
-                  attachments.push({
-                    name: `${team.name}_${task.title}_시연영상.mp4`,
-                    size: Math.floor(Math.random() * 50000) + 10000 + 'KB',
-                    uploadDate: new Date().toISOString().split('T')[0]
-                  });
-                } else {
-                  attachments.push({
-                    name: `${team.name}_${file.name}.pdf`,
-                    size: Math.floor(Math.random() * 3000) + 1000 + 'KB',
-                    uploadDate: new Date().toISOString().split('T')[0]
-                  });
-                }
+                const fileExtension = getFileExtensionByType(file.type || 'document');
+                const fileSize = getFileSizeByType(file.type || 'document');
+                
+                attachments.push({
+                  name: `${team.name}_${task.title}_${file.name.replace(/[^\w가-힣]/g, '_')}.${fileExtension}`,
+                  size: fileSize,
+                  uploadDate: new Date().toISOString().split('T')[0],
+                  type: file.type || 'document'
+                });
               }
               
               submissions[team.id][task.id][fileIndex] = {
@@ -313,7 +331,6 @@
     // 페이지 초기화
     document.addEventListener('DOMContentLoaded', function() {
       renderAllTeamTabs();
-      initCharts();
     });
 
     // 팀 탭 전환
@@ -563,6 +580,7 @@
                     }).join('') :
                     task.files.map((file, fileIndex) => {
                       const submission = taskSubmissions[fileIndex];
+                      const fileId = `${team.id}-${task.id}-${fileIndex}`;
                       return `
                         <div class="bg-gray-50 rounded p-3">
                           <div class="flex justify-between items-start mb-2">
@@ -574,6 +592,7 @@
                               ${submission?.submitted ? '✅ 제출완료' : task.status === 'pending' ? '❌ 미제출' : '⏳ 예정'}
                             </span>
                           </div>
+                          
                           ${submission?.submitted && submission.attachments.length > 0 ? `
                             <div class="mt-2">
                               <p class="text-xs text-gray-600 mb-1">첨부파일:</p>
@@ -589,7 +608,32 @@
                                 `).join('')}
                               </div>
                             </div>
-                          ` : ''}
+                          ` : `
+                            ${task.status === 'pending' || task.status === 'upcoming' ? `
+                              <div class="mt-3">
+                                <!-- 발표 과제 업로드 영역 -->
+                                <div id="dropzone-presentation-${fileId}" 
+                                     class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-orange-400 transition-colors"
+                                     onclick="triggerProjectFileInput('${fileId}', '${task.projectType}')"
+                                     ondrop="handleProjectDrop(event, '${fileId}', '${task.projectType}')"
+                                     ondragover="handleDragOver(event)"
+                                     ondragleave="handleDragLeave(event)">
+                                  <svg class="mx-auto h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                  </svg>
+                                  <p class="mt-2 text-sm font-medium text-gray-700">${file.name} 업로드</p>
+                                  <p class="text-xs text-gray-500 mt-1">${file.description || ''}</p>
+                                  <p class="text-xs text-gray-400">
+                                    ${getAcceptedFileTypesForProjectFile(file.type)}
+                                  </p>
+                                </div>
+                                <input type="file" id="fileInput-presentation-${fileId}" 
+                                       class="hidden" 
+                                       accept="${getFileAcceptPattern(file.type)}"
+                                       onchange="handleProjectFileSelect(event, '${fileId}', '${task.projectType}')">
+                              </div>
+                            ` : ''}
+                          `}
                         </div>
                       `;
                     }).join('')
@@ -709,6 +753,7 @@
       }, 2000);
     }
 
+    // 멘토링 파일 검증 함수
     function validateMentoringFiles(files) {
       if (files.length === 0) {
         return { isValid: false, message: '파일을 선택해주세요.' };
@@ -748,6 +793,148 @@
       }
 
       return { isValid: true, message: '파일 검증 완료' };
+    }
+
+    // 과제별 파일 검증 함수 (새로운 산출물 구조 기반)
+    function validateProjectFiles(files, projectType) {
+      const deliverable = PROJECT_DELIVERABLES[projectType];
+      if (!deliverable) {
+        return { isValid: false, message: '유효하지 않은 과제 유형입니다.' };
+      }
+
+      if (files.length === 0) {
+        return { isValid: false, message: '파일을 선택해주세요.' };
+      }
+
+      const requiredFiles = deliverable.files.filter(file => file.required);
+      if (files.length < requiredFiles.length) {
+        return { 
+          isValid: false, 
+          message: `필수 파일이 부족합니다. 최소 ${requiredFiles.length}개의 파일이 필요합니다. (현재: ${files.length}개)` 
+        };
+      }
+
+      // 파일 크기 검증 (타입별 제한)
+      const oversizedFiles = [];
+      files.forEach(file => {
+        const maxSize = getMaxFileSizeByExtension(file.name);
+        if (file.size > maxSize) {
+          oversizedFiles.push(`${file.name} (최대 ${formatFileSize(maxSize)})`);
+        }
+      });
+
+      if (oversizedFiles.length > 0) {
+        return { 
+          isValid: false, 
+          message: `파일 크기 초과: ${oversizedFiles.join(', ')}` 
+        };
+      }
+
+      return { isValid: true, message: '파일 검증 완료' };
+    }
+
+    // 파일 확장자별 최대 크기 반환
+    function getMaxFileSizeByExtension(fileName) {
+      const extension = fileName.split('.').pop().toLowerCase();
+      const sizeLimits = {
+        'txt': 1 * 1024 * 1024,        // 1MB
+        'doc': 10 * 1024 * 1024,       // 10MB
+        'docx': 10 * 1024 * 1024,      // 10MB
+        'pdf': 10 * 1024 * 1024,       // 10MB
+        'mp4': 100 * 1024 * 1024,      // 100MB
+        'avi': 100 * 1024 * 1024,      // 100MB
+        'mov': 100 * 1024 * 1024,      // 100MB
+        'jpg': 5 * 1024 * 1024,        // 5MB
+        'jpeg': 5 * 1024 * 1024,       // 5MB
+        'png': 5 * 1024 * 1024,        // 5MB
+        'gif': 5 * 1024 * 1024         // 5MB
+      };
+      return sizeLimits[extension] || 10 * 1024 * 1024; // 기본 10MB
+    }
+
+    // 파일 크기 포맷팅
+    function formatFileSize(bytes) {
+      if (bytes >= 1024 * 1024) {
+        return Math.round(bytes / (1024 * 1024)) + 'MB';
+      }
+      return Math.round(bytes / 1024) + 'KB';
+    }
+
+    // 발표 과제 업로드 관련 함수들
+    function getAcceptedFileTypesForProjectFile(fileType) {
+      const descriptions = {
+        'github': 'TXT, DOC, DOCX 파일',
+        'video': 'MP4, AVI, MOV 파일 (최대 100MB)',
+        'presentation': 'PDF, PPT, PPTX 파일',
+        'document': 'PDF, DOC, DOCX 파일',
+        'capture': 'PNG, JPG, JPEG 파일',
+        'diagram': 'PNG, JPG, JPEG, PDF 파일'
+      };
+      return descriptions[fileType] || 'PDF, DOC, DOCX 파일';
+    }
+
+    function getFileAcceptPattern(fileType) {
+      const patterns = {
+        'github': '.txt,.doc,.docx',
+        'video': '.mp4,.avi,.mov',
+        'presentation': '.pdf,.ppt,.pptx',
+        'document': '.pdf,.doc,.docx',
+        'capture': '.png,.jpg,.jpeg',
+        'diagram': '.png,.jpg,.jpeg,.pdf'
+      };
+      return patterns[fileType] || '.pdf,.doc,.docx';
+    }
+
+    function triggerProjectFileInput(fileId, projectType) {
+      const input = document.getElementById(`fileInput-presentation-${fileId}`);
+      input.click();
+    }
+
+    function handleProjectDrop(event, fileId, projectType) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('border-orange-400', 'bg-orange-50');
+      
+      const files = Array.from(event.dataTransfer.files);
+      processProjectFiles(files, fileId, projectType);
+    }
+
+    function handleProjectFileSelect(event, fileId, projectType) {
+      const files = Array.from(event.target.files);
+      processProjectFiles(files, fileId, projectType);
+    }
+
+    function processProjectFiles(files, fileId, projectType) {
+      // 파일 검증
+      const validationResult = validateProjectFiles(files, projectType);
+      
+      if (!validationResult.isValid) {
+        showNotification(validationResult.message, 'error');
+        return;
+      }
+
+      // 파일 업로드 처리
+      const dropzone = document.getElementById(`dropzone-presentation-${fileId}`);
+      
+      // 업로드 진행 상태 표시
+      dropzone.innerHTML = `
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-600 mx-auto"></div>
+          <p class="mt-2 text-sm text-gray-600">파일 업로드 중...</p>
+          <p class="text-xs text-gray-500">${files.length}개 파일 처리 중</p>
+        </div>
+      `;
+
+      // 시뮬레이션된 업로드 (실제로는 서버 업로드)
+      setTimeout(() => {
+        showNotification(`${files.length}개 파일이 성공적으로 업로드되었습니다!`, 'success');
+        
+        // 페이지 새로고침으로 업데이트된 데이터 표시
+        setTimeout(() => {
+          const parts = fileId.split('-');
+          const teamId = parseInt(parts[0]);
+          renderTeamContent(teamId);
+        }, 1000);
+      }, 2000);
     }
 
     // 미리보기 관련 함수들
@@ -831,7 +1018,7 @@
       document.getElementById(modalId).classList.remove('show');
     }
 
-    // 과제 유형별 필수 산출물 업데이트
+    // 과제 유형별 필수 산출물 업데이트 (변수 기반)
     function updateRequiredDeliverables() {
       const projectType = document.getElementById('projectType').value;
       const deliverablesList = document.getElementById('deliverables-list');
@@ -841,47 +1028,16 @@
         return;
       }
 
-      const deliverables = {
-        'mini': {
-          title: '미니프로젝트 산출물',
-          items: [
-            { name: 'GitHub 링크', required: true, description: '프로젝트 소스코드가 포함된 GitHub 저장소 URL' },
-            { name: '시연 영상', required: true, description: '프로젝트 기능을 보여주는 데모 영상' },
-            { name: '발표 PPT', required: true, description: 'PDF 형태로 변환하여 제출' }
-          ]
-        },
-        'plan': {
-          title: '기획발표 산출물',
-          items: [
-            { name: '발표 PPT', required: true, description: '프로젝트 기획 내용을 담은 발표 자료 (PDF 변환 필수)' }
-          ]
-        },
-        'mid': {
-          title: '중간발표 산출물',
-          items: [
-            { name: '발표 PPT', required: true, description: '중간 진행 상황을 담은 발표 자료 (PDF 변환 필수)' }
-          ]
-        },
-        'final': {
-          title: '최종발표 산출물',
-          items: [
-            { name: 'GitHub 링크', required: true, description: '최종 완성된 프로젝트 소스코드 저장소 URL' },
-            { name: '시연 영상', required: true, description: '최종 프로젝트의 완성된 기능을 보여주는 데모 영상' },
-            { name: '프로젝트 계획서', required: true, description: '프로젝트 개요, 목표, 일정 등을 포함한 계획서' },
-            { name: '요구사항 정의서', required: true, description: '기능적/비기능적 요구사항 정의 문서' },
-            { name: 'WBS', required: true, description: 'GitHub Project 캡처본 또는 Notion WBS 캡처본' },
-            { name: '시스템/인프라 구성도', required: true, description: '아키텍처 다이어그램 및 인프라 설계도' },
-            { name: '협업 이력', required: true, description: '팀 회의록 및 협업 과정 기록' },
-            { name: '발표 PPT', required: true, description: '팀원 소개 및 프로젝트 상세 설명 포함 (PDF 변환 필수)' }
-          ]
-        }
-      };
-
-      const selectedDeliverables = deliverables[projectType];
+      const selectedDeliverables = PROJECT_DELIVERABLES[projectType];
       
-      let html = `<h5 class="font-semibold text-gray-800 mb-3">${selectedDeliverables.title}</h5>`;
+      if (!selectedDeliverables) {
+        deliverablesList.innerHTML = '<p class="text-red-500 text-sm">유효하지 않은 과제 유형입니다.</p>';
+        return;
+      }
       
-      selectedDeliverables.items.forEach((item, index) => {
+      let html = `<h5 class="font-semibold text-gray-800 mb-3">${selectedDeliverables.title} 산출물</h5>`;
+      
+      selectedDeliverables.files.forEach((item, index) => {
         html += `
           <div class="flex items-start space-x-3 p-3 bg-white rounded border border-gray-200">
             <input type="checkbox" id="deliverable-${index}" ${item.required ? 'checked disabled' : ''} 
@@ -891,6 +1047,7 @@
                 ${item.name} ${item.required ? '(필수)' : '(선택)'}
               </label>
               <p class="text-sm text-gray-600 mt-1">${item.description}</p>
+              ${item.type ? `<span class="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded mt-1 inline-block">${getFileTypeLabel(item.type)}</span>` : ''}
             </div>
           </div>
         `;
@@ -899,91 +1056,53 @@
       deliverablesList.innerHTML = html;
     }
 
-    // 차트 초기화
-    function initCharts() {
-      // 발표별 참가 현황 차트
-      const submissionCtx = document.getElementById('submissionChart');
-      if (submissionCtx) {
-        new Chart(submissionCtx, {
-          type: 'bar',
-          data: {
-            labels: ['미니프로젝트', '기획발표', '중간발표', '최종발표'],
-            datasets: [{
-              label: '참가 팀 수',
-              data: [5, 5, 3, 0],
-              backgroundColor: ['#16A34A', '#16A34A', '#EAB308', '#9CA3AF'],
-              borderColor: ['#15803D', '#15803D', '#CA8A04', '#6B7280'],
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              y: {
-                beginAtZero: true,
-                max: 5,
-                ticks: {
-                  stepSize: 1
-                }
-              }
-            },
-            plugins: {
-              legend: {
-                display: false
-              }
-            }
-          }
-        });
-      }
-
-      // 팀별 발표 평가 차트
-      const teamCtx = document.getElementById('teamPerformanceChart');
-      if (teamCtx) {
-        new Chart(teamCtx, {
-          type: 'radar',
-          data: {
-            labels: ['1팀', '2팀', '3팀', '4팀', '5팀'],
-            datasets: [
-              {
-                label: '미니프로젝트',
-                data: [9.2, 8.8, 9.5, 8.7, 9.1],
-                borderColor: '#3B82F6',
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                pointBackgroundColor: '#3B82F6'
-              },
-              {
-                label: '기획발표',
-                data: [8.5, 9.3, 8.9, 9.0, 8.7],
-                borderColor: '#10B981',
-                backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                pointBackgroundColor: '#10B981'
-              },
-              {
-                label: '중간발표',
-                data: [0, 8.8, 9.2, 0, 0],
-                borderColor: '#F59E0B',
-                backgroundColor: 'rgba(245, 158, 11, 0.2)',
-                pointBackgroundColor: '#F59E0B'
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              r: {
-                beginAtZero: true,
-                max: 10,
-                ticks: {
-                  stepSize: 2
-                }
-              }
-            }
-          }
-        });
-      }
+    // 파일 타입 라벨 반환 함수
+    function getFileTypeLabel(type) {
+      const typeLabels = {
+        'github': 'GitHub 링크',
+        'video': '동영상',
+        'presentation': '발표자료',
+        'document': '문서',
+        'capture': '캡처본',
+        'diagram': '다이어그램'
+      };
+      return typeLabels[type] || '📎 파일';
     }
+
+    // 파일 타입별 확장자 반환 함수
+    function getFileExtensionByType(type) {
+      const extensions = {
+        'github': 'txt',
+        'video': 'mp4',
+        'presentation': 'pdf',
+        'document': 'pdf',
+        'capture': 'png',
+        'diagram': 'png'
+      };
+      return extensions[type] || 'pdf';
+    }
+
+    // 파일 타입별 파일 크기 반환 함수 (랜덤 범위)
+    function getFileSizeByType(type) {
+      const sizeRanges = {
+        'github': { min: 1, max: 5 }, // 1-5KB (텍스트 파일)
+        'video': { min: 10000, max: 100000 }, // 10-100MB (동영상)
+        'presentation': { min: 2000, max: 10000 }, // 2-10MB (PPT PDF)
+        'document': { min: 500, max: 5000 }, // 500KB-5MB (문서)
+        'capture': { min: 200, max: 2000 }, // 200KB-2MB (캡처본)
+        'diagram': { min: 500, max: 3000 } // 500KB-3MB (다이어그램)
+      };
+      
+      const range = sizeRanges[type] || { min: 500, max: 2000 };
+      const size = Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
+      
+      if (size >= 1000) {
+        return Math.floor(size / 1000) + '.' + Math.floor((size % 1000) / 100) + 'MB';
+      }
+      return size + 'KB';
+    }
+
+
   </script>
 </body>
 </html> 
