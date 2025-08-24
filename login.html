@@ -188,13 +188,13 @@
         // 사용자 타입에 따라 리다이렉트
         if (account.type === 'operator') {
           alert(`${account.name}님, 환영합니다!\n운영자 시스템으로 이동합니다.`);
-          window.location.href = 'index.html?authenticated=true';
+          window.location.href = 'cohort-list.html?authenticated=true';
         } else if (account.type === 'mentor') {
           alert(`${account.name}님, 환영합니다!\n멘토 대시보드로 이동합니다.`);
           window.location.href = 'mentor/index.html';
         } else if (account.type === 'coach') {
           alert(`${account.name}님, 환영합니다!\n코치 시스템으로 이동합니다.`);
-          window.location.href = 'index.html?authenticated=true';
+          window.location.href = 'cohort-list.html?authenticated=true';
         } else if (account.type === 'student') {
           alert(`${account.name}님, 환영합니다!\n학생 대시보드로 이동합니다.`);
           window.location.href = 'main.html';

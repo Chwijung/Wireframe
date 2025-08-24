@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-X 전체 과정 관리</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script>
+    // 페이지 로드 시 인증 상태 확인 및 스크롤 초기화
+    window.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isAuthenticated = urlParams.get('authenticated') === 'true';
+      const inviteCode = urlParams.get('invite') === 'true';
+      
+      // 첫 방문자인지 확인 (인증되지 않았고 초대 코드도 없고 로그인 의도도 없는 경우)
+      const fromLogin = urlParams.get('from') === 'login';
+      if (!isAuthenticated && !inviteCode && !fromLogin) {
+        // 첫 방문자는 preview.html로 리다이렉트
+        window.location.href = 'preview.html';
+        return;
+      }
+      
+      if (isAuthenticated) {
+        // main.html에서 온 경우 로그인 건너뛰기
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainContent').classList.remove('hidden');
+        document.getElementById('mainContent').classList.add('block');
+        
+        // 사용자 역할에 따른 UI 조정
+        checkUserRoleAndAdjustUI();
+      }
+      
+      // 초대 코드로 온 경우 멘토 회원가입 페이지로 리다이렉트
+      if (inviteCode) {
+        window.location.href = 'mentor-signup.html';
+        return;
+      }
+      
+      // 초기화 완료
+    });
+
+    function goToCohort(id) {
+      window.location.href = `main.html?cohort=${id}`;
+    }
+  </script>
+</head>
+<body class="bg-gray-100 p-6" style="overflow-x: hidden;">
+  
+  <!-- 로그인/회원가입 화면 -->
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-lg p-8 w-96 max-w-sm mx-4">
+    </div>
+  </div>
+
+  <!-- 메인 콘텐츠 (로그인 후 표시) -->
+  <div id="mainContent" class="max-w-5xl mx-auto space-y-8 hidden">
+
+    <!-- 헤더 -->
+    <header class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold mb-2">📁 AI-X 과정 관리</h1>
+        <p class="text-gray-600">운영자 권회은 님, 총 3개 과정을 관리 중입니다.</p>
+      </div>
+      <div class="flex gap-2">
+        <button id="adminToolBtn" onclick="window.location.href='admin.html'" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors">
+          ⚙️ 관리자 도구
+        </button>
+        <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">
+          로그아웃
+        </button>
+      </div>
+    </header>
+
+    <!-- 전체 과정 목록 -->
+    <section class="bg-white shadow rounded-xl p-6">
+      <h2 class="text-xl font-semibold mb-6">🗂 과정 목록</h2>
+      
+      <!-- 과정 카드 그리드 -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="border rounded-lg p-6 bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer" onclick="goToCohort('ai-x-3rd')">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-blue-800">AI-X 3기</h3>
+            <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">진행 중</span>
+          </div>
+          <div class="space-y-2 text-sm text-gray-700">
+            <p><span class="font-medium">운영 기간:</span> 2025.06.18 ~ 2025.08.30</p>
+            <p><span class="font-medium">수강생:</span> 24명</p>
+            <p><span class="font-medium">멘토:</span> 정기수, 배경관</p>
+          </div>
+          <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">
+            📋 과정 관리
+          </button>
+        </div>
+        
+        <div class="border rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onclick="goToCohort('ai-x-2nd')">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-gray-800">AI-X 2기</h3>
+            <span class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-semibold">종료</span>
+          </div>
+          <div class="space-y-2 text-sm text-gray-600">
+            <p><span class="font-medium">운영 기간:</span> 2025.03.01 ~ 2025.05.20</p>
+            <p><span class="font-medium">수강생:</span> 28명</p>
+            <p><span class="font-medium">멘토:</span> 정기수, 김민수</p>
+          </div>
+          <button class="mt-4 w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition-colors">
+            📚 아카이브 보기
+          </button>
+        </div>
+        
+        <div class="border rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onclick="goToCohort('ai-x-1st')">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-gray-800">AI-X 1기</h3>
+            <span class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-semibold">종료</span>
+          </div>
+          <div class="space-y-2 text-sm text-gray-600">
+            <p><span class="font-medium">운영 기간:</span> 2024.10.01 ~ 2024.12.15</p>
+            <p><span class="font-medium">수강생:</span> 22명</p>
+            <p><span class="font-medium">멘토:</span> 박지영, 이상훈</p>
+          </div>
+          <button class="mt-4 w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition-colors">
+            📚 아카이브 보기
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+
+  </div>
+
+  <script>
+    // 로그인 처리 (기존 사용자 + 새 사용자 지원)
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      const adminId = document.getElementById('adminId').value;
+      const adminPassword = document.getElementById('adminPassword').value;
+      
+      // 기본 관리자 계정 확인
+      if (adminId === 'admin' && adminPassword === 'admin123') {
+        loginSuccess('권회은', 'operator');
+        return;
+      }
+      
+      // 등록된 사용자 확인
+      const existingUsers = JSON.parse(localStorage.getItem('aixUsers') || '[]');
+      const user = existingUsers.find(u => u.id === adminId && u.password === adminPassword);
+      
+      if (user) {
+        loginSuccess(user.name, user.role);
+      } else {
+        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+      }
+    }
+
+    // 사용자 역할에 따른 UI 조정
+    function checkUserRoleAndAdjustUI() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
+      
+      if (currentUser.type) {
+        // 헤더에 사용자 이름 업데이트
+        const userGreeting = document.querySelector('header p');
+        if (userGreeting) {
+          const roleText = currentUser.type === 'operator' ? '운영자' : 
+                          currentUser.type === 'coach' ? '코치' : currentUser.type;
+          userGreeting.textContent = `${roleText} ${currentUser.name} 님, 안녕하세요:)`;
+        }
+        
+        // 코치인 경우 관리자 도구 버튼 숨기기
+        if (currentUser.type === 'coach') {
+          const adminBtn = document.getElementById('adminToolBtn');
+          if (adminBtn) {
+            adminBtn.style.display = 'none';
+          }
+        }
+      }
+    }
+
+    // 로그인 성공 처리
+    function loginSuccess(userName, userRole) {
+      // 사용자 정보를 세션에 저장
+      localStorage.setItem('currentUser', JSON.stringify({
+        name: userName,
+        role: userRole,
+        loginTime: new Date().toISOString()
+      }));
+      
+      // 로그인 화면 숨기고 메인 콘텐츠 표시
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('mainContent').classList.remove('hidden');
+      document.getElementById('mainContent').classList.add('block');
+      
+      // 사용자 역할에 따른 UI 조정
+      checkUserRoleAndAdjustUI();
+    }
+
+    // 로그아웃
+    function logout() {
+      if (confirm('로그아웃하시겠습니까?')) {
+        // 사용자 세션 정보 제거
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+        
+        // 로그인 페이지로 이동
+        window.location.href = 'login.html';
+      }
+    }
+  </script>
+</body>
+</html> 
