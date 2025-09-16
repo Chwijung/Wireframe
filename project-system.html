@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>발표 관리 시스템 - AI-X 통합 운영 시스템</title>
+  <title>산출물 관리 시스템 - AI-X 통합 운영 시스템</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     html, body {
       overflow-x: hidden;
@@ -20,7 +19,9 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.5);
+      background-color: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
     .modal.show {
       display: flex;
@@ -29,20 +30,25 @@
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-orange-50 to-red-100">
+<body class="bg-gradient-to-br from-indigo-50 to-purple-100">
   <!-- 헤더 -->
   <nav class="bg-white shadow-lg">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <button onclick="goBackToMain()" class="text-orange-600 hover:text-orange-700">
+          <button onclick="goBackToMain()" class="text-gray-600 hover:text-gray-800 transition-colors font-medium">
             ← 메인으로
           </button>
-          <h1 class="text-2xl font-bold text-orange-700">🎤 발표 관리 시스템</h1>
+          <h1 class="text-2xl font-bold text-gray-900">산출물 관리</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="text-gray-600">AI-X 3기 (5개 팀)</span>
-          <button onclick="openModal('newProjectModal')" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">새 발표 등록</button>
+          <span class="text-indigo-700">[코치] 김멘토</span>
+          <button 
+            onclick="downloadAllFiles()"
+            class="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <span>전체 다운로드</span>
+          </button>
         </div>
       </div>
     </div>
@@ -50,636 +56,605 @@
 
   <div class="max-w-7xl mx-auto p-6 space-y-8">
     <!-- 메인 헤더 -->
-    <header class="text-center py-6">
-      <h2 class="text-3xl font-bold text-gray-800 mb-2">발표 일정 및 산출물 관리</h2>
-      <p class="text-lg text-gray-600">운영진·코치를 위한 발표 운영 시스템</p>
-    </header>
-
-    <!-- 통계 카드 -->
-    <section class="grid md:grid-cols-4 gap-6">
-      <div class="bg-white rounded-xl shadow-lg p-6">
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-indigo-100">
         <div class="flex items-center justify-between">
+        <div class="flex items-center">
           <div>
-            <p class="text-sm text-gray-600">총 발표 수</p>
-            <p class="text-2xl font-bold text-gray-800">4</p>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">산출물 관리</h2>
+            <p class="text-gray-600">팀별 과제 및 프로젝트 산출물 제출 현황을 관리할 수 있습니다.</p>
           </div>
-          <div class="bg-blue-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-            </svg>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-gray-600">5개 팀</div>
           </div>
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-600">참여 팀 수</p>
-            <p class="text-2xl font-bold text-green-600">5</p>
-          </div>
-          <div class="bg-green-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
-          </div>
-        </div>
+    <!-- 팀별 제출 현황 관리 -->
+    <section class="bg-white rounded-xl shadow-lg border border-indigo-100">
+      <div class="flex justify-between items-center p-6 border-b border-indigo-200">
+        <h3 class="text-xl font-semibold text-gray-900">팀별 제출 현황 관리</h3>
       </div>
 
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-600">진행 중</p>
-            <p class="text-2xl font-bold text-yellow-600">2</p>
-          </div>
-          <div class="bg-yellow-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-600">완료율</p>
-            <p class="text-2xl font-bold text-purple-600">50%</p>
-          </div>
-          <div class="bg-purple-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 새 발표 등록 버튼 -->
-    <section class="text-right">
-      <button onclick="openModal('newProjectModal')" class="bg-orange-500 text-white px-8 py-3 rounded-lg hover:bg-orange-600 text-lg font-semibold shadow-lg transform hover:scale-105 transition-all">
-        ➕ 새 발표 등록
-      </button>
-    </section>
-
-    <!-- 발표 관리 탭 -->
-    <section class="bg-white rounded-xl shadow-lg">
-      <div class="border-b border-gray-200">
-        <nav class="flex space-x-8 px-6">
-          <button id="tab-active" class="py-4 px-1 border-b-2 border-orange-500 text-orange-600 font-semibold">진행중인 발표</button>
-          <button id="tab-completed" class="py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700">완료된 발표</button>
-          <button id="tab-upcoming" class="py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700">예정된 발표</button>
+      <!-- 팀 탭 네비게이션 -->
+      <div class="border-b border-indigo-200">
+        <nav class="flex space-x-8 px-6 overflow-x-auto">
+          <button id="team-1" onclick="selectTeam(1)" class="py-4 px-1 border-b-2 border-indigo-500 text-gray-600 font-semibold whitespace-nowrap">1팀 - 팀 알파</button>
+          <button id="team-2" onclick="selectTeam(2)" class="py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">2팀 - 팀 베타</button>
+          <button id="team-3" onclick="selectTeam(3)" class="py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">3팀 - 팀 감마</button>
+          <button id="team-4" onclick="selectTeam(4)" class="py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">4팀 - 팀 델타</button>
+          <button id="team-5" onclick="selectTeam(5)" class="py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">5팀 - 팀 이프실론</button>
         </nav>
       </div>
 
-      <!-- 진행중인 발표 -->
-      <div id="content-active" class="p-6">
-        <div class="flex justify-between items-center mb-6">
-          <h3 class="text-xl font-semibold">진행중인 발표 관리</h3>
-          <button onclick="openModal('newProjectModal')" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">새 발표 등록</button>
+      <!-- 선택된 팀 콘텐츠 -->
+      <div id="team-content" class="p-6">
+        <!-- 팀 정보 -->
+        <div class="mb-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900">팀 알파</h4>
+              <p class="text-sm text-gray-600">AI 기반 학습 도우미 플랫폼 개발</p>
+            </div>
+            <button
+              onclick="downloadTeamFiles(1)"
+              class="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              <span>팀 파일 다운로드</span>
+            </button>
+          </div>
         </div>
 
-        <div class="space-y-4">
-
-          <!-- 발표 카드 2: 중간발표 -->
-          <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-            <div class="flex justify-between items-start mb-3">
-              <div>
-                <h4 class="font-semibold text-lg">중간발표</h4>
-                <p class="text-sm text-gray-600">6주차 | 중간발표</p>
+        <!-- 과제별 제출 현황 -->
+        <div class="space-y-6">
+          <!-- 일반 과제들 -->
+          <!-- 과제 1: 미니프로젝트 -->
+          <div class="border border-indigo-200 rounded-xl shadow-sm bg-white">
+            <div class="p-6 border-b border-indigo-100">
+              <div class="flex justify-between items-center">
+                <div class="flex-1">
+                  <h5 class="text-lg font-semibold text-gray-900 mb-2">미니프로젝트 (프로젝트 워크스트림)</h5>
+                  <div class="flex items-center space-x-4 text-sm text-gray-600">
+                    <span>마감: 12월 20일</span>
+                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">D+5 (완료)</span>
               </div>
-              <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">진행중</span>
             </div>
-            <p class="text-gray-700 mb-4">팀 프로젝트 중간 진행 상황 발표 및 피드백</p>
-            
-            <!-- 필수 산출물 정보 -->
-            <div class="bg-yellow-50 rounded-lg p-3 mb-4">
-              <h5 class="text-sm font-semibold text-yellow-800 mb-2">📋 제출 대기중인 산출물</h5>
-              <div class="text-xs text-yellow-700 space-y-1">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-2">
-                    <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                    <span>발표 PPT (PDF)</span>
+                <div class="flex items-center space-x-4">
+                  <div class="text-right">
+                    <div class="text-lg font-medium text-green-600">100% 완료</div>
+                    <div class="text-sm text-gray-500">3/3 항목 (제출완료)</div>
                   </div>
-                  <span class="text-yellow-600">3/5 팀</span>
+                  <button onclick="toggleTask('task-1')" class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-indigo-100 transition-colors">
+                    <svg class="w-5 h-5 text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-green-600 h-2 rounded-full" style="width: 100%"></div>
                 </div>
               </div>
             </div>
             
-            <div class="grid md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <p class="text-sm text-gray-600">발표 예정일</p>
-                <p class="font-semibold text-yellow-600">2024년 1월 18일 14:00</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-600">산출물 제출</p>
-                <p class="font-semibold">3/5팀 제출완료</p>
-              </div>
+            <!-- 세부 내용 (확장 가능) -->
+            <div id="task-1" class="p-6 hidden">
+              <div class="space-y-4">
+                <div class="flex justify-between items-center mb-4">
+                  <h6 class="font-medium text-gray-800">필요 산출물</h6>
+                  <span class="text-sm text-gray-600">총 3개 항목</span>
             </div>
 
-            <div class="mb-4">
-              <div class="flex justify-between text-sm mb-1">
-                <span>준비 완료율</span>
-                <span>60%</span>
+                <div class="grid gap-4">
+                  <!-- GitHub 링크 -->
+                  <div class="border rounded-lg p-4 border-green-200 bg-green-50">
+                    <div class="flex justify-between items-start">
+                      <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-2">
+                          <span class="font-medium text-gray-800">GitHub 링크</span>
+                          <span class="text-xs text-gray-500">1개 이상 필요</span>
+                          <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">1개 제출완료</span>
+                        </div>
+                        <div class="space-y-2">
+                          <div class="flex items-center justify-between bg-white rounded p-2">
+                            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                              </svg>
+                              <span>github_repo_link.txt</span>
+                              <span class="text-gray-400">(1.2KB)</span>
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="bg-yellow-600 h-2 rounded-full" style="width: 60%"></div>
+                            <div class="flex items-center space-x-2">
+                              <button class="text-gray-600 hover:text-gray-800 text-sm">다운로드</button>
+                              <button class="text-red-600 hover:text-red-800 text-sm">삭제</button>
               </div>
             </div>
-
-            <div class="flex space-x-2 flex-wrap">
-              <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 mb-1">미제출팀 확인</button>
-              <button class="bg-yellow-600 text-white px-3 py-1 rounded text-sm hover:bg-yellow-700 mb-1">리마인더 발송</button>
-              <button class="bg-purple-600 text-white px-3 py-1 rounded text-sm hover:bg-purple-700 mb-1">발표 순서 관리</button>
-              <button class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 mb-1">일정 수정</button>
+                          <div class="text-xs text-gray-500 mt-2">제출일: 2024년 12월 18일</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 완료된 발표 (숨겨진 상태) -->
-      <div id="content-completed" class="p-6 hidden">
-        <h3 class="text-xl font-semibold mb-6">완료된 발표</h3>
-        <div class="space-y-4">
-          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-            <div class="flex justify-between items-start mb-3">
-              <div>
-                <h4 class="font-semibold text-lg">기획 발표</h4>
-                <p class="text-sm text-gray-600">3주차 | 기획발표</p>
+                  <!-- 시연 영상 -->
+                  <div class="border rounded-lg p-4 border-green-200 bg-green-50">
+                    <div class="flex justify-between items-start">
+                      <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-2">
+                          <span class="font-medium text-gray-800">시연 영상</span>
+                          <span class="text-xs text-gray-500">1개 이상 필요</span>
+                          <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">1개 제출완료</span>
               </div>
-              <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">완료</span>
+                        <div class="space-y-2">
+                          <div class="flex items-center justify-between bg-white rounded p-2">
+                            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                              </svg>
+                              <span>demo_video.mp4</span>
+                              <span class="text-gray-400">(25.7MB)</span>
             </div>
-            
-            <!-- 제출된 산출물 확인 -->
-            <div class="bg-green-50 rounded-lg p-3 mb-4">
-              <h5 class="text-sm font-semibold text-green-800 mb-2">✅ 제출 완료된 산출물</h5>
-              <div class="text-xs text-green-700">
                 <div class="flex items-center space-x-2">
-                  <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                  <span>발표 PPT (PDF)</span>
-                  <span class="text-green-600 ml-auto">5/5 팀</span>
+                              <button class="text-gray-600 hover:text-gray-800 text-sm">다운로드</button>
+                              <button class="text-red-600 hover:text-red-800 text-sm">삭제</button>
+                            </div>
+                          </div>
+                          <div class="text-xs text-gray-500 mt-2">제출일: 2024년 12월 19일</div>
+                        </div>
                 </div>
               </div>
             </div>
             
-            <div class="grid md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <p class="text-sm text-gray-600">발표일</p>
-                <p class="font-semibold">2025년 1월 20일 완료</p>
+                  <!-- PPT 발표자료 -->
+                  <div class="border rounded-lg p-4 border-green-200 bg-green-50">
+                    <div class="flex justify-between items-start">
+                      <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-2">
+                          <span class="font-medium text-gray-800">PPT 발표자료</span>
+                          <span class="text-xs text-gray-500">1개 이상 필요</span>
+                          <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">1개 제출완료</span>
+                        </div>
+                        <div class="space-y-2">
+                          <div class="flex items-center justify-between bg-white rounded p-2">
+                            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                              </svg>
+                              <span>miniproject_presentation.pdf</span>
+                              <span class="text-gray-400">(8.9MB)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                              <button class="text-gray-600 hover:text-gray-800 text-sm">다운로드</button>
+                              <button class="text-red-600 hover:text-red-800 text-sm">삭제</button>
+                            </div>
+                          </div>
+                          <div class="text-xs text-gray-500 mt-2">제출일: 2024년 12월 19일</div>
               </div>
-              <div>
-                <p class="text-sm text-gray-600">참가 현황</p>
-                <p class="font-semibold">5/5팀 참가완료</p>
               </div>
             </div>
-            
-            <div class="flex space-x-2">
-              <button class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">발표 평가 보기</button>
-              <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">산출물 아카이브</button>
-              <button class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">피드백 관리</button>
             </div>
           </div>
         </div>
-        <br><br>
-        <!-- 발표 카드 1: 미니프로젝트 발표 -->
-        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-          <div class="flex justify-between items-start mb-3">
-            <div>
-              <h4 class="font-semibold text-lg">미니프로젝트 발표</h4>
-              <p class="text-sm text-gray-600">2주차 | 미니프로젝트</p>
-            </div>
-            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">완료</span>
-          </div>
-          <p class="text-gray-700 mb-4">개인 또는 팀별 미니프로젝트 성과 발표</p>
-          
-          <!-- 필수 산출물 정보 -->
-          <div class="bg-green-50 rounded-lg p-3 mb-4">
-            <h5 class="text-sm font-semibold text-green-800 mb-2">✅ 제출 완료된 산출물</h5>
-            <div class="text-xs text-green-700 space-y-1">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                  <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                  <span>GitHub 링크</span>
-                </div>
-                <span class="text-green-600">5/5 팀</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                  <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                  <span>시연 영상</span>
-                </div>
-                <span class="text-green-600">5/5 팀</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                  <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                  <span>발표 PPT (PDF)</span>
-                </div>
-                <span class="text-green-600">5/5 팀</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="grid md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <p class="text-sm text-gray-600">발표일</p>
-              <p class="font-semibold">2024년 12월 20일 완료</p>
-            </div>
-            <div>
-              <p class="text-sm text-gray-600">참가 현황</p>
-              <p class="font-semibold">5/5팀 참가완료</p>
             </div>
           </div>
 
-          <div class="flex space-x-2 flex-wrap">
-            <button class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 mb-1">발표 평가 보기</button>
-            <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 mb-1">산출물 아카이브</button>
-            <button class="bg-purple-600 text-white px-3 py-1 rounded text-sm hover:bg-purple-700 mb-1">피드백 관리</button>
+          <!-- 과제 2: 최종프로젝트 -->
+          <div class="border border-indigo-200 rounded-xl shadow-sm bg-white">
+            <div class="p-6 border-b border-indigo-100">
+              <div class="flex justify-between items-center">
+                <div class="flex-1">
+                  <h5 class="text-lg font-semibold text-gray-900 mb-2">최종프로젝트 (프로젝트 워크스트림)</h5>
+                  <div class="flex items-center space-x-4 text-sm text-gray-600">
+                    <span>마감: 2월 15일</span>
+                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">D-30</span>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <div class="text-right">
+                    <div class="text-lg font-medium text-red-600">25% 완료</div>
+                    <div class="text-sm text-gray-500">2/8 항목 (미제출)</div>
+              </div>
+                  <button onclick="toggleTask('task-2')" class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-indigo-100 transition-colors">
+                    <svg class="w-5 h-5 text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-red-600 h-2 rounded-full" style="width: 25%"></div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 세부 내용 (접힌 상태) -->
+            <div id="task-2" class="p-6 hidden">
+              <div class="text-center py-8 text-gray-500">
+                최종프로젝트 산출물 요구사항을 확인하려면 클릭하세요.
+              </div>
+            </div>
+          </div>
+          
+          <!-- 멘토링 과제들 - 그리드 레이아웃 -->
+          <div class="border border-indigo-200 rounded-xl shadow-sm bg-white">
+            <div class="p-6 border-b border-indigo-100">
+              <h5 class="text-lg font-semibold text-gray-900 mb-2">멘토링 과제</h5>
+              <p class="text-sm text-gray-600">주차별 멘토링 제출 현황</p>
+            </div>
+            <div class="p-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- 멘토링 1주차 -->
+                <div class="border border-indigo-200 rounded-lg shadow-sm bg-white h-fit">
+                  <div class="p-4">
+                    <div class="flex flex-col space-y-3">
+                      <div class="flex items-center justify-between">
+                        <h6 class="text-sm font-semibold text-gray-900 truncate">1주차</h6>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">완료</span>
+                      </div>
+                      <div class="text-xs text-gray-600">마감: 1월 5일</div>
+                      <div class="space-y-2">
+                        <div class="text-sm font-medium text-center text-green-600">100% 완료</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                          <div class="bg-green-600 h-2 rounded-full" style="width: 100%"></div>
+            </div>
+                        <div class="text-xs text-gray-500 text-center">2/2 항목 (제출완료)</div>
+          </div>
+                      <button onclick="openModal('uploadModal')" class="w-full px-3 py-2 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">업로드</button>
           </div>
         </div>
       </div>
       
+                <!-- 멘토링 2주차 -->
+                <div class="border border-indigo-200 rounded-lg shadow-sm bg-white h-fit">
+                  <div class="p-4">
+                    <div class="flex flex-col space-y-3">
+                      <div class="flex items-center justify-between">
+                        <h6 class="text-sm font-semibold text-gray-900 truncate">2주차</h6>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">지남</span>
+              </div>
+                      <div class="text-xs text-gray-600">마감: 1월 12일</div>
+                      <div class="space-y-2">
+                        <div class="text-sm font-medium text-center text-red-600">50% 완료</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                          <div class="bg-red-600 h-2 rounded-full" style="width: 50%"></div>
+            </div>
+                        <div class="text-xs text-gray-500 text-center">1/2 항목 (미제출)</div>
+                </div>
+                      <button onclick="openModal('uploadModal')" class="w-full px-3 py-2 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">업로드</button>
+                </div>
+                </div>
+                </div>
 
-      <!-- 예정된 발표 (숨겨진 상태) -->
-      <div id="content-upcoming" class="p-6 hidden">
-        <h3 class="text-xl font-semibold mb-6">예정된 발표</h3>
-        <div class="space-y-4">
-          <div class="border border-gray-200 rounded-lg p-4 bg-blue-50">
-            <div class="flex justify-between items-start mb-3">
-              <div>
-                <h4 class="font-semibold text-lg">최종 발표</h4>
-                <p class="text-sm text-gray-600">8주차 | 최종발표</p>
-              </div>
-              <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">예정</span>
-            </div>
-            
-            <!-- 필수 산출물 정보 -->
-            <div class="bg-blue-50 rounded-lg p-3 mb-4">
-              <h5 class="text-sm font-semibold text-blue-800 mb-2">📋 준비해야 할 산출물 (8개)</h5>
-              <div class="text-xs text-blue-700 space-y-1 grid grid-cols-2 gap-1">
-                <div class="flex items-center space-x-1">
-                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                  <span>GitHub 링크</span>
+                <!-- 멘토링 3주차 -->
+                <div class="border border-indigo-200 rounded-lg shadow-sm bg-white h-fit">
+                  <div class="p-4">
+                    <div class="flex flex-col space-y-3">
+                      <div class="flex items-center justify-between">
+                        <h6 class="text-sm font-semibold text-gray-900 truncate">3주차</h6>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-gray-800">D-3</span>
                 </div>
-                <div class="flex items-center space-x-1">
-                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                  <span>시연 영상</span>
+                      <div class="text-xs text-gray-600">마감: 1월 19일</div>
+                      <div class="space-y-2">
+                        <div class="text-sm font-medium text-center text-red-600">0% 완료</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                          <div class="bg-red-600 h-2 rounded-full" style="width: 0%"></div>
                 </div>
-                <div class="flex items-center space-x-1">
-                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                  <span>프로젝트 계획서</span>
+                        <div class="text-xs text-gray-500 text-center">0/2 항목 (미제출)</div>
                 </div>
-                <div class="flex items-center space-x-1">
-                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                  <span>요구사항 정의서</span>
-                </div>
-                <div class="flex items-center space-x-1">
-                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                  <span>WBS</span>
-                </div>
-                <div class="flex items-center space-x-1">
-                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                  <span>시스템 구성도</span>
-                </div>
-                <div class="flex items-center space-x-1">
-                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                  <span>협업 이력</span>
-                </div>
-                <div class="flex items-center space-x-1">
-                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                  <span>발표 PPT</span>
+                      <button onclick="openModal('uploadModal')" class="w-full px-3 py-2 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">업로드</button>
                 </div>
               </div>
             </div>
             
-            <div class="grid md:grid-cols-2 gap-4">
-              <div>
-                <p class="text-sm text-gray-600">발표 예정일</p>
-                <p class="font-semibold">2024년 2월 15일</p>
+                <!-- 멘토링 4주차 -->
+                <div class="border border-indigo-200 rounded-lg shadow-sm bg-white h-fit">
+                  <div class="p-4">
+                    <div class="flex flex-col space-y-3">
+                      <div class="flex items-center justify-between">
+                        <h6 class="text-sm font-semibold text-gray-900 truncate">4주차</h6>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-gray-800">D-10</span>
+                      </div>
+                      <div class="text-xs text-gray-600">마감: 1월 26일</div>
+                      <div class="space-y-2">
+                        <div class="text-sm font-medium text-center text-red-600">0% 완료</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                          <div class="bg-red-600 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <div class="text-xs text-gray-500 text-center">0/2 항목 (미제출)</div>
+                      </div>
+                      <button onclick="openModal('uploadModal')" class="w-full px-3 py-2 text-xs bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">업로드</button>
+                    </div>
+                  </div>
               </div>
-              <div>
-                <p class="text-sm text-gray-600">산출물 마감</p>
-                <p class="font-semibold">2024년 2월 13일</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- 발표 현황 차트 -->
-    <section class="grid md:grid-cols-2 gap-6">
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-semibold mb-4">발표별 참가 현황</h3>
-        <div style="position: relative; height: 300px;">
-          <canvas id="submissionChart"></canvas>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-semibold mb-4">팀별 발표 평가</h3>
-        <div style="position: relative; height: 300px;">
-          <canvas id="teamPerformanceChart"></canvas>
-        </div>
-      </div>
     </section>
   </div>
 
-  <!-- 새 발표 등록 모달 -->
-  <div id="newProjectModal" class="modal">
-    <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-semibold">새 발표 등록</h3>
-        <button onclick="closeModal('newProjectModal')" class="text-gray-500 hover:text-gray-700">✕</button>
+  <!-- 파일 업로드 모달 -->
+  <div id="uploadModal" class="modal">
+    <div 
+      class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto mx-4"
+      onclick="event.stopPropagation()"
+    >
+      <!-- 모달 헤더 -->
+      <div class="bg-indigo-600 rounded-t-2xl p-6 text-white">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-bold">파일 업로드</h2>
+            <p class="text-gray-100 text-sm mt-1">팀 알파 - 미니프로젝트</p>
+            <p class="text-gray-100 text-xs mt-1">PPT 발표자료</p>
+          </div>
+          <button
+            onclick="closeModal('uploadModal')"
+            class="text-white hover:text-indigo-200 transition-colors p-2 hover:bg-white hover:bg-opacity-10 rounded-full"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        </div>
+        
+      <!-- 모달 본문 -->
+      <div class="p-6">
+        <!-- 파일 드롭존 -->
+        <div 
+          id="dropzone"
+          class="border-2 border-dashed border-indigo-300 rounded-xl p-8 text-center cursor-pointer transition-all duration-200 hover:border-indigo-400"
+          onclick="document.getElementById('file-input').click()"
+        >
+          <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+          <p class="text-lg font-medium text-gray-700 mb-2">파일을 드래그하거나 클릭하여 업로드</p>
+          <p class="text-sm text-gray-500">지원 형식: PDF, PPT, PPTX</p>
+          <p class="text-xs text-gray-400 mt-1">최대 크기: 20MB</p>
+        </div>
+
+        <input 
+          id="file-input"
+          type="file" 
+          class="hidden" 
+          accept=".pdf,.ppt,.pptx"
+          multiple
+        />
+
+        <!-- 선택된 파일 목록 -->
+        <div id="selected-files" class="mt-6 hidden">
+          <h4 class="text-sm font-medium text-gray-700 mb-3">선택된 파일 (1개)</h4>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between bg-gray-50 rounded-lg p-3">
+              <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0">
+                  <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+          </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium text-gray-900 truncate">miniproject_presentation.pdf</p>
+                  <p class="text-sm text-gray-500">8.9MB</p>
+            </div>
+          </div>
+              <button
+                class="flex-shrink-0 text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            </div>
+          </div>
+        </div>
+        
+      <!-- 모달 푸터 -->
+      <div class="bg-gray-50 rounded-b-2xl px-6 py-4 border-t border-gray-200">
+        <div class="flex justify-end space-x-3">
+          <button
+            onclick="closeModal('uploadModal')"
+            class="px-6 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+          >
+            취소
+          </button>
+          <button
+            onclick="uploadFiles()"
+            class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 flex items-center space-x-2"
+          >
+            <span>업로드 (1개 파일)</span>
+          </button>
+        </div>
       </div>
-      
-      <form class="space-y-6">
-        <!-- 기본 정보 -->
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">발표 제목</label>
-            <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="발표 제목을 입력하세요">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">발표 유형</label>
-            <select id="projectType" onchange="updateRequiredDeliverables()" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
-              <option value="">발표 유형을 선택하세요</option>
-              <option value="mini">미니프로젝트</option>
-              <option value="plan">기획발표</option>
-              <option value="mid">중간발표</option>
-              <option value="final">최종발표</option>
-            </select>
-          </div>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">주차</label>
-          <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
-            <option>2주차 - 미니프로젝트 발표</option>
-            <option>3주차 - 기획발표</option>
-            <option>6주차 - 중간발표</option>
-            <option>8주차 - 최종발표</option>
-          </select>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">발표 설명</label>
-          <textarea rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="발표에 대한 상세 설명을 입력하세요"></textarea>
-        </div>
-        
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">발표일</label>
-            <input type="datetime-local" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">산출물 제출 마감</label>
-            <input type="date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
-          </div>
-        </div>
-
-        <!-- 필수 산출물 설정 -->
-        <div id="deliverables-section" class="bg-gray-50 rounded-lg p-4">
-          <h4 class="text-lg font-semibold text-gray-800 mb-3">📋 필수 산출물 설정</h4>
-          <p class="text-sm text-gray-600 mb-4">과제 유형을 선택하면 자동으로 필수 산출물이 설정됩니다.</p>
-          
-          <div id="deliverables-list" class="space-y-3">
-            <!-- 동적으로 생성됨 -->
-          </div>
-        </div>
-
-        <!-- 제출 방식 및 품질 기준 -->
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">제출 방식</label>
-            <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
-              <option value="github">GitHub 링크 제출</option>
-              <option value="file">파일 업로드</option>
-              <option value="link">온라인 링크 제출</option>
-              <option value="combined">복합 제출 (GitHub + 파일)</option>
-            </select>
-          </div>
-
-          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h5 class="font-semibold text-blue-800 mb-2">📝 산출물 품질 기준</h5>
-            <div class="text-sm text-blue-700 space-y-1">
-              <p>• 모든 PPT 파일은 반드시 PDF로 변환하여 제출</p>
-              <p>• GitHub 저장소는 README.md 파일 필수 포함</p>
-              <p>• 명확하고 일관된 파일명 규칙 적용</p>
-              <p>• 팀별로 제출 (개인별 제출 금지)</p>
-              <p>• 최종 버전임을 명확히 표시</p>
-            </div>
-          </div>
-
-          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h5 class="font-semibold text-yellow-800 mb-2">⚠️ 주의사항</h5>
-            <div class="text-sm text-yellow-700 space-y-1">
-              <p>• 제출 기한 엄수 필수</p>
-              <p>• 모든 산출물의 백업본 보관</p>
-              <p>• PDF 변환 시 레이아웃 확인</p>
-              <p>• 시연 영상은 기능 중심으로 제작</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="flex space-x-4">
-          <button type="button" onclick="closeModal('newProjectModal')" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400">취소</button>
-          <button type="submit" class="flex-1 bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700">발표 등록</button>
-        </div>
-      </form>
     </div>
   </div>
 
   <script>
+    // 목업 데이터
+    const mockTeams = [
+      { id: 1, name: '팀 알파', description: 'AI 기반 학습 도우미 플랫폼 개발' },
+      { id: 2, name: '팀 베타', description: '실시간 코드 리뷰 시스템' },
+      { id: 3, name: '팀 감마', description: '스마트 일정 관리 서비스' },
+      { id: 4, name: '팀 델타', description: '커뮤니티 기반 Q&A 플랫폼' },
+      { id: 5, name: '팀 이프실론', description: 'IoT 기반 스마트홈 컨트롤러' }
+    ];
+
+    let currentTeam = 1;
+
     function goBackToMain() {
       const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
       window.location.href = `main.html?cohort=${currentCohort}`;
     }
 
-    // 탭 전환 기능
-    document.addEventListener('DOMContentLoaded', function() {
-      const tabs = ['active', 'completed', 'upcoming'];
+    // 팀 선택 기능
+    function selectTeam(teamId) {
+      currentTeam = teamId;
       
-      tabs.forEach(tab => {
-        document.getElementById(`tab-${tab}`).addEventListener('click', function() {
-          // 모든 탭 비활성화
-          tabs.forEach(t => {
-            document.getElementById(`tab-${t}`).className = 'py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700';
-            document.getElementById(`content-${t}`).classList.add('hidden');
-          });
-          
-          // 선택된 탭 활성화
-          this.className = 'py-4 px-1 border-b-2 border-orange-500 text-orange-600 font-semibold';
-          document.getElementById(`content-${tab}`).classList.remove('hidden');
-        });
-      });
+      // 모든 팀 탭 비활성화
+      for (let i = 1; i <= 5; i++) {
+        const teamTab = document.getElementById(`team-${i}`);
+        if (teamTab) {
+          teamTab.className = 'py-4 px-1 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap';
+        }
+      }
+      
+      // 선택된 팀 탭 활성화
+      const selectedTab = document.getElementById(`team-${teamId}`);
+      if (selectedTab) {
+        selectedTab.className = 'py-4 px-1 border-b-2 border-indigo-500 text-gray-600 font-semibold whitespace-nowrap';
+      }
 
-      // 차트 초기화
-      initCharts();
-    });
+      // 팀 정보 업데이트
+      updateTeamContent(teamId);
+    }
+
+    // 팀 콘텐츠 업데이트
+    function updateTeamContent(teamId) {
+      const team = mockTeams.find(t => t.id === teamId);
+      if (!team) return;
+
+      // 팀 정보 업데이트
+      const teamContent = document.getElementById('team-content');
+      if (teamContent) {
+        const teamInfoDiv = teamContent.querySelector('div > div > div');
+        if (teamInfoDiv) {
+          teamInfoDiv.innerHTML = `
+            <h4 class="text-lg font-semibold text-gray-900">${team.name}</h4>
+            <p class="text-sm text-gray-600">${team.description}</p>
+          `;
+        }
+      }
+      
+      // 다운로드 버튼 업데이트
+      const downloadBtn = teamContent.querySelector('button[onclick^="downloadTeamFiles"]');
+      if (downloadBtn) {
+        downloadBtn.setAttribute('onclick', `downloadTeamFiles(${teamId})`);
+      }
+    }
+
+    // 과제 토글 기능
+    function toggleTask(taskId) {
+      const taskElement = document.getElementById(taskId);
+      if (taskElement) {
+        taskElement.classList.toggle('hidden');
+        
+        // 화살표 회전
+        const button = document.querySelector(`[onclick="toggleTask('${taskId}')"]`);
+        if (button) {
+          const svg = button.querySelector('svg');
+          if (svg) {
+            svg.classList.toggle('rotate-180');
+          }
+        }
+      }
+    }
 
     // 모달 관리
     function openModal(modalId) {
-      document.getElementById(modalId).classList.add('show');
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add('show');
+      }
     }
 
     function closeModal(modalId) {
-      document.getElementById(modalId).classList.remove('show');
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.remove('show');
+      }
     }
 
-    // 과제 유형별 필수 산출물 업데이트
-    function updateRequiredDeliverables() {
-      const projectType = document.getElementById('projectType').value;
-      const deliverablesList = document.getElementById('deliverables-list');
-      
-      if (!projectType) {
-        deliverablesList.innerHTML = '<p class="text-gray-500 text-sm">과제 유형을 선택해주세요.</p>';
-        return;
-      }
+    // 파일 다운로드 기능
+    function downloadTeamFiles(teamId) {
+      const team = mockTeams.find(t => t.id === teamId);
+      showNotification(`${team.name} 파일 다운로드가 시작되었습니다.`, 'success');
+    }
 
-      const deliverables = {
-        'mini': {
-          title: '미니프로젝트 산출물',
-          items: [
-            { name: 'GitHub 링크', required: true, description: '프로젝트 소스코드가 포함된 GitHub 저장소 URL' },
-            { name: '시연 영상', required: true, description: '프로젝트 기능을 보여주는 데모 영상' },
-            { name: '발표 PPT', required: true, description: 'PDF 형태로 변환하여 제출' }
-          ]
-        },
-        'plan': {
-          title: '기획발표 산출물',
-          items: [
-            { name: '발표 PPT', required: true, description: '프로젝트 기획 내용을 담은 발표 자료 (PDF 변환 필수)' }
-          ]
-        },
-        'mid': {
-          title: '중간발표 산출물',
-          items: [
-            { name: '발표 PPT', required: true, description: '중간 진행 상황을 담은 발표 자료 (PDF 변환 필수)' }
-          ]
-        },
-        'final': {
-          title: '최종발표 산출물',
-          items: [
-            { name: 'GitHub 링크', required: true, description: '최종 완성된 프로젝트 소스코드 저장소 URL' },
-            { name: '시연 영상', required: true, description: '최종 프로젝트의 완성된 기능을 보여주는 데모 영상' },
-            { name: '프로젝트 계획서', required: true, description: '프로젝트 개요, 목표, 일정 등을 포함한 계획서' },
-            { name: '요구사항 정의서', required: true, description: '기능적/비기능적 요구사항 정의 문서' },
-            { name: 'WBS', required: true, description: 'GitHub Project 캡처본 또는 Notion WBS 캡처본' },
-            { name: '시스템/인프라 구성도', required: true, description: '아키텍처 다이어그램 및 인프라 설계도' },
-            { name: '협업 이력', required: true, description: '팀 회의록 및 협업 과정 기록' },
-            { name: '발표 PPT', required: true, description: '팀원 소개 및 프로젝트 상세 설명 포함 (PDF 변환 필수)' }
-          ]
-        }
+    function downloadAllFiles() {
+      showNotification('전체 파일 다운로드가 시작되었습니다.', 'success');
+    }
+
+    // 파일 업로드 기능
+    function uploadFiles() {
+      showNotification('파일이 성공적으로 업로드되었습니다!', 'success');
+      closeModal('uploadModal');
+    }
+
+    // 알림 표시
+    function showNotification(message, type = 'info') {
+      const colors = {
+        'success': 'bg-green-100 text-green-800 border-green-200',
+        'error': 'bg-red-100 text-red-800 border-red-200',
+        'info': 'bg-blue-100 text-gray-800 border-blue-200'
       };
+      
+      const notif = document.createElement('div');
+      notif.className = `fixed top-4 right-4 ${colors[type]} px-6 py-4 rounded-lg shadow-lg z-50 transition-all duration-300 border`;
+      notif.textContent = message;
+      document.body.appendChild(notif);
+      
+      setTimeout(() => {
+        notif.style.opacity = '0';
+        setTimeout(() => notif.remove(), 300);
+      }, 3000);
+    }
 
-      const selectedDeliverables = deliverables[projectType];
-      
-      let html = `<h5 class="font-semibold text-gray-800 mb-3">${selectedDeliverables.title}</h5>`;
-      
-      selectedDeliverables.items.forEach((item, index) => {
-        html += `
-          <div class="flex items-start space-x-3 p-3 bg-white rounded border border-gray-200">
-            <input type="checkbox" id="deliverable-${index}" ${item.required ? 'checked disabled' : ''} 
-                   class="mt-1 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
-            <div class="flex-1">
-              <label for="deliverable-${index}" class="font-medium text-gray-800 ${item.required ? 'text-red-600' : ''}">
-                ${item.name} ${item.required ? '(필수)' : '(선택)'}
-              </label>
-              <p class="text-sm text-gray-600 mt-1">${item.description}</p>
-            </div>
-          </div>
-        `;
+    // 드래그 앤 드롭 기능
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropzone = document.getElementById('dropzone');
+      const fileInput = document.getElementById('file-input');
+      const selectedFiles = document.getElementById('selected-files');
+
+      if (dropzone && fileInput) {
+        // 드래그 오버 이벤트
+        dropzone.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          dropzone.classList.add('border-indigo-400', 'bg-indigo-50');
+        });
+
+        dropzone.addEventListener('dragleave', function(e) {
+          e.preventDefault();
+          dropzone.classList.remove('border-indigo-400', 'bg-indigo-50');
+        });
+
+        // 드롭 이벤트
+        dropzone.addEventListener('drop', function(e) {
+          e.preventDefault();
+          dropzone.classList.remove('border-indigo-400', 'bg-indigo-50');
+          
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            selectedFiles.classList.remove('hidden');
+            showNotification(`${files.length}개 파일이 선택되었습니다.`, 'info');
+          }
+        });
+
+        // 파일 선택 이벤트
+        fileInput.addEventListener('change', function(e) {
+          if (e.target.files.length > 0) {
+            selectedFiles.classList.remove('hidden');
+            showNotification(`${e.target.files.length}개 파일이 선택되었습니다.`, 'info');
+          }
+        });
+      }
+
+      // 모달 외부 클릭 시 닫기
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal') && e.target.classList.contains('show')) {
+          const modalId = e.target.id;
+          closeModal(modalId);
+        }
       });
-
-      deliverablesList.innerHTML = html;
-    }
-
-    // 차트 초기화
-    function initCharts() {
-      // 발표별 참가 현황 차트
-      const submissionCtx = document.getElementById('submissionChart');
-      if (submissionCtx) {
-        new Chart(submissionCtx, {
-          type: 'bar',
-          data: {
-            labels: ['미니프로젝트', '기획발표', '중간발표', '최종발표'],
-            datasets: [{
-              label: '참가 팀 수',
-              data: [5, 5, 3, 0],
-              backgroundColor: ['#16A34A', '#16A34A', '#EAB308', '#9CA3AF'],
-              borderColor: ['#15803D', '#15803D', '#CA8A04', '#6B7280'],
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              y: {
-                beginAtZero: true,
-                max: 5,
-                ticks: {
-                  stepSize: 1
-                }
-              }
-            },
-            plugins: {
-              legend: {
-                display: false
-              }
-            }
-          }
-        });
-      }
-
-      // 팀별 발표 평가 차트
-      const teamCtx = document.getElementById('teamPerformanceChart');
-      if (teamCtx) {
-        new Chart(teamCtx, {
-          type: 'radar',
-          data: {
-            labels: ['1팀', '2팀', '3팀', '4팀', '5팀'],
-            datasets: [
-              {
-                label: '미니프로젝트',
-                data: [9.2, 8.8, 9.5, 8.7, 9.1],
-                borderColor: '#3B82F6',
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                pointBackgroundColor: '#3B82F6'
-              },
-              {
-                label: '기획발표',
-                data: [8.5, 9.3, 8.9, 9.0, 8.7],
-                borderColor: '#10B981',
-                backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                pointBackgroundColor: '#10B981'
-              },
-              {
-                label: '중간발표',
-                data: [0, 8.8, 9.2, 0, 0],
-                borderColor: '#F59E0B',
-                backgroundColor: 'rgba(245, 158, 11, 0.2)',
-                pointBackgroundColor: '#F59E0B'
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              r: {
-                beginAtZero: true,
-                max: 10,
-                ticks: {
-                  stepSize: 2
-                }
-              }
-            }
-          }
-        });
-      }
-    }
+    });
   </script>
 </body>
 </html> 
