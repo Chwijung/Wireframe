@@ -44,7 +44,6 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
             </svg>
           </div>
-          <span class="text-2xl font-bold text-blue-600" id="cohortNumber">3기</span>
         </div>
         <h3 class="font-semibold text-gray-800" id="cohortCardTitle">3기 과정 운영 관리</h3>
         <p class="text-sm text-gray-600 mt-2">과정 상세 관리, 진행률 모니터링, 일정 관리</p>
@@ -58,45 +57,41 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
             </svg>
           </div>
-          <span class="text-sm font-medium text-purple-600" id="studentCount">24명</span>
         </div>
         <h3 class="font-semibold text-gray-800">수강생·조 관리</h3>
         <p class="text-sm text-gray-600 mt-2">조 편성, 출석 관리, 수강생 현황</p>
       </div>
 
-      <!-- 과제 시스템 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='project-system.html'">
-        <div class="flex items-center justify-between mb-4">
-          <div class="bg-orange-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-          </div>
-          <span class="text-sm font-medium text-orange-600">7개 대기</span>
-        </div>
-        <h3 class="font-semibold text-gray-800">과제 출제·평가</h3>
-        <p class="text-sm text-gray-600 mt-2">과제 등록, 제출 현황, 채점 관리</p>
-      </div>
+            <!-- 수강생 설문 -->
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='student-onboarding.html'">
+              <div class="flex items-center justify-between mb-4">
+                <div class="bg-indigo-100 p-3 rounded-lg">
+                  <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6l2 2h6a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H9a2 2 0 00-2 2v0z"></path>
+                  </svg>
+                </div>
+                <div class="flex flex-col items-end">
+                </div>
+              </div>
+              <h3 class="font-semibold text-gray-800">수강생 설문</h3>
+              <p class="text-sm text-gray-600 mt-2">팀 편성용 정보 수집, 설문 관리</p>
+            </div>
     </section>
 
     <!-- 추가 기능 카드 -->
     <section class="grid md:grid-cols-3 gap-6">
-      <!-- 수강생 설문 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='student-onboarding.html'">
-        <div class="flex items-center justify-between mb-4">
-          <div class="bg-indigo-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6l2 2h6a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H9a2 2 0 00-2 2v0z"></path>
-            </svg>
-          </div>
-          <div class="flex flex-col items-end">
-            <span class="text-sm font-medium text-green-600">89.3% 완료</span>
-            <span class="text-xs text-orange-600">3명 미완료</span>
-          </div>
-        </div>
-        <h3 class="font-semibold text-gray-800">📝 수강생 설문</h3>
-        <p class="text-sm text-gray-600 mt-2">팀 편성용 정보 수집, 설문 관리</p>
-      </div>
+            <!-- 과제 시스템 -->
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='project-system.html'">
+              <div class="flex items-center justify-between mb-4">
+                <div class="bg-orange-100 p-3 rounded-lg">
+                  <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                </div>
+              </div>
+              <h3 class="font-semibold text-gray-800">산출물</h3>
+              <p class="text-sm text-gray-600 mt-2">산출물 관리</p>
+            </div>
 
       <!-- 회의 스크럼 -->
       <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='meeting-scrum.html'">
@@ -106,24 +101,24 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h2m0-8h10a2 2 0 012 2v6a2 2 0 01-2 2h-2m-6-4h.01M17 11h.01"></path>
             </svg>
           </div>
-          <span class="text-sm font-medium text-red-600">진행중</span>
         </div>
         <h3 class="font-semibold text-gray-800">스크럼/노션 대시보드</h3>
         <p class="text-sm text-gray-600 mt-2">데일리 스크럼, 진행 점검</p>
       </div>
 
-      <!-- 자료 보관소 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='file-storage.html'">
+      <!-- 상담일정 관리 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='counseling-schedule.html'">
         <div class="flex items-center justify-between mb-4">
-          <div class="bg-yellow-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2v2zm0 0h18v2a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path>
+          <div class="bg-teal-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
           </div>
-          <span class="text-sm font-medium text-yellow-600">23% 사용</span>
+          <div class="flex flex-col items-end">
+          </div>
         </div>
-        <h3 class="font-semibold text-gray-800">교육자료 관리</h3>
-        <p class="text-sm text-gray-600 mt-2">참고자료</p>
+        <h3 class="font-semibold text-gray-800">상담일정 관리</h3>
+        <p class="text-sm text-gray-600 mt-2">취업 상담, 개별 멘토링 스케줄 관리</p>
       </div>
     </section>
 
@@ -139,10 +134,9 @@
           </div>
           <div class="flex flex-col items-end">
             <span class="text-sm font-medium text-red-600">5개 미답변</span>
-            <span class="text-xs text-emerald-600">12개 총 문의</span>
           </div>
         </div>
-        <h3 class="font-semibold text-gray-800">💬 수강생 문의</h3>
+        <h3 class="font-semibold text-gray-800">수강생 문의</h3>
         <p class="text-sm text-gray-600 mt-2">학습 문의, 기술 지원, 상담 요청 관리</p>
       </div>
 
@@ -156,28 +150,23 @@
           </div>
           <div class="flex flex-col items-end">
             <span class="text-sm font-medium text-red-600">3개 미작성</span>
-            <span class="text-xs text-indigo-600">이번 주</span>
           </div>
         </div>
-        <h3 class="font-semibold text-gray-800">📋 멘토링 일지</h3>
+        <h3 class="font-semibold text-gray-800">멘토링 일지</h3>
         <p class="text-sm text-gray-600 mt-2">조별 멘토링 기록, 진행 상황 관리</p>
       </div>
 
-      <!-- 상담일정 관리 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='counseling-schedule.html'">
+      <!-- 자료 보관소 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='file-storage.html'">
         <div class="flex items-center justify-between mb-4">
-          <div class="bg-teal-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          <div class="bg-yellow-100 p-3 rounded-lg">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2v2zm0 0h18v2a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path>
             </svg>
           </div>
-          <div class="flex flex-col items-end">
-            <span class="text-sm font-medium text-teal-600">15개 예정</span>
-            <span class="text-xs text-orange-600">2개 수정 요청</span>
-          </div>
         </div>
-        <h3 class="font-semibold text-gray-800">📅 상담일정 관리</h3>
-        <p class="text-sm text-gray-600 mt-2">취업 상담, 개별 멘토링 스케줄 관리</p>
+        <h3 class="font-semibold text-gray-800">교육자료 관리</h3>
+        <p class="text-sm text-gray-600 mt-2">참고자료</p>
       </div>
     </section>
 
