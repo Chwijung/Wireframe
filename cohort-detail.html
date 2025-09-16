@@ -8,99 +8,64 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100">
-  <!-- 네비게이션 -->
-  <nav class="bg-white shadow-lg">
+  <!-- 네비게이션 헤더 -->
+  <header class="bg-white shadow-lg">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <button onclick="handleBackToDashboard()" class="text-indigo-600 hover:text-indigo-800">
-            ← 메인페이지로
+          <button onclick="handleBackToDashboard()" class="text-gray-600 hover:text-gray-800 transition-colors">
+            메인으로
           </button>
-          <h1 class="text-2xl font-bold text-gray-800" id="cohortTitle">과정 상세 관리</h1>
+          <h1 class="text-2xl font-bold text-gray-800" id="cohortTitle">AI-X 3기 운영 관리</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="text-gray-600">운영자: 권회은</span>
+          <span class="text-gray-600">[운영자] 권회은</span>
         </div>
       </div>
     </div>
-  </nav>
+  </header>
 
   <div class="max-w-7xl mx-auto p-6 space-y-8">
-    
-    <!-- 과정 상태 정보 -->
-    <section class="bg-white rounded-xl shadow-lg p-6" id="cohortInfo">
-      <div class="space-y-4">
-        <!-- 헤더 섹션 -->
-      <div class="flex justify-between items-start">
-          <div class="flex items-center space-x-4">
-            <h2 class="text-3xl font-bold text-gray-900" id="cohortName">AI-X 3기</h2>
-            <span class="bg-green-600 text-black px-3 py-1 rounded-full text-sm font-medium" id="cohortStatus">진행중</span>
+
+    <!-- 기수 상태 정보 -->
+    <section class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+        <div class="flex-1">
+          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800" id="cohortName">
+            AI-X 3기
+          </h2>
+          <div class="flex flex-wrap items-center gap-2 md:gap-4 mt-2">
+            <span class="bg-indigo-500 text-white px-3 py-1 rounded-full text-sm" id="cohortStatus">진행중</span>
+            <span class="text-gray-600" id="cohortPeriod">2025-06-18 ~ 2025-08-30</span>
+            <span class="text-gray-600" id="cohortStudents">24/30명</span>
           </div>
-          <button onclick="handleEditCohortInfo()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-            </svg>
-            <span>정보 수정</span>
+          <div class="mt-4">
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <span class="text-sm text-gray-600">진행률:</span>
+              <div class="flex-1 bg-gray-200 rounded-full h-2 min-w-0 max-w-full sm:max-w-xs">
+                <div class="bg-purple-600 h-2 rounded-full" id="progressBar" style="width: 65%"></div>
+              </div>
+              <span class="text-sm font-medium text-gray-700" id="progressPercent">65%</span>
+            </div>
+            <p class="text-sm text-gray-500 mt-1" id="currentPhase">7주차 - 중간 발표 준비</p>
+          </div>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+          <button onclick="handleEditCohortInfo()" class="bg-purple-400 text-white px-4 py-2 rounded-lg hover:bg-purple-500 transition-colors w-full sm:w-auto">
+            정보 수정
           </button>
-        </div>
-
-        <!-- 메인 정보 그리드 -->
-        <div class="grid md:grid-cols-3 gap-3">
-          <!-- 교육 기간 -->
-          <div class="bg-gray-50 p-3 rounded border border-gray-200">
-            <div class="flex items-center space-x-1.5 mb-2">
-              <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-        </svg>
-              <h3 class="text-sm font-medium text-gray-700">교육 기간</h3>
-            </div>
-            <div class="space-y-0.5">
-              <p class="text-xs text-gray-900" id="startDate">2025-06-18</p>
-              <p class="text-xs text-gray-500">~</p>
-              <p class="text-xs text-gray-900" id="endDate">2025-08-30</p>
-            </div>
-          </div>
-
-          <!-- 수강생 현황 -->
-          <div class="bg-gray-50 p-3 rounded border border-gray-200">
-            <div class="flex items-center space-x-1.5 mb-2">
-              <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-              </svg>
-              <h3 class="text-sm font-medium text-gray-700">수강생 현황</h3>
-        </div>
-            <div class="flex items-end space-x-1 mb-1.5">
-              <span class="text-lg font-bold text-gray-900" id="currentStudents">24</span>
-              <span class="text-xs text-gray-600">/ <span id="maxStudents">30</span>명</span>
-            </div>
-            <div class="bg-gray-200 rounded-full h-1">
-              <div class="bg-gray-600 h-1 rounded-full transition-all duration-300" id="studentProgress" style="width: 80%"></div>
-            </div>
-          </div>
-
-          <!-- 멘토링 일정 -->
-          <div class="bg-gray-50 p-3 rounded border border-gray-200">
-            <div class="flex items-center space-x-1.5 mb-2">
-              <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-              </svg>
-              <h3 class="text-sm font-medium text-gray-700">멘토링 일정</h3>
-            </div>
-            <p class="text-base font-medium text-gray-900" id="mentoringDay">목요일 14:00</p>
-            <p class="text-xs text-gray-500 mt-0.5" id="mentoringStatus">진행중</p>
-          </div>
+          <button onclick="handleGenerateReport()" class="bg-purple-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-purple-200 transition-colors w-full sm:w-auto">
+            보고서 생성
+          </button>
         </div>
       </div>
     </section>
 
     <!-- 주요 일정 및 관리 메뉴 -->
-    <div class="grid md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
       <!-- 다음 일정 -->
-      <section class="bg-white rounded-xl shadow-lg p-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-5 h-5 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
+      <section class="bg-white rounded-xl shadow-lg p-4 md:p-6">
+        <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center">
           다음 일정
         </h2>
         <div class="space-y-3" id="upcomingSchedule">
@@ -108,378 +73,236 @@
         </div>
       </section>
 
-      <!-- 실시간 통계 -->
-      <section class="bg-white rounded-xl shadow-lg p-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-6 h-6 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
-          실시간 통계
+      <!-- 빠른 관리 메뉴 -->
+      <section class="bg-white rounded-xl shadow-lg p-4 md:p-6">
+        <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center">
+          빠른 관리
         </h2>
-        <div class="grid grid-cols-2 gap-4" id="statisticsGrid">
-          <!-- 동적으로 생성될 통계 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button onclick="handleNavigate('수강생 관리')" class="bg-purple-100 hover:bg-purple-200 text-gray-700 p-3 rounded-lg transition-colors">
+            <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+            </svg>
+            <div class="text-sm">수강생 관리</div>
+          </button>
+          <button onclick="handleNavigate('조 관리')" class="bg-purple-400 hover:bg-purple-500 text-white p-3 rounded-lg transition-colors">
+            <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <div class="text-sm">조 관리</div>
+          </button>
+          <button onclick="handleNavigate('멘토링')" class="bg-indigo-300 hover:bg-indigo-400 text-white p-3 rounded-lg transition-colors">
+            <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            <div class="text-sm">멘토링</div>
+          </button>
+          <button onclick="handleNavigate('프로젝트')" class="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg transition-colors">
+            <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+            <div class="text-sm">프로젝트</div>
+          </button>
         </div>
       </section>
     </div>
 
     <!-- 전체 일정 -->
-    <section class="bg-white rounded-xl shadow-lg p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold flex items-center">
-          <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-          <span id="scheduleTitle">전체 일정</span>
+    <section class="bg-white rounded-xl shadow-lg p-4 md:p-6">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h2 class="text-lg md:text-xl lg:text-2xl font-bold flex items-center" id="scheduleTitle">
+          AI-X 3기 전체 일정
         </h2>
-        <div class="flex space-x-2">
-          <button onclick="handleModifySchedule()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-            </svg>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button onclick="handleModifySchedule()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors w-full sm:w-auto">
             일정 수정
           </button>
-          <button onclick="handleExportSchedule()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+          <button onclick="handleExportSchedule()" class="bg-purple-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-purple-200 transition-colors w-full sm:w-auto">
             일정 내보내기
           </button>
         </div>
       </div>
-      
-      <div id="scheduleWeeks" class="space-y-4">
+
+      <div class="space-y-4" id="scheduleWeeks">
         <!-- 동적으로 생성될 주별 일정 -->
-              </div>
+      </div>
     </section>
 
         </div>
 
   <script>
-    // 목업 데이터
-    const mockCohorts = [
-      {
-        id: 'ai-x-3rd',
-        name: 'AI-X 3기',
-        status: 'running',
-        start_date: '2025-06-18',
-        end_date: '2025-08-30',
-        current_students: 24,
-        max_students: 30,
-        mentoring_day: '목요일 14:00',
-        schedule: {
-          orientation: '2025-06-18',
-          deepLearning1: '2025-06-19',
-          deepLearning2: '2025-06-20',
-          courseInfo: '2025-06-21',
-          careerLecture: '2025-06-27',
-          miniProject: '2025-06-28',
-          planningPresentation: '2025-07-04',
-          collaborationLecture: '2025-07-06',
-          midPresentation: '2025-07-25',
-          industryLecture: '2025-07-27',
-          finalPresentation: '2025-08-12'
-        }
-      },
-      {
-        id: 'ai-x-2nd',
-        name: 'AI-X 2기',
-        status: 'completed',
-        start_date: '2025-03-01',
-        end_date: '2025-05-20',
-        current_students: 18,
-        max_students: 20,
-        mentoring_day: '금요일 15:00',
-        schedule: {
-          orientation: '2025-03-01',
-          finalPresentation: '2025-05-20'
-        }
-      }
-    ];
-
-    const cohortStatusLabels = {
-      recruiting: '모집중',
-      preparing: '준비중',
-      running: '진행중',
-      completed: '완료'
-    };
-
-    const cohortStatusStyles = {
-      recruiting: { bgColor: 'bg-yellow-600' },
-      preparing: { bgColor: 'bg-gray-600' },
-      running: { bgColor: 'bg-green-600' },
-      completed: { bgColor: 'bg-blue-600' }
-    };
-
-    // URL에서 cohortId 추출
-    function getCurrentCohortId() {
-      const path = window.location.pathname;
-      const matches = path.match(/\/cohort-detail\/(.+)/);
-      return matches ? matches[1] : 'ai-x-3rd';
-    }
-
-    let currentCohort = getCurrentCohortId();
-    let currentInfo = null;
-    let expandedEvents = {};
-
-    // 통계 계산 함수
-    function getStatistics() {
-      if (!currentInfo) {
-        return [
-          { value: '-', label: '수강생', color: 'text-blue-800', bgColor: 'bg-blue-200', borderColor: 'border-blue-200', icon: 'users' },
-          { value: '-', label: '과제 제출', color: 'text-green-800', bgColor: 'bg-green-200', borderColor: 'border-green-200', icon: 'check' },
-          { value: '-', label: '미제출', color: 'text-yellow-800', bgColor: 'bg-yellow-200', borderColor: 'border-yellow-200', icon: 'warning' },
-          { value: '-', label: '멘토링 기록', color: 'text-purple-800', bgColor: 'bg-purple-200', borderColor: 'border-purple-200', icon: 'message' }
-        ];
-      }
-
-      const submittedRate = Math.round(currentInfo.current_students * 0.75);
-      const notSubmitted = currentInfo.current_students - submittedRate;
-      const mentoringLogs = Math.round(currentInfo.current_students * 1.3);
-
-      return [
-        { value: currentInfo.current_students.toString(), label: '수강생', color: 'text-blue-800', bgColor: 'bg-blue-200', borderColor: 'border-blue-200', icon: 'users' },
-        { value: submittedRate.toString(), label: '과제 제출', color: 'text-green-800', bgColor: 'bg-green-200', borderColor: 'border-green-200', icon: 'check' },
-        { value: notSubmitted.toString(), label: '미제출', color: 'text-yellow-800', bgColor: 'bg-yellow-200', borderColor: 'border-yellow-200', icon: 'warning' },
-        { value: mentoringLogs.toString(), label: '멘토링 기록', color: 'text-purple-800', bgColor: 'bg-purple-200', borderColor: 'border-purple-200', icon: 'message' }
-      ];
-    }
-
-    // 다음 일정 계산 함수
-    function getUpcomingSchedule() {
-      if (!currentInfo || !currentInfo.schedule) {
-        return [
-          {
-            title: '⏰ 일정 없음',
-            date: '-',
-            description: '등록된 일정이 없습니다',
-            bgColor: 'bg-gray-50',
-            borderColor: 'border-gray-200',
-            textColor: 'text-gray-800',
-            dateColor: 'text-gray-600'
-          }
-        ];
-      }
-
-      const schedule = currentInfo.schedule;
-      const today = new Date();
-      const upcomingEvents = [];
-
-      const eventMapping = {
-        orientation: { title: 'OT (오리엔테이션)', color: 'blue' },
-        deepLearning1: { title: '딥러닝 특강 1일차', color: 'blue' },
-        deepLearning2: { title: '딥러닝 특강 2일차', color: 'blue' },
-        courseInfo: { title: '과정 안내', color: 'green' },
-        careerLecture: { title: '취업 특강', color: 'green' },
-        miniProject: { title: '미니프로젝트 발표', color: 'green' },
-        planningPresentation: { title: '기획 발표', color: 'green' },
-        collaborationLecture: { title: '협업 특강', color: 'blue' },
-        midPresentation: { title: '중간 발표', color: 'green' },
-        industryLecture: { title: '현직자 특강', color: 'blue' },
-        finalPresentation: { title: '최종 발표', color: 'green' }
-      };
-
-      const colorClasses = {
-        blue: { bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-800', dateColor: 'text-blue-600' },
-        green: { bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-800', dateColor: 'text-green-600' },
-        gray: { bgColor: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-800', dateColor: 'text-gray-600' }
-      };
-
-      Object.entries(schedule).forEach(([key, dateString]) => {
-        if (dateString && eventMapping[key]) {
-          const eventDate = new Date(dateString);
-          if (eventDate >= today) {
-            const event = eventMapping[key];
-            const isNearFuture = eventDate <= new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-            const colorKey = isNearFuture ? 'blue' : 'green';
-            const colors = colorClasses[colorKey];
-            
-            upcomingEvents.push({
-              title: event.title,
-              date: new Intl.DateTimeFormat('ko-KR', { 
-                month: '2-digit', 
-                day: '2-digit',
-                weekday: 'short' 
-              }).format(eventDate),
-              description: dateString,
-              ...colors,
-              sortDate: eventDate
-            });
-          }
-        }
-      });
-
-      upcomingEvents.sort((a, b) => a.sortDate - b.sortDate);
-      
-      if (upcomingEvents.length === 0) {
-        return [
-          {
-            title: '✅ 모든 일정 완료',
-            date: '-',
-            description: '예정된 일정이 없습니다',
-            bgColor: 'bg-green-50',
-            borderColor: 'border-green-200',
-            textColor: 'text-green-800',
-            dateColor: 'text-green-600'
-          }
-        ];
-      }
-
-      return upcomingEvents.slice(0, 3);
-    }
-
-    // 주별 일정 계산 함수
-    function getScheduleWeeks() {
-      if (!currentInfo || !currentInfo.schedule) {
-        return [
-          {
-            title: '일정 정보 없음',
-            bgColor: 'bg-gray-50',
-            borderColor: 'border-gray-200',
-            textColor: 'text-gray-800',
-            events: [
-              { title: '⏰ 등록된 일정이 없습니다', date: '-' }
-            ]
-          }
-        ];
-      }
-
-      const schedule = currentInfo.schedule;
-      const startDate = new Date(currentInfo.start_date);
-      const endDate = new Date(currentInfo.end_date);
-      const today = new Date();
-
-      const sortedEvents = Object.entries(schedule)
-        .filter(([_, dateString]) => dateString)
-        .map(([key, dateString]) => ({
-          key,
-          date: new Date(dateString),
-          dateString,
-          title: {
-            orientation: 'OT (오리엔테이션)',
-            deepLearning1: '딥러닝 특강 1일차',
-            deepLearning2: '딥러닝 특강 2일차',
-            courseInfo: '과정 안내',
-            careerLecture: '취업 특강',
-            miniProject: '미니프로젝트 발표',
-            planningPresentation: '기획 발표',
-            collaborationLecture: '협업 특강',
-            midPresentation: '중간 발표',
-            industryLecture: '현직자 특강',
-            finalPresentation: '최종 발표'
-          }[key] || key
-        }))
-        .sort((a, b) => a.date - b.date);
-
-      const weekGroups = [];
-      let currentWeekStart = new Date(startDate);
-      
-      while (currentWeekStart <= endDate) {
-        const weekEnd = new Date(currentWeekStart);
-        weekEnd.setDate(weekEnd.getDate() + 6);
-        
-        const weekEvents = sortedEvents.filter(event => 
-          event.date >= currentWeekStart && event.date <= weekEnd
-        );
-
-        if (weekEvents.length > 0) {
-          const isCurrentWeek = today >= currentWeekStart && today <= weekEnd;
-          const isPastWeek = weekEnd < today && !isCurrentWeek;
-          
-          weekGroups.push({
-            title: `${currentWeekStart.toLocaleDateString('ko-KR', { 
-              year: 'numeric', 
-              month: '2-digit', 
-              day: '2-digit' 
-            })} - ${weekEnd.toLocaleDateString('ko-KR', { 
-              year: 'numeric', 
-              month: '2-digit', 
-              day: '2-digit' 
-            })}${isCurrentWeek ? ' (현재 진행중)' : ''}`,
-            bgColor: isCurrentWeek ? 'bg-blue-50' : isPastWeek ? 'bg-gray-50' : 'bg-green-50',
-            borderColor: isCurrentWeek ? 'border-blue-400' : isPastWeek ? 'border-gray-200' : 'border-green-200',
-            textColor: isCurrentWeek ? 'text-blue-800' : isPastWeek ? 'text-gray-700' : 'text-green-800',
-            isCurrent: isCurrentWeek,
-            events: weekEvents.map(event => ({
-              title: event.title,
-              eventKey: event.key,
-              date: event.date.toLocaleDateString('ko-KR', { 
-                month: '2-digit', 
-                day: '2-digit',
-                weekday: 'short'
-              }),
-              isUpcoming: event.date > today
-            }))
-          });
-        }
-
-        currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-      }
-
-      return weekGroups.length > 0 ? weekGroups : [
+    // 목업 데이터 (React 구조 매칭)
+    const cohortData = {
+      id: 'ai-x-3rd',
+      name: 'AI-X 3기',
+      status: 'running',
+      start_date: '2025-06-18',
+      end_date: '2025-08-30',
+      current_students: 24,
+      max_students: 30,
+      progress_percentage: 65,
+      current_phase: '7주차 - 중간 발표 준비',
+      mentoring_day: '목요일 14:00',
+      next_schedules: [
         {
-          title: '일정 정보 없음',
-          bgColor: 'bg-gray-50',
-          borderColor: 'border-gray-200',
-          textColor: 'text-gray-800',
-          events: [
-            { title: '⏰ 상세 일정이 등록되지 않았습니다', date: '-' }
-          ]
+          title: '중간 발표',
+          date: '07.25 (금)',
+          description: '프로젝트 중간 발표',
+          is_today: false,
+          days_remaining: 3
+        },
+        {
+          title: '현직자 특강',
+          date: '07.27 (일)',
+          description: '산업계 전문가 특강',
+          is_today: false,
+          days_remaining: 5
+        },
+        {
+          title: '최종 발표',
+          date: '08.12 (월)',
+          description: '최종 프로젝트 발표',
+          is_today: false,
+          days_remaining: 21
         }
-      ];
-    }
+      ],
+      weekly_schedule: [
+        {
+          week_number: 1,
+          week_start: '2025-06-16',
+          week_end: '2025-06-22',
+          week_period: '06/16 - 06/22',
+          events: [
+            { name: '오리엔테이션', date: '2025-06-18', korean_day: '수' },
+            { name: '딥러닝 특강 1차', date: '2025-06-19', korean_day: '목' },
+            { name: '딥러닝 특강 2차', date: '2025-06-20', korean_day: '금' },
+            { name: '과정 안내', date: '2025-06-21', korean_day: '토' }
+          ],
+          event_count: 4,
+          is_current: false
+        },
+        {
+          week_number: 2,
+          week_start: '2025-06-23',
+          week_end: '2025-06-29',
+          week_period: '06/23 - 06/29',
+          events: [
+            { name: '취업 특강', date: '2025-06-27', korean_day: '금' },
+            { name: '미니플젝 발표', date: '2025-06-28', korean_day: '토' }
+          ],
+          event_count: 2,
+          is_current: false
+        },
+        {
+          week_number: 7,
+          week_start: '2025-07-21',
+          week_end: '2025-07-27',
+          week_period: '07/21 - 07/27',
+          events: [
+            { name: '중간 발표', date: '2025-07-25', korean_day: '금' },
+            { name: '현직자 특강', date: '2025-07-27', korean_day: '일' }
+          ],
+          event_count: 2,
+          is_current: true
+        },
+        {
+          week_number: 11,
+          week_start: '2025-08-11',
+          week_end: '2025-08-17',
+          week_period: '08/11 - 08/17',
+          events: [
+            { name: '최종 발표', date: '2025-08-12', korean_day: '월' }
+          ],
+          event_count: 1,
+          is_current: false
+        }
+      ]
+    };
 
-    // 아이콘 렌더링 함수
-    function renderIcon(iconType) {
-      const icons = {
-        users: '<svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path></svg>',
-        check: '<svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
-        warning: '<svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
-        message: '<svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>'
-      };
-      return icons[iconType] || '';
-    }
+    // 현재 정보 포맷팅
+    const currentInfo = {
+      name: cohortData.name,
+      status: cohortData.status === 'completed' ? '완료' : '진행중',
+      statusColor: cohortData.status === 'completed' ? 'bg-slate-500' : 'bg-indigo-500',
+      period: `${cohortData.start_date} ~ ${cohortData.end_date}`,
+      students: `${cohortData.current_students}/${cohortData.max_students}명`,
+      progress: cohortData.progress_percentage,
+      currentPhase: cohortData.current_phase
+    };
+
+    // 다음 일정 데이터
+    const getUpcomingSchedule = () => {
+      const eventColors = [
+        { bgColor: 'bg-slate-50', borderColor: 'border-slate-200', textColor: 'text-slate-700', dateColor: 'text-slate-600' },
+        { bgColor: 'bg-indigo-50', borderColor: 'border-indigo-200', textColor: 'text-gray-700', dateColor: 'text-gray-600' }
+      ];
+
+      return cohortData.next_schedules.map((schedule, index) => {
+        const colors = eventColors[index] || eventColors[0];
+        return {
+          title: `• ${schedule.title}`,
+          date: schedule.date,
+          description: schedule.description,
+          ...colors
+        };
+      });
+    };
+
+    // 주별 일정 데이터
+    const getScheduleWeeks = () => {
+      const colors = [
+        { bgColor: 'bg-white', borderColor: 'border-purple-200', textColor: 'text-gray-700' },
+        { bgColor: 'bg-purple-50', borderColor: 'border-purple-200', textColor: 'text-gray-700' },
+        { bgColor: 'bg-purple-100', borderColor: 'border-purple-300', textColor: 'text-gray-800' },
+        { bgColor: 'bg-purple-100', borderColor: 'border-purple-300', textColor: 'text-gray-800' }
+      ];
+
+      return cohortData.weekly_schedule.map((week, index) => {
+        const colorIndex = index % colors.length;
+        const weekColor = colors[colorIndex];
+
+        const formattedEvents = week.events.map(event => {
+          const eventDate = new Date(event.date);
+          const formattedDate = `${String(eventDate.getMonth() + 1).padStart(2, '0')}.${String(eventDate.getDate()).padStart(2, '0')} (${event.korean_day})`;
+
+          return {
+            title: `• ${event.name}`,
+            date: formattedDate,
+            isUpcoming: new Date(event.date) > new Date()
+          };
+        });
+
+        return {
+          title: `${week.week_number}주차 (${week.week_period})${week.is_current ? ' (현재 진행중)' : ''}`,
+          ...weekColor,
+          events: formattedEvents,
+          isCurrent: week.is_current,
+          borderColor: week.is_current ? 'border-purple-400' : weekColor.borderColor
+        };
+      });
+    };
 
     // UI 업데이트 함수들
     function updateCohortInfo() {
-      if (!currentInfo) return;
-
-      document.getElementById('cohortTitle').textContent = `${currentInfo.name} 상세 관리`;
+      document.getElementById('cohortTitle').textContent = `${currentInfo.name} 운영 관리`;
       document.getElementById('cohortName').textContent = currentInfo.name;
-      document.getElementById('cohortStatus').textContent = cohortStatusLabels[currentInfo.status] || currentInfo.status;
-      document.getElementById('cohortStatus').className = `${cohortStatusStyles[currentInfo.status]?.bgColor || 'bg-gray-600'} text-black px-3 py-1 rounded-full text-sm font-medium`;
-      
-      document.getElementById('startDate').textContent = currentInfo.start_date;
-      document.getElementById('endDate').textContent = currentInfo.end_date;
-      document.getElementById('currentStudents').textContent = currentInfo.current_students;
-      document.getElementById('maxStudents').textContent = currentInfo.max_students;
-      document.getElementById('studentProgress').style.width = `${Math.round((currentInfo.current_students / currentInfo.max_students) * 100)}%`;
-      document.getElementById('mentoringDay').textContent = currentInfo.mentoring_day || '일정 미정';
-      document.getElementById('mentoringStatus').textContent = cohortStatusLabels[currentInfo.status] || currentInfo.status;
-      
+      document.getElementById('cohortStatus').textContent = currentInfo.status;
+      document.getElementById('cohortStatus').className = `${currentInfo.statusColor} text-white px-3 py-1 rounded-full text-sm`;
+
+      document.getElementById('cohortPeriod').textContent = currentInfo.period;
+      document.getElementById('cohortStudents').textContent = currentInfo.students;
+      document.getElementById('progressBar').style.width = `${currentInfo.progress}%`;
+      document.getElementById('progressPercent').textContent = `${currentInfo.progress}%`;
+      document.getElementById('currentPhase').textContent = currentInfo.currentPhase;
+
       document.getElementById('scheduleTitle').textContent = `${currentInfo.name} 전체 일정`;
       document.title = `${currentInfo.name} 상세 관리 - AI-X 시스템`;
-    }
-
-    function updateStatistics() {
-      const statistics = getStatistics();
-      const grid = document.getElementById('statisticsGrid');
-      
-      grid.innerHTML = statistics.map(stat => `
-        <div class="bg-white p-4 rounded-lg border ${stat.borderColor}">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-xl font-bold ${stat.color}">${stat.value}</div>
-              <div class="text-sm ${stat.color}">${stat.label}</div>
-            </div>
-            <div class="text-right">
-              ${renderIcon(stat.icon)}
-            </div>
-          </div>
-        </div>
-      `).join('');
     }
 
     function updateUpcomingSchedule() {
       const schedule = getUpcomingSchedule();
       const container = document.getElementById('upcomingSchedule');
-      
+
       container.innerHTML = schedule.map(item => `
         <div class="${item.bgColor} border ${item.borderColor} p-3 rounded-lg">
           <div class="flex justify-between items-center">
@@ -494,23 +317,19 @@
     function updateScheduleWeeks() {
       const weeks = getScheduleWeeks();
       const container = document.getElementById('scheduleWeeks');
-      
+
       container.innerHTML = weeks.map(week => `
         <div class="border ${week.isCurrent ? 'border-2 ' + week.borderColor : week.borderColor} rounded-lg p-4 ${week.bgColor}">
           <h3 class="font-bold ${week.textColor} mb-2">${week.title}</h3>
-          <div class="grid md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${week.events.map(event => `
-            <div class="space-y-2">
-                <div class="bg-white rounded border">
-                  <div class="w-full flex items-center justify-between p-2 rounded ${event.isUpcoming ? 'border-green-300' : ''}">
-                    <div class="flex items-center space-x-2">
-                      <span class="text-sm">${event.title}</span>
-              </div>
-                    <span class="text-xs ${event.isUpcoming ? 'text-green-600 font-medium' : 'text-gray-500'}">
-                      ${event.date}
-                    </span>
-          </div>
-        </div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between p-2 bg-white rounded border ${event.isUpcoming ? 'border-purple-300' : ''}">
+                  <span class="text-sm">${event.title}</span>
+                  <span class="text-xs ${event.isUpcoming ? 'text-gray-600 font-medium' : 'text-gray-500'}">
+                    ${event.date}
+                  </span>
+                </div>
               </div>
             `).join('')}
           </div>
@@ -518,43 +337,41 @@
       `).join('');
     }
 
-    function loadCohortData() {
-      currentInfo = mockCohorts.find(cohort => cohort.id === currentCohort) || mockCohorts[0];
-      
-      updateCohortInfo();
-      updateStatistics();
-      updateUpcomingSchedule();
-      updateScheduleWeeks();
-    }
-
     // 이벤트 핸들러
     function handleBackToDashboard() {
-      if (currentCohort) {
-        localStorage.setItem('selected-cohort', currentCohort);
-      }
-      window.location.href = 'main.html';
+      window.location.href = 'index.html';
+    }
+
+    function handleNavigate(page) {
+      alert(`${page} 페이지로 이동합니다. (구현 예정)`);
     }
 
     function handleEditCohortInfo() {
-      alert('과정 정보 수정 모달을 엽니다.\n\n수정 가능 항목:\n• 과정 이름\n• 교육 기간\n• 수강생 수\n• 멘토링 일정');
+      alert('기수 정보 수정 모달을 엽니다.\\n\\n수정 가능 항목:\\n• 기수 이름\\n• 교육 기간\\n• 멘토링 일정\\n• 상태');
+    }
+
+    function handleGenerateReport() {
+      alert('기수 보고서를 생성합니다...\\n\\n포함 내용:\\n• 수강생 현황 및 출석률\\n• 과제 제출 통계\\n• 멘토링 기록 요약\\n• 프로젝트 진행 상황\\n• 예산 사용 내역');
     }
 
     function handleModifySchedule() {
-      alert('📅 일정 수정 모드로 전환합니다.\n\n수정 가능 항목:\n• 일정 날짜 변경\n• 새 일정 추가\n• 일정 삭제\n• 일정 설명 수정');
+      alert('일정 수정 모달을 엽니다.\\n\\n수정 가능 항목:\\n• 일정 날짜 변경\\n• 새 일정 추가\\n• 일정 삭제\\n• 일정 설명 수정');
     }
 
     function handleExportSchedule() {
-      if (confirm('일정을 어떤 형식으로 내보내시겠습니까?\n\nOK: Excel 파일\nCancel: PDF 파일')) {
-        alert('📊 Excel 형식으로 일정을 내보냅니다.');
+      if (confirm('일정을 어떤 형식으로 내보내시겠습니까?\\n\\nOK: Excel 파일\\nCancel: PDF 파일')) {
+        alert('Excel 형식으로 일정을 내보냅니다.');
       } else {
-        alert('📄 PDF 형식으로 일정을 내보냅니다.');
+        alert('PDF 형식으로 일정을 내보냅니다.');
       }
     }
 
     // 페이지 로드 시 초기화
     document.addEventListener('DOMContentLoaded', function() {
-      loadCohortData();
+      updateCohortInfo();
+      updateUpcomingSchedule();
+      updateScheduleWeeks();
     });
   </script>
 </body>
-</html> 
+</html>
