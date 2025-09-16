@@ -22,11 +22,19 @@
           <button onclick="goBackToMain()" class="text-emerald-600 hover:text-emerald-800">
             ← 메인으로
           </button>
-          <h1 class="text-2xl font-bold text-emerald-700">💬 수강생 문의 관리</h1>
+          <h1 class="text-2xl font-bold text-emerald-700">수강생 문의 관리</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="text-gray-600">운영진: 권회은</span>
+          <!-- 모드 전환 버튼 -->
           <div class="flex items-center space-x-2">
+            <span class="text-sm text-gray-600">모드:</span>
+            <select id="modeSelector" onchange="switchMode()" class="border border-gray-300 rounded px-2 py-1 text-sm">
+              <option value="admin">관리자</option>
+              <option value="student">학생</option>
+            </select>
+          </div>
+          <span id="userInfo" class="text-gray-600">운영진: 권회은</span>
+          <div id="adminNotification" class="flex items-center space-x-2">
             <span class="text-sm text-red-600 font-medium">미답변 5개</span>
             <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
           </div>
@@ -40,49 +48,157 @@
     <header class="bg-white rounded-xl shadow-lg p-6">
       <div class="flex justify-between items-center">
         <div>
-          <h2 class="text-3xl font-bold text-gray-800 mb-2">수강생 문의 관리</h2>
-          <p class="text-gray-600">AI-X 3기 수강생들의 문의사항을 확인하고 답변하세요</p>
+          <h2 id="pageTitle" class="text-3xl font-bold text-gray-800 mb-2">수강생 문의 관리</h2>
+          <p id="pageDescription" class="text-gray-600">AI-X 3기 수강생들의 문의사항을 확인하고 답변하세요</p>
         </div>
         <div class="text-right">
-          <div class="text-2xl font-bold text-emerald-600">12</div>
-          <div class="text-sm text-gray-500">총 문의</div>
+          <div id="totalCount" class="text-2xl font-bold text-emerald-600">12</div>
+          <div id="countLabel" class="text-sm text-gray-500">총 문의</div>
         </div>
       </div>
     </header>
 
-    <!-- 통계 카드 -->
-    <section class="grid md:grid-cols-4 gap-6">
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between">
+    <!-- FAQ 섹션 -->
+    <section id="faqSection" class="bg-white rounded-xl shadow-lg p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-gray-800">자주 묻는 질문 (FAQ)</h3>
+        <button id="addFaqBtn" onclick="addFaq()" class="bg-emerald-600 text-black px-4 py-2 rounded-lg hover:bg-emerald-700 text-sm" style="display: none;">
+          FAQ 추가
+        </button>
+      </div>
+      <div id="faqList" class="space-y-4">
+        <!-- FAQ 항목들이 여기에 동적으로 생성됩니다 -->
+      </div>
+    </section>
+
+    <!-- 학생 문의 작성 섹션 -->
+    <section id="studentInquiryForm" class="bg-white rounded-xl shadow-lg p-6" style="display: none;">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">문의하기</h3>
+      <form onsubmit="submitInquiry(event)">
+        <div class="space-y-4">
           <div>
-            <p class="text-sm font-medium text-gray-600">미답변 문의</p>
-            <p class="text-2xl font-bold text-red-600">5</p>
+            <label class="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
+            <select id="inquiryCategory" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+              <option value="technical">수업 관련 문의(ex.수강취소)</option>
+              <option value="assignment">학원 시설 및 환경(ex.장비교체, 환경개선)</option>
+              <option value="schedule">팀원 및 학원 생활(ex.팀 프로젝트 문제)</option>
+              <option value="other">기타</option>
+            </select>
           </div>
-          <div class="bg-red-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">제목</label>
+            <input type="text" id="inquiryTitle" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="문의 제목을 입력하세요" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">내용</label>
+            <textarea id="inquiryContent" rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="문의 내용을 상세히 작성해주세요" required></textarea>
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700">
+              문의 등록
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- 관리자 대시보드 통계 -->
+    <section id="statsSection" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+      <!-- 미답변 문의 -->
+      <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl shadow-lg p-6 border border-red-200 hover:shadow-xl transition-all duration-200">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <div class="flex items-center mb-2">
+              <div class="bg-red-500 w-3 h-3 rounded-full mr-2 animate-pulse"></div>
+              <p class="text-sm font-semibold text-red-700 uppercase tracking-wide">긴급</p>
+            </div>
+            <h3 class="text-2xl font-bold text-red-800 mb-1" id="pendingCount">5</h3>
+            <p class="text-sm text-red-600 font-medium">미답변 문의</p>
+          </div>
+          <div class="bg-red-200 p-3 rounded-xl">
+            <svg class="w-8 h-8 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-lg p-6">
+      <!-- 답변 완료 -->
+      <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-lg p-6 border border-green-200 hover:shadow-xl transition-all duration-200">
         <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600">답변 완료</p>
-            <p class="text-2xl font-bold text-green-600">7</p>
+          <div class="flex-1">
+            <div class="flex items-center mb-2">
+              <div class="bg-green-500 w-3 h-3 rounded-full mr-2"></div>
+              <p class="text-sm font-semibold text-green-700 uppercase tracking-wide">완료</p>
+            </div>
+            <h3 class="text-2xl font-bold text-green-800 mb-1" id="answeredCount">7</h3>
+            <p class="text-sm text-green-600 font-medium">답변 완료</p>
           </div>
-          <div class="bg-green-100 p-3 rounded-lg">
-            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          <div class="bg-green-200 p-3 rounded-xl">
+            <svg class="w-8 h-8 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 이번 주 문의 -->
+      <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-lg p-6 border border-blue-200 hover:shadow-xl transition-all duration-200">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <div class="flex items-center mb-2">
+              <div class="bg-blue-500 w-3 h-3 rounded-full mr-2"></div>
+              <p class="text-sm font-semibold text-blue-700 uppercase tracking-wide">이번 주</p>
+            </div>
+            <h3 class="text-2xl font-bold text-blue-800 mb-1" id="weeklyCount">8</h3>
+            <p class="text-sm text-blue-600 font-medium">신규 문의</p>
+          </div>
+          <div class="bg-blue-200 p-3 rounded-xl">
+            <svg class="w-8 h-8 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 필터 및 검색 -->
-    <section class="bg-white rounded-xl shadow-lg p-6">
+    <!-- 카테고리별 문의 현황 -->
+    <section id="categoryStatsSection" class="bg-white rounded-xl shadow-lg p-6">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">카테고리별 문의 현황</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
+          <div class="text-2xl font-bold text-purple-600" id="technicalCount">4</div>
+          <div class="text-sm text-purple-500 font-medium">수업 관련 문의</div>
+          <div class="w-full bg-purple-200 rounded-full h-2 mt-2">
+            <div class="bg-purple-600 h-2 rounded-full" style="width: 33%"></div>
+          </div>
+        </div>
+        <div class="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <div class="text-2xl font-bold text-blue-600" id="assignmentCount">3</div>
+          <div class="text-sm text-blue-500 font-medium">과제 관련</div>
+          <div class="w-full bg-blue-200 rounded-full h-2 mt-2">
+            <div class="bg-blue-600 h-2 rounded-full" style="width: 25%"></div>
+          </div>
+        </div>
+        <div class="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+          <div class="text-2xl font-bold text-yellow-600" id="scheduleCount">2</div>
+          <div class="text-sm text-yellow-500 font-medium">일정 문의</div>
+          <div class="w-full bg-yellow-200 rounded-full h-2 mt-2">
+            <div class="bg-yellow-600 h-2 rounded-full" style="width: 17%"></div>
+          </div>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div class="text-2xl font-bold text-gray-600" id="otherCount">1</div>
+          <div class="text-sm text-gray-500 font-medium">기타</div>
+          <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div class="bg-gray-600 h-2 rounded-full" style="width: 8%"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 필터 및 검색 (관리자 모드에서만 표시) -->
+    <section id="filterSection" class="bg-white rounded-xl shadow-lg p-6">
       <div class="flex flex-wrap gap-4 items-center justify-between">
         <div class="flex items-center space-x-4">
           <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-2">
@@ -91,17 +207,16 @@
             <option value="answered">답변완료</option>
             <option value="closed">종료</option>
           </select>
-          
+
           <select id="categoryFilter" class="border border-gray-300 rounded-lg px-3 py-2">
             <option value="all">전체 카테고리</option>
-            <option value="technical">기술 문의</option>
-            <option value="assignment">과제 관련</option>
-            <option value="schedule">일정 문의</option>
-            <option value="mentoring">멘토링</option>
+            <option value="technical">수업 관련 문의</option>
+            <option value="assignment">학원 시설 및 환경</option>
+            <option value="schedule">팀원 및 학원 생활</option>
             <option value="other">기타</option>
           </select>
         </div>
-        
+
         <div class="flex items-center space-x-2">
           <input type="text" placeholder="학생명 또는 내용 검색" class="border border-gray-300 rounded-lg px-3 py-2 w-64">
           <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
@@ -112,122 +227,8 @@
     </section>
 
     <!-- 문의 목록 -->
-    <section class="space-y-4">
-      <!-- 미답변 문의 1 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미답변</span>
-              <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">기술 문의</span>
-              <span class="text-sm text-gray-500">2시간 전</span>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">김하늘 - 프로젝트 환경 설정 오류</h3>
-            <p class="text-gray-600 mb-3">안녕하세요, 프로젝트 개발 환경을 설정하는데 Docker 컨테이너가 계속 실행되지 않습니다. 로그를 확인해보니 포트 충돌 오류가 발생하는 것 같은데, 어떻게 해결해야 할까요?</p>
-            <div class="flex items-center space-x-4 text-sm text-gray-500">
-              <span>📧 khaneul@email.com</span>
-              <span>📱 010-1234-5678</span>
-              <span>🏷️ 1조</span>
-            </div>
-          </div>
-          <div class="ml-4">
-            <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 mb-2">
-              답변하기
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 미답변 문의 2 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미답변</span>
-              <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">과제 관련</span>
-              <span class="text-sm text-gray-500">5시간 전</span>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">이지윤 - 최종 프로젝트 주제 변경 요청</h3>
-            <p class="text-gray-600 mb-3">멘토님과 상의 후 현재 진행 중인 AI 챗봇 프로젝트에서 추천 시스템으로 주제를 변경하고 싶습니다. 변경 가능한지 확인 부탁드립니다.</p>
-            <div class="flex items-center space-x-4 text-sm text-gray-500">
-              <span>📧 jiyoon@email.com</span>
-              <span>📱 010-9876-5432</span>
-              <span>🏷️ 3조</span>
-            </div>
-          </div>
-          <div class="ml-4">
-            <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 mb-2">
-              답변하기
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 답변 완료 문의 1 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">답변완료</span>
-              <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">일정 문의</span>
-              <span class="text-sm text-gray-500">1일 전</span>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">박민수 - 중간발표 일정 변경 가능한가요?</h3>
-            <p class="text-gray-600 mb-3">개인 사정으로 7월 3일 중간발표 참석이 어려울 것 같습니다. 일정 조정이 가능한지 문의드립니다.</p>
-            
-            <!-- 답변 내용 -->
-            <div class="bg-gray-50 rounded-lg p-4 mt-4">
-              <div class="flex items-center space-x-2 mb-2">
-                <span class="text-sm font-medium text-emerald-600">권회은 운영진</span>
-                <span class="text-xs text-gray-500">12시간 전 답변</span>
-              </div>
-              <p class="text-sm text-gray-700">안녕하세요 민수님, 중간발표 일정 변경 요청 확인했습니다. 7월 4일 오후로 개별 발표 일정을 조정해드렸습니다. 발표 자료는 기존 일정대로 7월 2일까지 제출해주세요.</p>
-            </div>
-            
-            <div class="flex items-center space-x-4 text-sm text-gray-500 mt-3">
-              <span>📧 minsu@email.com</span>
-              <span>📱 010-5555-1234</span>
-              <span>🏷️ 2조</span>
-            </div>
-          </div>
-          <div class="ml-4">
-            <span class="text-green-600 text-sm font-medium">✓ 해결됨</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 답변 완료 문의 2 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-3 mb-2">
-              <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">답변완료</span>
-              <span class="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded">멘토링</span>
-              <span class="text-sm text-gray-500">2일 전</span>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">정수현 - 추가 멘토링 세션 요청</h3>
-            <p class="text-gray-600 mb-3">머신러닝 알고리즘 구현 부분에서 어려움을 겪고 있어서 추가 멘토링 세션을 요청드립니다.</p>
-            
-            <!-- 답변 내용 -->
-            <div class="bg-gray-50 rounded-lg p-4 mt-4">
-              <div class="flex items-center space-x-2 mb-2">
-                <span class="text-sm font-medium text-emerald-600">권회은 운영진</span>
-                <span class="text-xs text-gray-500">1일 전 답변</span>
-              </div>
-              <p class="text-sm text-gray-700">수현님, 추가 멘토링 요청 확인했습니다. 김민준 멘토님과 7월 1일 오후 2시에 1:1 세션을 배정해드렸습니다. 미리 궁금한 점들을 정리해오시면 더 효율적인 멘토링이 가능할 것 같습니다.</p>
-            </div>
-            
-            <div class="flex items-center space-x-4 text-sm text-gray-500 mt-3">
-              <span>📧 suhyun@email.com</span>
-              <span>📱 010-7777-8888</span>
-              <span>🏷️ 4조</span>
-            </div>
-          </div>
-          <div class="ml-4">
-            <span class="text-green-600 text-sm font-medium">✓ 해결됨</span>
-          </div>
-        </div>
-      </div>
+    <section id="inquiryList" class="space-y-4">
+      <!-- 문의 목록이 여기에 동적으로 생성됩니다 -->
     </section>
 
     <!-- 페이지네이션 -->
@@ -242,7 +243,480 @@
     </section>
   </div>
 
+  <!-- FAQ 추가 모달 -->
+  <div id="faqModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+    <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-gray-800">FAQ 추가</h3>
+          <button onclick="closeFaqModal()" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <form onsubmit="submitFaq(event)">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">질문</label>
+              <input type="text" id="faqQuestion" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="자주 묻는 질문을 입력하세요" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">답변</label>
+              <textarea id="faqAnswer" rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="답변을 입력하세요" required></textarea>
+            </div>
+            <div class="flex justify-end space-x-2">
+              <button type="button" onclick="closeFaqModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                취소
+              </button>
+              <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
+                추가
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 답변하기 모달 -->
+  <div id="answerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-gray-800">답변하기</h3>
+          <button onclick="closeAnswerModal()" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div id="inquiryToAnswer" class="bg-gray-50 rounded-lg p-4 mb-4">
+          <!-- 답변할 문의 내용이 여기에 표시됩니다 -->
+        </div>
+        <form onsubmit="submitAnswer(event)">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">답변</label>
+            <textarea id="answerContent" rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="답변을 입력하세요" required></textarea>
+          </div>
+          <div class="flex justify-end space-x-2 mt-4">
+            <button type="button" onclick="closeAnswerModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+              취소
+            </button>
+            <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
+              답변 등록
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // 현재 모드와 사용자 정보
+    let currentMode = 'admin';
+    let currentUser = {
+      admin: { name: '권회은', role: '운영진' },
+      student: { name: '김하늘', email: 'khaneul@email.com', team: '1조' }
+    };
+
+    // 답변할 문의 ID 저장
+    let currentInquiryId = null;
+
+    // FAQ 데이터
+    let faqData = [
+      {
+        id: 1,
+        question: '프로젝트 환경 설정은 어떻게 하나요?',
+        answer: 'Docker와 Git을 먼저 설치하신 후, 제공된 가이드 문서를 참조하여 환경을 구성해주세요. 문제가 있으면 멘토에게 문의하세요.'
+      },
+      {
+        id: 2,
+        question: '과제 제출 기한을 놓쳤을 때는 어떻게 하나요?',
+        answer: '과제 제출 기한을 놓쳤을 경우, 지체 없이 운영진에게 연락하여 상황을 설명해주세요. 부득이한 사유가 있는 경우 연장 심사를 받을 수 있습니다.'
+      },
+      {
+        id: 3,
+        question: '멘토링 세션은 언제 신청할 수 있나요?',
+        answer: '멘토링 세션은 매주 월요일 오전에 신청 가능하며, 선착순으로 배정됩니다. 개인 멘토링과 그룹 멘토링 중 선택할 수 있습니다.'
+      }
+    ];
+
+    // 문의 데이터
+    let inquiryData = [
+      {
+        id: 1,
+        student: '김하늘',
+        email: 'khaneul@email.com',
+        team: '1조',
+        category: 'technical',
+        status: 'pending',
+        title: '프로젝트 환경 설정 오류',
+        content: '안녕하세요, 프로젝트 개발 환경을 설정하는데 Docker 컨테이너가 계속 실행되지 않습니다. 로그를 확인해보니 포트 충돌 오류가 발생하는 것 같은데, 어떻게 해결해야 할까요?',
+        time: '2시간 전',
+        answer: null
+      },
+      {
+        id: 2,
+        student: '이지윤',
+        email: 'jiyoon@email.com',
+        team: '3조',
+        category: 'assignment',
+        status: 'pending',
+        title: '최종 프로젝트 주제 변경 요청',
+        content: '멘토님과 상의 후 현재 진행 중인 AI 챗봇 프로젝트에서 추천 시스템으로 주제를 변경하고 싶습니다. 변경 가능한지 확인 부탁드립니다.',
+        time: '5시간 전',
+        answer: null
+      },
+      {
+        id: 3,
+        student: '박민수',
+        email: 'minsu@email.com',
+        team: '2조',
+        category: 'schedule',
+        status: 'answered',
+        title: '중간발표 일정 변경 가능한가요?',
+        content: '개인 사정으로 7월 3일 중간발표 참석이 어려울 것 같습니다. 일정 조정이 가능한지 문의드립니다.',
+        time: '1일 전',
+        answer: {
+          content: '안녕하세요 민수님, 중간발표 일정 변경 요청 확인했습니다. 7월 4일 오후로 개별 발표 일정을 조정해드렸습니다. 발표 자료는 기존 일정대로 7월 2일까지 제출해주세요.',
+          admin: '권회은 운영진',
+          time: '12시간 전'
+        }
+      },
+      {
+        id: 4,
+        student: '김하늘',
+        email: 'khaneul@email.com',
+        team: '1조',
+        category: 'mentoring',
+        status: 'answered',
+        title: '추가 멘토링 세션 요청',
+        content: '머신러닝 알고리즘 구현 부분에서 어려움을 겪고 있어서 추가 멘토링 세션을 요청드립니다.',
+        time: '3일 전',
+        answer: {
+          content: '하늘님, 추가 멘토링 요청 확인했습니다. 김민준 멘토님과 7월 1일 오후 2시에 1:1 세션을 배정해드렸습니다. 미리 궁금한 점들을 정리해오시면 더 효율적인 멘토링이 가능할 것 같습니다.',
+          admin: '권회은 운영진',
+          time: '2일 전'
+        }
+      }
+    ];
+
+    // 페이지 로드 시 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      renderFAQ();
+      renderInquiries();
+      updateStatistics();
+      updateModeUI();
+    });
+
+    // 모드 전환
+    function switchMode() {
+      currentMode = document.getElementById('modeSelector').value;
+      updateModeUI();
+      renderFAQ();
+      renderInquiries();
+      updateStatistics();
+    }
+
+    // UI 업데이트
+    function updateModeUI() {
+      const isAdmin = currentMode === 'admin';
+      const user = currentUser[currentMode];
+
+      // 헤더 정보 업데이트
+      document.getElementById('userInfo').textContent = isAdmin ?
+        `${user.role}: ${user.name}` : `학생: ${user.name}`;
+
+      document.getElementById('adminNotification').style.display = isAdmin ? 'flex' : 'none';
+
+      // 페이지 제목 업데이트
+      document.getElementById('pageTitle').textContent = isAdmin ?
+        '수강생 문의 관리' : '나의 문의사항';
+
+      document.getElementById('pageDescription').textContent = isAdmin ?
+        'AI-X 3기 수강생들의 문의사항을 확인하고 답변하세요' :
+        '문의사항을 확인하고 새로운 질문을 등록하세요';
+
+      // 통계 섹션
+      document.getElementById('statsSection').style.display = isAdmin ? 'grid' : 'none';
+      document.getElementById('categoryStatsSection').style.display = isAdmin ? 'block' : 'none';
+
+      // 학생 문의 작성 폼
+      document.getElementById('studentInquiryForm').style.display = isAdmin ? 'none' : 'block';
+
+      // FAQ 추가 버튼
+      document.getElementById('addFaqBtn').style.display = isAdmin ? 'block' : 'none';
+
+      // 필터 섹션 (관리자만 표시)
+      document.getElementById('filterSection').style.display = isAdmin ? 'block' : 'none';
+
+      // 카운트 업데이트
+      if (isAdmin) {
+        document.getElementById('totalCount').textContent = inquiryData.length;
+        document.getElementById('countLabel').textContent = '총 문의';
+      } else {
+        const myInquiries = inquiryData.filter(inquiry => inquiry.email === user.email);
+        document.getElementById('totalCount').textContent = myInquiries.length;
+        document.getElementById('countLabel').textContent = '내 문의';
+      }
+    }
+
+    // 통계 업데이트 함수
+    function updateStatistics() {
+      const pendingInquiries = inquiryData.filter(inquiry => inquiry.status === 'pending');
+      const answeredInquiries = inquiryData.filter(inquiry => inquiry.status === 'answered');
+
+      // 기본 통계 업데이트
+      document.getElementById('pendingCount').textContent = pendingInquiries.length;
+      document.getElementById('answeredCount').textContent = answeredInquiries.length;
+
+      // 카테고리별 통계 업데이트
+      const categoryCounts = {
+        technical: 0,
+        assignment: 0,
+        schedule: 0,
+        mentoring: 0,
+        other: 0
+      };
+
+      inquiryData.forEach(inquiry => {
+        categoryCounts[inquiry.category] = (categoryCounts[inquiry.category] || 0) + 1;
+      });
+
+      document.getElementById('technicalCount').textContent = categoryCounts.technical;
+      document.getElementById('assignmentCount').textContent = categoryCounts.assignment;
+      document.getElementById('scheduleCount').textContent = categoryCounts.schedule;
+      document.getElementById('mentoringCount').textContent = categoryCounts.mentoring;
+      document.getElementById('otherCount').textContent = categoryCounts.other;
+
+      // 진행률 바 업데이트
+      const total = inquiryData.length;
+      if (total > 0) {
+        document.querySelector('#technicalCount').parentNode.querySelector('.bg-purple-600').style.width = (categoryCounts.technical / total * 100) + '%';
+        document.querySelector('#assignmentCount').parentNode.querySelector('.bg-blue-600').style.width = (categoryCounts.assignment / total * 100) + '%';
+        document.querySelector('#scheduleCount').parentNode.querySelector('.bg-yellow-600').style.width = (categoryCounts.schedule / total * 100) + '%';
+        document.querySelector('#mentoringCount').parentNode.querySelector('.bg-orange-600').style.width = (categoryCounts.mentoring / total * 100) + '%';
+        document.querySelector('#otherCount').parentNode.querySelector('.bg-gray-600').style.width = (categoryCounts.other / total * 100) + '%';
+      }
+    }
+
+    // FAQ 렌더링
+    function renderFAQ() {
+      const faqList = document.getElementById('faqList');
+      const isAdmin = currentMode === 'admin';
+
+      faqList.innerHTML = faqData.map(faq => `
+        <div class="border border-gray-200 rounded-lg">
+          <div class="flex justify-between items-center p-4 cursor-pointer" onclick="toggleFaq(${faq.id})">
+            <h4 class="font-medium text-gray-800">${faq.question}</h4>
+            <div class="flex items-center space-x-2">
+              ${isAdmin ? `<button onclick="deleteFaq(${faq.id}); event.stopPropagation();" class="text-red-500 hover:text-red-700 text-sm">삭제</button>` : ''}
+              <svg class="w-5 h-5 text-gray-500 transform transition-transform" id="faq-arrow-${faq.id}">
+                <path fill="currentColor" d="M7.293 4.707a1 1 0 011.414 0L10 6.586l1.293-1.879a1 1 0 111.414 1.414L11 8.414l1.707 2.293a1 1 0 01-1.414 1.414L10 10.586l-1.293 1.879a1 1 0 01-1.414-1.414L9 8.414l-1.707-2.293a1 1 0 010-1.414z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="p-4 pt-0 text-gray-600 text-sm" id="faq-content-${faq.id}" style="display: none;">
+            ${faq.answer}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // FAQ 토글
+    function toggleFaq(id) {
+      const content = document.getElementById(`faq-content-${id}`);
+      const arrow = document.getElementById(`faq-arrow-${id}`);
+
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        arrow.style.transform = 'rotate(180deg)';
+      } else {
+        content.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    // 문의 목록 렌더링
+    function renderInquiries() {
+      const inquiryList = document.getElementById('inquiryList');
+      const isAdmin = currentMode === 'admin';
+      const user = currentUser[currentMode];
+
+      let filteredInquiries = inquiryData;
+      if (!isAdmin) {
+        // 학생 모드에서는 자신의 문의만 표시
+        filteredInquiries = inquiryData.filter(inquiry => inquiry.email === user.email);
+      }
+
+      inquiryList.innerHTML = filteredInquiries.map(inquiry => {
+        const categoryColors = {
+          technical: 'bg-purple-100 text-purple-800',
+          assignment: 'bg-blue-100 text-blue-800',
+          schedule: 'bg-yellow-100 text-yellow-800',
+          mentoring: 'bg-orange-100 text-orange-800',
+          other: 'bg-gray-100 text-gray-800'
+        };
+
+        const categoryNames = {
+          technical: '수업 관련 문의',
+          assignment: '학원 시설 및 환경',
+          schedule: '팀원 및 학원 생활',
+          other: '기타'
+        };
+
+        const statusColor = inquiry.status === 'pending' ? 'border-red-500' : 'border-green-500';
+        const statusBadge = inquiry.status === 'pending' ?
+          '<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미답변</span>' :
+          '<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">답변완료</span>';
+
+        return `
+          <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 ${statusColor}">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center space-x-3 mb-2">
+                  ${statusBadge}
+                  <span class="${categoryColors[inquiry.category]} text-xs font-medium px-2.5 py-0.5 rounded">${categoryNames[inquiry.category]}</span>
+                  <span class="text-sm text-gray-500">${inquiry.time}</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">${inquiry.student} - ${inquiry.title}</h3>
+                <p class="text-gray-600 mb-3">${inquiry.content}</p>
+
+                ${inquiry.answer ? `
+                  <div class="bg-gray-50 rounded-lg p-4 mt-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="text-sm font-medium text-emerald-600">${inquiry.answer.admin}</span>
+                      <span class="text-xs text-gray-500">${inquiry.answer.time} 답변</span>
+                    </div>
+                    <p class="text-sm text-gray-700">${inquiry.answer.content}</p>
+                  </div>
+                ` : ''}
+
+                <div class="flex items-center space-x-4 text-sm text-gray-500 mt-3">
+                  <span>📧 ${inquiry.email}</span>
+                  <span>🏷️ ${inquiry.team}</span>
+                </div>
+              </div>
+              <div class="ml-4">
+                ${inquiry.status === 'pending' && isAdmin ?
+                  `<button onclick="openAnswerModal(${inquiry.id})" class="bg-emerald-600 text-black px-4 py-2 rounded-lg hover:bg-emerald-700 mb-2">답변하기</button>` :
+                  inquiry.status === 'answered' ? '<span class="text-green-600 text-sm font-medium">✓ 해결됨</span>' : ''
+                }
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // FAQ 관련 함수들
+    function addFaq() {
+      document.getElementById('faqModal').style.display = 'flex';
+    }
+
+    function closeFaqModal() {
+      document.getElementById('faqModal').style.display = 'none';
+      document.getElementById('faqQuestion').value = '';
+      document.getElementById('faqAnswer').value = '';
+    }
+
+    function submitFaq(event) {
+      event.preventDefault();
+      const question = document.getElementById('faqQuestion').value;
+      const answer = document.getElementById('faqAnswer').value;
+
+      const newFaq = {
+        id: faqData.length + 1,
+        question: question,
+        answer: answer
+      };
+
+      faqData.push(newFaq);
+      renderFAQ();
+      closeFaqModal();
+      alert('FAQ가 추가되었습니다.');
+    }
+
+    function deleteFaq(id) {
+      if (confirm('이 FAQ를 삭제하시겠습니까?')) {
+        faqData = faqData.filter(faq => faq.id !== id);
+        renderFAQ();
+      }
+    }
+
+    // 답변 관련 함수들
+    function openAnswerModal(inquiryId) {
+      currentInquiryId = inquiryId;
+      const inquiry = inquiryData.find(item => item.id === inquiryId);
+
+      document.getElementById('inquiryToAnswer').innerHTML = `
+        <h4 class="font-medium text-gray-800 mb-2">${inquiry.student} - ${inquiry.title}</h4>
+        <p class="text-gray-600 text-sm">${inquiry.content}</p>
+      `;
+
+      document.getElementById('answerModal').style.display = 'flex';
+    }
+
+    function closeAnswerModal() {
+      document.getElementById('answerModal').style.display = 'none';
+      document.getElementById('answerContent').value = '';
+      currentInquiryId = null;
+    }
+
+    function submitAnswer(event) {
+      event.preventDefault();
+      const answerContent = document.getElementById('answerContent').value;
+
+      const inquiry = inquiryData.find(item => item.id === currentInquiryId);
+      inquiry.status = 'answered';
+      inquiry.answer = {
+        content: answerContent,
+        admin: currentUser.admin.role + ' ' + currentUser.admin.name,
+        time: '방금 전'
+      };
+
+      renderInquiries();
+      updateStatistics();
+      closeAnswerModal();
+      alert('답변이 등록되었습니다.');
+    }
+
+    // 학생 문의 등록
+    function submitInquiry(event) {
+      event.preventDefault();
+
+      const category = document.getElementById('inquiryCategory').value;
+      const title = document.getElementById('inquiryTitle').value;
+      const content = document.getElementById('inquiryContent').value;
+      const user = currentUser.student;
+
+      const newInquiry = {
+        id: inquiryData.length + 1,
+        student: user.name,
+        email: user.email,
+        team: user.team,
+        category: category,
+        status: 'pending',
+        title: title,
+        content: content,
+        time: '방금 전',
+        answer: null
+      };
+
+      inquiryData.push(newInquiry);
+      renderInquiries();
+      updateStatistics();
+      updateModeUI();
+
+      // 폼 리셋
+      document.getElementById('inquiryTitle').value = '';
+      document.getElementById('inquiryContent').value = '';
+
+      alert('문의가 등록되었습니다.');
+    }
+
+    // 기존 함수들
     function goBackToMain() {
       const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
       window.location.href = `main.html?cohort=${currentCohort}`;
@@ -251,24 +725,12 @@
     // 필터 기능
     document.getElementById('statusFilter').addEventListener('change', function() {
       const selectedStatus = this.value;
-      // 실제 구현시 문의 목록 필터링 로직 추가
       console.log('상태 필터:', selectedStatus);
     });
 
     document.getElementById('categoryFilter').addEventListener('change', function() {
       const selectedCategory = this.value;
-      // 실제 구현시 카테고리 필터링 로직 추가
       console.log('카테고리 필터:', selectedCategory);
-    });
-
-    // 답변하기 버튼 클릭
-    document.querySelectorAll('button').forEach(button => {
-      if (button.textContent.includes('답변하기')) {
-        button.addEventListener('click', function() {
-          // 실제 구현시 답변 작성 모달 또는 페이지 이동
-          alert('답변 작성 페이지로 이동합니다.');
-        });
-      }
     });
   </script>
 </body>
