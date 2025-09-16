@@ -86,12 +86,6 @@
         <!-- 테스트 계정 안내 -->
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <h3 class="font-semibold text-gray-900 mb-2">테스트 계정</h3>
-          <div class="text-sm text-gray-600 space-y-1">
-            <p><strong>운영자:</strong> admin@aix.com / admin123</p>
-            <p><strong>멘토:</strong> mentor@aix.com / mentor123</p>
-            <p><strong>코치:</strong> coach@aix.com / coach123</p>
-            <p><strong>학생:</strong> student@aix.com / student123</p>
-          </div>
         </div>
 
         <!-- 회원가입 링크 -->
@@ -158,12 +152,7 @@
       const rememberMe = formData.get('remember-me');
 
       // 테스트 계정 확인
-      const testAccounts = {
-        'admin@aix.com': { password: 'admin123', type: 'operator', name: '권회은' },
-        'mentor@aix.com': { password: 'mentor123', type: 'mentor', name: '김멘토' },
-        'coach@aix.com': { password: 'coach123', type: 'coach', name: '박코치' },
-        'student@aix.com': { password: 'student123', type: 'student', name: '이학생' }
-      };
+
 
       if (testAccounts[email] && testAccounts[email].password === password) {
         const account = testAccounts[email];
@@ -202,7 +191,7 @@
         }
       } else {
         // 실제 시스템에서는 서버 인증
-        alert('이메일 또는 비밀번호가 올바르지 않습니다.\n\n테스트 계정을 사용해보세요:\n- admin@aix.com / admin123\n- mentor@aix.com / mentor123\n- coach@aix.com / coach123\n- student@aix.com / student123');
+        alert('이메일 또는 비밀번호가 올바르지 않습니다.\n\n테스트 계정을 사용해보세요');
       }
     }
 

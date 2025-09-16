@@ -6,37 +6,10 @@
   <title>AI-X 전체 과정 관리</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script>
-    // 페이지 로드 시 인증 상태 확인 및 스크롤 초기화
+    // 페이지 로드 시 초기화 (와이어프레임용)
     window.addEventListener('DOMContentLoaded', function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const isAuthenticated = urlParams.get('authenticated') === 'true';
-      const inviteCode = urlParams.get('invite') === 'true';
-      
-      // 첫 방문자인지 확인 (인증되지 않았고 초대 코드도 없고 로그인 의도도 없는 경우)
-      const fromLogin = urlParams.get('from') === 'login';
-      if (!isAuthenticated && !inviteCode && !fromLogin) {
-        // 첫 방문자는 preview.html로 리다이렉트
-        window.location.href = 'preview.html';
-        return;
-      }
-      
-      if (isAuthenticated) {
-        // main.html에서 온 경우 로그인 건너뛰기
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('mainContent').classList.remove('hidden');
-        document.getElementById('mainContent').classList.add('block');
-        
-        // 사용자 역할에 따른 UI 조정
-        checkUserRoleAndAdjustUI();
-      }
-      
-      // 초대 코드로 온 경우 멘토 회원가입 페이지로 리다이렉트
-      if (inviteCode) {
-        window.location.href = 'mentor-signup.html';
-        return;
-      }
-      
-      // 초기화 완료
+      // 와이어프레임이므로 항상 로그인 화면부터 시작
+      // 별도의 인증 확인이나 리다이렉트 없음
     });
 
     function goToCohort(id) {
@@ -49,6 +22,20 @@
   <!-- 로그인/회원가입 화면 -->
   <div id="loginScreen" class="min-h-screen flex items-center justify-center">
     <div class="bg-white rounded-xl shadow-lg p-8 w-96 max-w-sm mx-4">
+      <h2 class="text-2xl font-bold text-center mb-6">AI-X 로그인</h2>
+      <form onsubmit="handleLogin(event)">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2">아이디</label>
+          <input type="text" id="adminId" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" placeholder="아이디를 입력하세요">
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2">비밀번호</label>
+          <input type="password" id="adminPassword" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" placeholder="비밀번호를 입력하세요">
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          로그인
+        </button>
+      </form>
     </div>
   </div>
 
@@ -129,28 +116,12 @@
   </div>
 
   <script>
-    // 로그인 처리 (기존 사용자 + 새 사용자 지원)
+    // 로그인 처리 (와이어프레임용 - 인증 없이 진행)
     function handleLogin(event) {
       event.preventDefault();
-      
-      const adminId = document.getElementById('adminId').value;
-      const adminPassword = document.getElementById('adminPassword').value;
-      
-      // 기본 관리자 계정 확인
-      if (adminId === 'admin' && adminPassword === 'admin123') {
-        loginSuccess('권회은', 'operator');
-        return;
-      }
-      
-      // 등록된 사용자 확인
-      const existingUsers = JSON.parse(localStorage.getItem('aixUsers') || '[]');
-      const user = existingUsers.find(u => u.id === adminId && u.password === adminPassword);
-      
-      if (user) {
-        loginSuccess(user.name, user.role);
-      } else {
-        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
-      }
+
+      // 와이어프레임이므로 어떤 입력이든 로그인 성공으로 처리
+      loginSuccess('운영자', 'operator');
     }
 
     // 사용자 역할에 따른 UI 조정
