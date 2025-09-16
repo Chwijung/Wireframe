@@ -3,389 +3,811 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>설문 관리 - AI-X 시스템</title>
+  <title>수강생 설문 관리 - AI-X 시스템</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-  <!-- 네비게이션 -->
-  <nav class="bg-white shadow-lg">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex justify-between items-center py-4">
+  <!-- 헤더 -->
+  <header class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <button onclick="goBackToMain()" class="text-gray-600 hover:text-gray-800 transition-colors mr-4">
+            메인으로
+          </button>
+          <h1 class="text-xl font-bold text-gray-900">수강생 설문 관리</h1>
+        </div>
         <div class="flex items-center space-x-4">
-          <a href="#" onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
-          <h1 class="text-2xl font-bold text-green-700">🎓 학습자 온보딩 시스템</h1>
+          <span class="text-gray-600">[운영자] 권회은</span>
         </div>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="max-w-4xl mx-auto p-6">
-    <!-- 관리자 대시보드 헤더 -->
+  <div class="max-w-6xl mx-auto p-6">
+    <!-- 통계 대시보드 헤더 -->
     <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-      <div class="flex items-start justify-between">
-        <div class="flex items-start">
-          <svg class="w-8 h-8 text-indigo-600 mr-4 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
           <div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">설문 관리 시스템</h2>
-            <p class="text-gray-600">설문을 활성화하고 응답 현황을 확인할 수 있습니다.</p>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">사전 설문 관리</h2>
+            <p class="text-gray-600">수강생들의 설문 응답을 확인하고 통계를 분석할 수 있습니다.</p>
           </div>
         </div>
-        <div class="text-right">
-          <div class="text-sm text-gray-500">총 등록된 설문</div>
-          <div class="text-2xl font-bold text-indigo-600">4개</div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-gray-600" id="completion-rate">
+            24 / 30
+          </div>
+          <div class="text-sm text-gray-500">설문 완료 현황</div>
+          <div class="text-xs text-gray-400 mt-1">
+            완료율: <span id="completion-percentage">80</span>%
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 설문 관리 목록 -->
-    <div class="space-y-6">
-      <!-- 설문 1 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <span class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">1</span>
-            <div>
-              <h3 class="text-xl font-bold text-gray-800">팀 빌딩을 위한 사전설문</h3>
-              <p class="text-gray-600 text-sm">최적의 팀 편성을 위한 개인 정보와 기술 수준, 협업 스타일을 파악합니다.</p>
-            </div>
+    <!-- 탭 메뉴 -->
+    <div class="mb-6">
+      <div class="border-b border-gray-200">
+        <nav class="-mb-px flex space-x-8">
+          <button onclick="switchTab('overview')" id="tab-overview" class="py-2 px-1 border-b-2 font-medium text-sm transition-colors border-indigo-500 text-gray-600">
+            통계 개요
+          </button>
+          <button onclick="switchTab('responses')" id="tab-responses" class="py-2 px-1 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+            개별 응답
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- 통계 개요 탭 -->
+    <div id="overview-tab" class="tab-content">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- 왼쪽 위: 기본 정보 -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-800">기본 정보</h3>
+            <select id="chart-select-1" onchange="updateChart('chart1', this.value)" class="text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="gender">성별 분포</option>
+              <option value="computer_major">컴퓨터 전공 여부</option>
+              <option value="python_pre_learning">파이썬 사전 학습</option>
+            </select>
           </div>
-          <div class="flex items-center space-x-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-blue-600" id="count-team-building">27</div>
-              <div class="text-sm text-gray-500">응답자</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="toggle-team-building" class="sr-only peer" checked onchange="toggleSurvey('team-building')">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-            </label>
+          <div class="h-64 relative">
+            <canvas id="chart1"></canvas>
           </div>
         </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4 text-sm text-gray-500">
-            <span>⏱️ 예상 소요: 10-15분</span>
-            <span>📅 생성일: 2024-01-15</span>
-            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">활성화</span>
+
+        <!-- 오른쪽 위: 경험 분석 -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-800">경험 분석</h3>
+            <select id="chart-select-2" onchange="updateChart('chart2', this.value)" class="text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="ai_experience">AI 경험 수준</option>
+              <option value="programming_languages">프로그래밍 언어</option>
+              <option value="tech_stack">기술 스택</option>
+              <option value="recent_role">최근 프로젝트 역할</option>
+            </select>
           </div>
-          <div class="flex space-x-2">
-            <button onclick="editSurvey('team-building')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-              설문 편집
-            </button>
-            <button onclick="viewResponses('team-building')" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
-              응답 보기
-            </button>
-            <button onclick="downloadResults('team-building')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-              다운로드
-            </button>
+          <div class="h-64 relative">
+            <canvas id="chart2"></canvas>
+          </div>
+        </div>
+
+        <!-- 왼쪽 아래: 목표 분석 -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-800">목표 분석</h3>
+            <select id="chart-select-3" onchange="updateChart('chart3', this.value)" class="text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="learning_fields">학습 희망 분야</option>
+              <option value="preferred_project_type">선호 프로젝트 유형</option>
+            </select>
+          </div>
+          <div class="h-64 relative">
+            <canvas id="chart3"></canvas>
+          </div>
+        </div>
+
+        <!-- 오른쪽 아래: 성향 분석 -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-800">성향 분석</h3>
+            <select id="chart-select-4" onchange="updateChart('chart4', this.value)" class="text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="mbti">MBTI 분포</option>
+            </select>
+          </div>
+          <div class="h-64 relative">
+            <canvas id="chart4"></canvas>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- 설문 2 -->
+    <!-- 개별 응답 탭 -->
+    <div id="responses-tab" class="tab-content" style="display: none;">
       <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <span class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">2</span>
-            <div>
-              <h3 class="text-xl font-bold text-gray-800">슬기로운 프로젝트 생활 Part 1</h3>
-              <p class="text-gray-600 text-sm">프로젝트 초기 단계에서의 목표 설정과 계획 수립에 대한 설문입니다.</p>
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-green-600" id="count-project-life-1">89</div>
-              <div class="text-sm text-gray-500">응답자</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="toggle-project-life-1" class="sr-only peer" checked onchange="toggleSurvey('project-life-1')">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-            </label>
-          </div>
-        </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4 text-sm text-gray-500">
-            <span>⏱️ 예상 소요: 8-12분</span>
-            <span>📅 생성일: 2024-01-20</span>
-            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">활성화</span>
-          </div>
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-gray-800">개별 응답 목록</h3>
           <div class="flex space-x-2">
-            <button onclick="editSurvey('project-life-1')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-              설문 편집
+            <input type="text" id="search-input" placeholder="이름으로 검색..." class="px-3 py-1 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button onclick="searchStudents()" class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors">
+              검색
             </button>
-            <button onclick="viewResponses('project-life-1')" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
-              응답 보기
-            </button>
-            <button onclick="downloadResults('project-life-1')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-              다운로드
+            <button onclick="resetFilters()" class="px-3 py-1 bg-gray-500 text-white rounded-lg text-sm hover:bg-gray-600 transition-colors">
+              초기화
             </button>
           </div>
         </div>
-      </div>
 
-      <!-- 설문 3 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <span class="bg-purple-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">3</span>
+        <!-- 필터링 옵션 -->
+        <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <h3 class="text-xl font-bold text-gray-800">슬기로운 프로젝트 생활 Part 2</h3>
-              <p class="text-gray-600 text-sm">프로젝트 진행 중 발생하는 문제 해결과 팀워크에 관한 설문입니다.</p>
+              <label class="block text-sm font-medium text-gray-700 mb-1">AI 경험</label>
+              <select id="filter-ai-experience" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">전체</option>
+                <option value="none">전혀 모른다</option>
+                <option value="chatgpt_basic">ChatGPT 기초</option>
+                <option value="chatgpt_dev">개발 도구 사용</option>
+                <option value="opensource">오픈소스 활용</option>
+                <option value="expert">전문가 수준</option>
+              </select>
             </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600" id="count-project-life-2">45</div>
-              <div class="text-sm text-gray-500">응답자</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="toggle-project-life-2" class="sr-only peer" onchange="toggleSurvey('project-life-2')">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-            </label>
-          </div>
-        </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4 text-sm text-gray-500">
-            <span>⏱️ 예상 소요: 7-10분</span>
-            <span>📅 생성일: 2024-01-25</span>
-            <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">비활성화</span>
-          </div>
-          <div class="flex space-x-2">
-            <button onclick="editSurvey('project-life-2')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-              설문 편집
-            </button>
-            <button onclick="viewResponses('project-life-2')" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors">
-              응답 보기
-            </button>
-            <button onclick="downloadResults('project-life-2')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-              다운로드
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 설문 4 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <span class="bg-orange-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-semibold mr-4">4</span>
             <div>
-              <h3 class="text-xl font-bold text-gray-800">슬기로운 프로젝트 생활 Part 3</h3>
-              <p class="text-gray-600 text-sm">프로젝트 완료 및 결과 평가, 향후 개선 방안에 대한 설문입니다.</p>
+              <label class="block text-sm font-medium text-gray-700 mb-1">성별</label>
+              <select id="filter-gender" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">전체</option>
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">전공 여부</label>
+              <select id="filter-computer-major" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">전체</option>
+                <option value="Y">전공자</option>
+                <option value="N">비전공자</option>
+              </select>
             </div>
           </div>
-          <div class="flex items-center space-x-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-orange-600" id="count-project-life-3">12</div>
-              <div class="text-sm text-gray-500">응답자</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="toggle-project-life-3" class="sr-only peer" onchange="toggleSurvey('project-life-3')">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-            </label>
-          </div>
         </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4 text-sm text-gray-500">
-            <span>⏱️ 예상 소요: 5-8분</span>
-            <span>📅 생성일: 2024-01-30</span>
-            <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">비활성화</span>
-          </div>
-          <div class="flex space-x-2">
-            <button onclick="editSurvey('project-life-3')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-              설문 편집
-            </button>
-            <button onclick="viewResponses('project-life-3')" class="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors">
-              응답 보기
-            </button>
-            <button onclick="downloadResults('project-life-3')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-              다운로드
-            </button>
-          </div>
-        </div>
-      </div>
 
-      <!-- 설문 추가 버튼 -->
-      <div class="flex justify-center">
-        <button onclick="addSurvey()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-          설문 추가
-        </button>
+        <!-- 검색 결과 정보 -->
+        <div class="mb-4 text-sm text-gray-600" id="search-results-info">
+          전체 30명 중 24명 표시
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이름</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이메일</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">전공여부</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">주요언어</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">최근 역할</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">더보기</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200" id="students-table-body">
+              <!-- 학생 데이터가 JavaScript로 동적 생성됨 -->
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
   </div>
 
+  <!-- 설문 상세 모달 -->
+  <div id="survey-detail-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
+    <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="p-6">
+        <!-- 모달 헤더 -->
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold text-gray-800" id="modal-student-name">
+            학생 설문 응답
+          </h3>
+          <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- 설문 내용 -->
+        <div id="modal-survey-content">
+          <!-- 설문 상세 내용이 JavaScript로 동적 생성됨 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // 설문 상태 데이터
-    const surveyData = {
-      'team-building': {
-        title: '팀 빌딩을 위한 사전설문',
-        active: true,
-        responseCount: 127,
-        createdDate: '2024-01-15'
-      },
-      'project-life-1': {
-        title: '슬기로운 프로젝트 생활 Part 1',
-        active: true,
-        responseCount: 89,
-        createdDate: '2024-01-20'
-      },
-      'project-life-2': {
-        title: '슬기로운 프로젝트 생활 Part 2',
-        active: false,
-        responseCount: 45,
-        createdDate: '2024-01-25'
-      },
-      'project-life-3': {
-        title: '슬기로운 프로젝트 생활 Part 3',
-        active: false,
-        responseCount: 12,
-        createdDate: '2024-01-30'
+    // 현재 활성 탭
+    let currentTab = 'overview';
+
+    // 차트 인스턴스 저장
+    const charts = {};
+
+    // 차트 선택 상태
+    const chartSelections = {
+      chart1: 'gender',
+      chart2: 'ai_experience',
+      chart3: 'learning_fields',
+      chart4: 'mbti'
+    };
+
+    // 설문 통계 데이터 (React 컴포넌트와 동일한 구조)
+    const surveyStatsData = {
+      completed_surveys: 24,
+      total_students: 30,
+      completion_rate: 80
+    };
+
+    // 통계 데이터 (React 컴포넌트와 동일한 구조)
+    const statisticsData = {
+      total_responses: 24,
+      statistics: {
+        gender: {
+          '남성': 14,
+          '여성': 10
+        },
+        computer_major: {
+          '전공자': 16,
+          '비전공자': 8
+        },
+        python_pre_learning: {
+          '있음': 18,
+          '없음': 6
+        },
+        ai_experience: {
+          '전혀 모름': 3,
+          'ChatGPT 기초': 8,
+          'ChatGPT 개발': 7,
+          '오픈소스 활용': 4,
+          '전문가 수준': 2
+        },
+        programming_languages: {
+          'Python': 15,
+          'JavaScript': 12,
+          'Java': 8,
+          '기타': 4
+        },
+        tech_stack: {
+          '프론트엔드 (React, Vue 등)': 14,
+          '백엔드 (Node.js, Spring 등)': 12,
+          '데이터베이스 (MySQL, MongoDB 등)': 9,
+          '인프라 (Docker, AWS 등)': 5,
+          'AI (HuggingFace, API서비스 등)': 8
+        },
+        recent_role: {
+          '팀 리더': 4,
+          '개발자 (프론트)': 8,
+          '개발자 (백엔드)': 6,
+          '개발자 (AI)': 3,
+          '데이터 분석': 2,
+          '디자이너': 1
+        },
+        mbti: {
+          'ENFP': 3, 'ISTJ': 2, 'ENTP': 4, 'INFP': 2,
+          'ESTP': 3, 'ISFJ': 1, 'ENTJ': 2, 'INTP': 1,
+          'ESFP': 2, 'ISFP': 1, 'ESTJ': 1, 'INFJ': 1, 'ESFJ': 1
+        },
+        preferred_project_type: {
+          '강의 형식': 8,
+          '기업 플젝': 10,
+          '자율 플젝': 6
+        },
+        learning_fields: {
+          '백엔드': 12,
+          '프론트엔드': 14,
+          'AI': 10,
+          '데이터 분석': 6,
+          '인프라': 4
+        }
       }
     };
 
-    // 설문 활성화/비활성화 토글
-    function toggleSurvey(surveyId) {
-      const toggle = document.getElementById(`toggle-${surveyId}`);
-      const isActive = toggle.checked;
-      
-      surveyData[surveyId].active = isActive;
-      
-      // 상태 업데이트
-      updateSurveyStatus(surveyId);
-      
-      // 로그 출력 (실제 구현에서는 서버로 전송)
-      console.log(`설문 ${surveyId} 상태 변경:`, isActive ? '활성화' : '비활성화');
-      
-      // 알림 메시지
-      const action = isActive ? '활성화' : '비활성화';
-      showNotification(`${surveyData[surveyId].title}가 ${action}되었습니다.`, isActive ? 'success' : 'warning');
-    }
-
-    // 설문 상태 업데이트
-    function updateSurveyStatus(surveyId) {
-      const statusElements = document.querySelectorAll(`[data-survey="${surveyId}"] .status-badge`);
-      const isActive = surveyData[surveyId].active;
-      
-      // 상태 뱃지 찾기 (다른 방법으로 접근)
-      const surveyCard = document.getElementById(`toggle-${surveyId}`).closest('.bg-white');
-      const statusBadge = surveyCard.querySelector('.px-2.py-1');
-      
-      if (statusBadge) {
-        if (isActive) {
-          statusBadge.className = 'px-2 py-1 bg-green-100 text-green-800 rounded-full';
-          statusBadge.textContent = '활성화';
-        } else {
-          statusBadge.className = 'px-2 py-1 bg-red-100 text-red-800 rounded-full';
-          statusBadge.textContent = '비활성화';
-        }
-      }
-    }
-
-    // 응답 보기
-    function viewResponses(surveyId) {
-      const survey = surveyData[surveyId];
-      alert(`📊 ${survey.title} 응답 현황\n\n` +
-            `• 총 응답자: ${survey.responseCount}명\n` +
-            `• 설문 상태: ${survey.active ? '활성화' : '비활성화'}\n` +
-            `• 생성일: ${survey.createdDate}\n\n` +
-            `상세 응답 내용을 보려면 별도 페이지로 이동합니다.`);
-      
-      // 실제 구현에서는 응답 상세 페이지로 이동
-      console.log(`응답 보기: ${surveyId}`);
-    }
-
-    // 결과 다운로드
-    function downloadResults(surveyId) {
-      const survey = surveyData[surveyId];
-      
-      if (survey.responseCount === 0) {
-        showNotification('응답자가 없어서 다운로드할 데이터가 없습니다.', 'warning');
-        return;
-      }
-      
-      // 실제 구현에서는 서버에서 파일 생성 및 다운로드
-      showNotification(`${survey.title} 결과를 다운로드 중입니다...`, 'info');
-      
-      // 시뮬레이션: 2초 후 다운로드 완료
-      setTimeout(() => {
-        showNotification('다운로드가 완료되었습니다!', 'success');
-        console.log(`다운로드 완료: ${surveyId}_results.xlsx`);
-      }, 2000);
-    }
-
-    // 알림 메시지 표시
-    function showNotification(message, type = 'info') {
-      // 기존 알림이 있으면 제거
-      const existingNotification = document.querySelector('.notification');
-      if (existingNotification) {
-        existingNotification.remove();
-      }
-      
-      // 알림 색상 설정
-      let bgColor, textColor;
-      switch (type) {
-        case 'success':
-          bgColor = 'bg-green-100';
-          textColor = 'text-green-800';
-          break;
-        case 'warning':
-          bgColor = 'bg-yellow-100';
-          textColor = 'text-yellow-800';
-          break;
-        case 'error':
-          bgColor = 'bg-red-100';
-          textColor = 'text-red-800';
-          break;
-        default:
-          bgColor = 'bg-blue-100';
-          textColor = 'text-blue-800';
-      }
-      
-      // 알림 요소 생성
-      const notification = document.createElement('div');
-      notification.className = `notification fixed top-4 right-4 ${bgColor} ${textColor} px-6 py-4 rounded-lg shadow-lg z-50 transition-all duration-300`;
-      notification.textContent = message;
-      
-      // 페이지에 추가
-      document.body.appendChild(notification);
-      
-      // 3초 후 자동 제거
-      setTimeout(() => {
-        notification.style.opacity = '0';
-        setTimeout(() => {
-          if (notification.parentNode) {
-            notification.remove();
+    // 개별 응답 데이터
+    const individualResponsesData = {
+      total_students: 30,
+      filtered_students: 24,
+      students: [
+        {
+          user_id: 1,
+          name: '김민수',
+          email: 'kim.minsu@example.com',
+          computer_major: '전공자',
+          main_language: 'Python',
+          recent_role: '개발자 (백엔드)',
+          survey_completed: true,
+          survey_data: {
+            name: '김민수',
+            email: 'kim.minsu@example.com',
+            gender: 'male',
+            mbti: 'ENFP',
+            computer_major: 'Y',
+            python_pre_learning: 'Y',
+            ai_experience: 'chatgpt_dev',
+            programming_languages: ['Python', 'JavaScript'],
+            tech_stack: ['백엔드 (Node.js, Spring 등)', 'AI (HuggingFace, API서비스 등)'],
+            preferred_project_type: 'company',
+            learning_fields: ['백엔드', 'AI'],
+            desired_job: '백엔드 개발자',
+            previous_course: '없음',
+            skill_description: '웹 개발 2년 경험',
+            career_details: '스타트업에서 백엔드 개발',
+            goal_description: 'AI 융합 서비스 개발',
+            course_questions: 'AI 실무 프로젝트 경험 희망'
           }
-        }, 300);
-      }, 3000);
+        },
+        {
+          user_id: 2,
+          name: '박지영',
+          email: 'park.jiyoung@example.com',
+          computer_major: '비전공자',
+          main_language: 'JavaScript',
+          recent_role: '개발자 (프론트)',
+          survey_completed: true,
+          survey_data: {
+            name: '박지영',
+            email: 'park.jiyoung@example.com',
+            gender: 'female',
+            mbti: 'ISTJ',
+            computer_major: 'N',
+            python_pre_learning: 'N',
+            ai_experience: 'chatgpt_basic',
+            programming_languages: ['JavaScript', 'Python'],
+            tech_stack: ['프론트엔드 (React, Vue 등)', '데이터베이스 (MySQL, MongoDB 등)'],
+            preferred_project_type: 'lecture',
+            learning_fields: ['프론트엔드', '데이터 분석'],
+            desired_job: '풀스택 개발자',
+            previous_course: 'AI-X 2기',
+            skill_description: 'React 기반 웹 개발',
+            career_details: '프리랜서 프론트엔드 개발',
+            goal_description: 'AI 기능이 포함된 웹 서비스 개발',
+            course_questions: 'AI API 연동 방법 학습 희망'
+          }
+        },
+        {
+          user_id: 3,
+          name: '이준호',
+          email: 'lee.junho@example.com',
+          computer_major: '전공자',
+          main_language: 'Java',
+          recent_role: '팀 리더',
+          survey_completed: true,
+          survey_data: {
+            name: '이준호',
+            email: 'lee.junho@example.com',
+            gender: 'male',
+            mbti: 'ENTJ',
+            computer_major: 'Y',
+            python_pre_learning: 'Y',
+            ai_experience: 'opensource',
+            programming_languages: ['Java', 'Python'],
+            tech_stack: ['백엔드 (Node.js, Spring 등)', '인프라 (Docker, AWS 등)'],
+            preferred_project_type: 'self_directed',
+            learning_fields: ['백엔드', '인프라'],
+            desired_job: 'AI 엔지니어',
+            previous_course: '없음',
+            skill_description: 'Java Spring 5년 경험',
+            career_details: 'SI 기업에서 팀장 역할',
+            goal_description: 'MLOps 엔지니어로 전환',
+            course_questions: 'AI 모델 배포 및 운영 학습'
+          }
+        }
+      ]
+    };
+
+    // 필터 상태
+    let currentFilters = {
+      aiExperience: '',
+      gender: '',
+      computerMajor: '',
+      searchName: ''
+    };
+
+    // 페이지 로드 시 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeCharts();
+      renderStudentsTable();
+    });
+
+    // 탭 전환
+    function switchTab(tab) {
+      currentTab = tab;
+
+      // 탭 버튼 상태 업데이트
+      document.getElementById('tab-overview').className = tab === 'overview'
+        ? 'py-2 px-1 border-b-2 font-medium text-sm transition-colors border-indigo-500 text-gray-600'
+        : 'py-2 px-1 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
+
+      document.getElementById('tab-responses').className = tab === 'responses'
+        ? 'py-2 px-1 border-b-2 font-medium text-sm transition-colors border-indigo-500 text-gray-600'
+        : 'py-2 px-1 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
+
+      // 탭 컨텐츠 표시/숨김
+      document.getElementById('overview-tab').style.display = tab === 'overview' ? 'block' : 'none';
+      document.getElementById('responses-tab').style.display = tab === 'responses' ? 'block' : 'none';
+
+      console.log('설문 관리 탭 변경:', tab);
     }
 
-    // 실시간 응답자 수 업데이트 시뮬레이션
-    function simulateResponseUpdates() {
-      setInterval(() => {
-        // 활성화된 설문의 응답자 수를 랜덤하게 증가
-        Object.keys(surveyData).forEach(surveyId => {
-          if (surveyData[surveyId].active && Math.random() < 0.1) { // 10% 확률
-            surveyData[surveyId].responseCount += Math.floor(Math.random() * 3) + 1;
-            const countElement = document.getElementById(`count-${surveyId}`);
-            if (countElement) {
-              countElement.textContent = surveyData[surveyId].responseCount;
+    // 차트 초기화
+    function initializeCharts() {
+      const chartIds = ['chart1', 'chart2', 'chart3', 'chart4'];
+
+      chartIds.forEach(chartId => {
+        const canvas = document.getElementById(chartId);
+        if (canvas) {
+          const ctx = canvas.getContext('2d');
+          const chartType = getChartType(chartSelections[chartId]);
+          const chartData = generateChartData(chartSelections[chartId]);
+
+          charts[chartId] = new Chart(ctx, {
+            type: chartType,
+            data: chartData,
+            options: getChartOptions(chartType)
+          });
+        }
+      });
+    }
+
+    // 차트 업데이트
+    function updateChart(chartId, dataType) {
+      chartSelections[chartId] = dataType;
+
+      if (charts[chartId]) {
+        charts[chartId].destroy();
+      }
+
+      const canvas = document.getElementById(chartId);
+      const ctx = canvas.getContext('2d');
+      const chartType = getChartType(dataType);
+      const chartData = generateChartData(dataType);
+
+      charts[chartId] = new Chart(ctx, {
+        type: chartType,
+        data: chartData,
+        options: getChartOptions(chartType)
+      });
+
+      console.log('차트 선택 변경 (즉시 렌더링):', { chartId, dataType });
+    }
+
+    // 차트 타입 결정
+    function getChartType(dataType) {
+      switch (dataType) {
+        case 'gender':
+        case 'computer_major':
+        case 'python_pre_learning':
+          return 'pie';
+        case 'mbti':
+          return 'doughnut';
+        default:
+          return 'bar';
+      }
+    }
+
+    // 차트 데이터 생성
+    function generateChartData(dataType) {
+      const colors = {
+        primary: ['#3B82F6', '#EC4899', '#10B981', '#F59E0B', '#8B5CF6'],
+        doughnut: ['#3B82F6', '#EC4899', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444', '#06B6D4', '#84CC16', '#F97316', '#A855F7']
+      };
+
+      if (!statisticsData || statisticsData.total_responses === 0) {
+        return {
+          labels: ['데이터 없음'],
+          datasets: [{
+            data: [1],
+            backgroundColor: ['#E5E7EB'],
+            borderWidth: 0,
+            label: '응답 없음'
+          }]
+        };
+      }
+
+      const dataSource = statisticsData.statistics[dataType] || {};
+      const labels = Object.keys(dataSource);
+      const values = Object.values(dataSource);
+
+      if (dataType === 'mbti') {
+        return {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: colors.doughnut.slice(0, labels.length),
+            borderWidth: 0
+          }]
+        };
+      } else if (['ai_experience', 'programming_languages', 'tech_stack', 'recent_role', 'preferred_project_type', 'learning_fields'].includes(dataType)) {
+        return {
+          labels: labels,
+          datasets: [{
+            label: '응답자 수',
+            data: values,
+            backgroundColor: colors.primary.slice(0, labels.length),
+            borderRadius: 4
+          }]
+        };
+      } else {
+        return {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: colors.primary.slice(0, labels.length),
+            borderWidth: 0
+          }]
+        };
+      }
+    }
+
+    // 차트 옵션 설정
+    function getChartOptions(chartType) {
+      const baseOptions = {
+        responsive: true,
+        maintainAspectRatio: false
+      };
+
+      if (chartType === 'pie' || chartType === 'doughnut') {
+        return {
+          ...baseOptions,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 15,
+                usePointStyle: true,
+                font: {
+                  size: 11
+                }
+              }
             }
           }
-        });
-      }, 30000); // 30초마다 업데이트
+        };
+      } else {
+        return {
+          ...baseOptions,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            },
+            x: {
+              ticks: {
+                font: {
+                  size: 10
+                }
+              }
+            }
+          }
+        };
+      }
     }
 
+    // 학생 테이블 렌더링
+    function renderStudentsTable() {
+      const tbody = document.getElementById('students-table-body');
+      let filteredStudents = individualResponsesData.students;
+
+      // 필터 적용
+      if (currentFilters.searchName) {
+        filteredStudents = filteredStudents.filter(student =>
+          student.name.toLowerCase().includes(currentFilters.searchName.toLowerCase())
+        );
+      }
+
+      if (currentFilters.aiExperience) {
+        filteredStudents = filteredStudents.filter(student =>
+          student.survey_data && student.survey_data.ai_experience === currentFilters.aiExperience
+        );
+      }
+
+      if (currentFilters.gender) {
+        filteredStudents = filteredStudents.filter(student =>
+          student.survey_data && student.survey_data.gender === currentFilters.gender
+        );
+      }
+
+      if (currentFilters.computerMajor) {
+        filteredStudents = filteredStudents.filter(student =>
+          student.survey_data && student.survey_data.computer_major === currentFilters.computerMajor
+        );
+      }
+
+      // 테이블 HTML 생성
+      tbody.innerHTML = filteredStudents.map(student => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            ${student.name}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${student.email}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              student.computer_major === '전공자'
+                ? 'bg-blue-100 text-gray-800'
+                : student.computer_major === '비전공자'
+                ? 'bg-gray-100 text-gray-800'
+                : 'bg-red-100 text-red-800'
+            }">
+              ${student.computer_major}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${student.main_language}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${student.recent_role}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            ${student.survey_completed ? `
+              <button onclick="showStudentDetail(${student.user_id})" class="text-gray-600 hover:text-gray-900 transition-colors">
+                더보기
+              </button>
+            ` : `
+              <span class="text-gray-400">미완료</span>
+            `}
+          </td>
+        </tr>
+      `).join('');
+
+      // 검색 결과 정보 업데이트
+      document.getElementById('search-results-info').textContent =
+        `전체 ${individualResponsesData.total_students}명 중 ${filteredStudents.length}명 표시${
+          currentFilters.searchName ? ` (검색: "${currentFilters.searchName}")` : ''
+        }`;
+    }
+
+    // 검색 실행
+    function searchStudents() {
+      const searchInput = document.getElementById('search-input').value;
+      currentFilters.searchName = searchInput.trim();
+      renderStudentsTable();
+      console.log('검색 실행:', currentFilters.searchName);
+    }
+
+    // 필터 적용
+    function applyFilters() {
+      currentFilters.aiExperience = document.getElementById('filter-ai-experience').value;
+      currentFilters.gender = document.getElementById('filter-gender').value;
+      currentFilters.computerMajor = document.getElementById('filter-computer-major').value;
+      renderStudentsTable();
+      console.log('필터 변경:', currentFilters);
+    }
+
+    // 필터 초기화
+    function resetFilters() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('filter-ai-experience').value = '';
+      document.getElementById('filter-gender').value = '';
+      document.getElementById('filter-computer-major').value = '';
+
+      currentFilters = {
+        aiExperience: '',
+        gender: '',
+        computerMajor: '',
+        searchName: ''
+      };
+
+      renderStudentsTable();
+      console.log('필터 및 검색 초기화');
+    }
+
+    // 학생 상세 정보 표시
+    function showStudentDetail(userId) {
+      const student = individualResponsesData.students.find(s => s.user_id === userId);
+      if (!student || !student.survey_data) return;
+
+      const modal = document.getElementById('survey-detail-modal');
+      const modalTitle = document.getElementById('modal-student-name');
+      const modalContent = document.getElementById('modal-survey-content');
+
+      modalTitle.textContent = `${student.name}님의 설문 응답`;
+
+      const aiExperienceMap = {
+        'none': '전혀 모름',
+        'chatgpt_basic': 'ChatGPT 기초',
+        'chatgpt_dev': 'ChatGPT 개발',
+        'opensource': '오픈소스 활용',
+        'expert': '전문가 수준'
+      };
+
+      const projectTypeMap = {
+        'lecture': '강의 형식',
+        'company': '기업 플젝',
+        'self_directed': '자율 플젝'
+      };
+
+      modalContent.innerHTML = `
+        <div class="space-y-6">
+          <!-- 기본 정보 -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-800 mb-3">기본 정보</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div><span class="font-medium">이름:</span> ${student.survey_data.name}</div>
+              <div><span class="font-medium">이메일:</span> ${student.survey_data.email}</div>
+              <div><span class="font-medium">성별:</span> ${student.survey_data.gender === 'male' ? '남성' : '여성'}</div>
+              <div><span class="font-medium">MBTI:</span> ${student.survey_data.mbti}</div>
+              <div><span class="font-medium">컴퓨터 전공:</span> ${student.survey_data.computer_major === 'Y' ? '전공자' : '비전공자'}</div>
+              <div><span class="font-medium">파이썬 사전 학습:</span> ${student.survey_data.python_pre_learning === 'Y' ? '있음' : '없음'}</div>
+            </div>
+          </div>
+
+          <!-- 경험 정보 -->
+          <div class="bg-blue-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-800 mb-3">경험 정보</h4>
+            <div class="space-y-3 text-sm">
+              <div><span class="font-medium">AI 경험 수준:</span> ${aiExperienceMap[student.survey_data.ai_experience] || student.survey_data.ai_experience}</div>
+              <div><span class="font-medium">프로그래밍 언어:</span> ${student.survey_data.programming_languages?.join(', ') || '없음'}</div>
+              <div><span class="font-medium">기술 스택:</span> ${student.survey_data.tech_stack?.join(', ') || '없음'}</div>
+              <div><span class="font-medium">최근 프로젝트 역할:</span> ${student.recent_role}</div>
+            </div>
+          </div>
+
+          <!-- 목표 정보 -->
+          <div class="bg-green-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-800 mb-3">목표 정보</h4>
+            <div class="space-y-3 text-sm">
+              <div><span class="font-medium">선호 프로젝트 유형:</span> ${projectTypeMap[student.survey_data.preferred_project_type] || student.survey_data.preferred_project_type}</div>
+              <div><span class="font-medium">학습 희망 분야:</span> ${student.survey_data.learning_fields?.join(', ') || '없음'}</div>
+              <div><span class="font-medium">희망 직무:</span> ${student.survey_data.desired_job}</div>
+            </div>
+          </div>
+
+          <!-- 추가 정보 -->
+          <div class="bg-yellow-50 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-800 mb-3">추가 정보</h4>
+            <div class="space-y-3 text-sm">
+              <div><span class="font-medium">이전 수료 과정:</span> ${student.survey_data.previous_course}</div>
+              ${student.survey_data.skill_description ? `<div><span class="font-medium">기술 역량 설명:</span> ${student.survey_data.skill_description}</div>` : ''}
+              ${student.survey_data.career_details ? `<div><span class="font-medium">경력 사항:</span> ${student.survey_data.career_details}</div>` : ''}
+              ${student.survey_data.goal_description ? `<div><span class="font-medium">목표 설명:</span> ${student.survey_data.goal_description}</div>` : ''}
+              ${student.survey_data.course_questions ? `<div><span class="font-medium">과정 질문:</span> ${student.survey_data.course_questions}</div>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+    }
+
+    // 모달 닫기
+    function closeModal() {
+      document.getElementById('survey-detail-modal').classList.add('hidden');
+    }
+
+    // 메인으로 돌아가기
     function goBackToMain() {
       const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
       window.location.href = `main.html?cohort=${currentCohort}`;
     }
 
-    function addSurvey() {
-      // 설문 추가 로직을 구현해야 합니다.
-      console.log('설문 추가 로직을 구현해야 합니다.');
-    }
+    // 엔터키로 검색
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && e.target.id === 'search-input') {
+        searchStudents();
+      }
+    });
+
+    // 모달 배경 클릭으로 닫기
+    document.getElementById('survey-detail-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
   </script>
 </body>
 </html>
