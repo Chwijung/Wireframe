@@ -11,6 +11,32 @@
       height: 100%;
       scroll-behavior: smooth;
     }
+    .spreadsheet-table {
+      border: 1px solid #d1d5db;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .spreadsheet-cell {
+      border-right: 1px solid #d1d5db;
+      border-bottom: 1px solid #d1d5db;
+      background: white;
+    }
+    .spreadsheet-header {
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+    .missing-log {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+    .completed-log {
+      background: #f0fdf4;
+      color: #16a34a;
+    }
+    .future-log {
+      background: #f9fafb;
+      color: #6b7280;
+    }
   </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-50 to-purple-100">
@@ -20,13 +46,18 @@
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
           <button onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">
-            ← 메인으로
+            메인으로
           </button>
-          <h1 class="text-2xl font-bold text-indigo-700">📋 멘토링 일지 관리</h1>
+          <h1 class="text-2xl font-bold text-indigo-700">멘토링 일지 관리</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="text-gray-600">운영진: 권회은</span>
-          <div class="flex items-center space-x-2">
+          <!-- 모드 전환 토글 -->
+          <div class="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
+            <button id="adminModeBtn" class="px-3 py-1 text-sm font-medium rounded-md transition-colors duration-200">관리자</button>
+            <button id="mentorModeBtn" class="px-3 py-1 text-sm font-medium rounded-md transition-colors duration-200">멘토</button>
+          </div>
+          <span class="text-gray-600" id="userInfo">운영진: 권회은</span>
+          <div class="flex items-center space-x-2" id="statusInfo">
             <span class="text-sm text-red-600 font-medium">미작성 3개</span>
             <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
           </div>
@@ -35,275 +66,580 @@
     </div>
   </nav>
 
-  <div class="max-w-7xl mx-auto p-6 space-y-6">
+  <div class="max-w-full mx-auto p-6 pb-20">
     <!-- 페이지 헤더 -->
-    <header class="bg-white rounded-xl shadow-lg p-6">
+    <header class="bg-white rounded-lg shadow-sm p-4 mb-4">
       <div class="flex justify-between items-center">
         <div>
-          <h2 class="text-3xl font-bold text-gray-800 mb-2">멘토링 일지 관리</h2>
-          <p class="text-gray-600">AI-X 3기 조별 멘토링 진행 상황을 확인하고 관리하세요</p>
+          <h2 class="text-2xl font-bold text-gray-800">멘토링 일지 관리</h2>
+          <p class="text-gray-600 text-sm">AI-X 3기 조별 멘토링 진행 상황 (매주 화요일/금요일)</p>
         </div>
         <div class="text-right">
-          <div class="text-2xl font-bold text-indigo-600">4개조</div>
-          <div class="text-sm text-gray-500">총 관리 조</div>
+          <div class="text-lg font-bold text-indigo-600">4개조</div>
         </div>
       </div>
     </header>
 
-    <!-- 실시간 대시보드 -->
-    <section class="bg-gradient-to-r from-red-500 to-pink-500 rounded-xl shadow-xl p-6 text-white">
-      <h3 class="text-xl font-bold mb-4 flex items-center">
-        ⚠️ 멘토링 일지 미작성 알림
-      </h3>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="bg-white bg-opacity-20 rounded-lg p-4">
-          <p class="font-bold text-lg">2조</p>
-          <p class="text-sm opacity-90">6월 25일 (화) 미작성</p>
-          <p class="text-xs opacity-75">멘토: 김민준</p>
+    <!-- 조별 탭 네비게이션 (관리자 모드) -->
+    <div id="teamTabs" class="bg-white rounded-lg shadow-sm p-2 mb-4 hidden">
+      <div class="flex space-x-2">
+        <button onclick="switchTeam('1')" id="tab-1" class="px-4 py-2 bg-blue-600 font-medium rounded-md text-white hover:text-gray-800">
+          1조
+        </button>
+        <button onclick="switchTeam('2')" id="tab-2" class="px-4 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-800">
+          2조
+        </button>
+        <button onclick="switchTeam('3')" id="tab-3" class="px-4 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-800">
+          3조
+        </button>
+        <button onclick="switchTeam('4')" id="tab-4" class="px-4 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-800">
+          4조
+        </button>
+      </div>
+    </div>
+
+    <!-- 관리자 모드 미작성 현황 -->
+    <div id="adminAlert" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+      <h3 class="text-lg font-semibold text-red-800 mb-2">진행 현황 요약</h3>
+      <div class="grid md:grid-cols-3 gap-4 text-sm">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-green-600">5</div>
+          <div class="text-gray-600">완료된 회차</div>
         </div>
-        <div class="bg-white bg-opacity-20 rounded-lg p-4">
-          <p class="font-bold text-lg">3조</p>
-          <p class="text-sm opacity-90">6월 26일 (수) 미작성</p>
-          <p class="text-xs opacity-75">멘토: 이수정</p>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-600">7</div>
+          <div class="text-gray-600">남은 회차</div>
         </div>
-        <div class="bg-white bg-opacity-20 rounded-lg p-4">
-          <p class="font-bold text-lg">4조</p>
-          <p class="text-sm opacity-90">6월 27일 (목) 미작성</p>
-          <p class="text-xs opacity-75">멘토: 박성민</p>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-indigo-600">42%</div>
+          <div class="text-gray-600">전체 진도율</div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- 조별 멘토링 현황 -->
-    <section class="grid md:grid-cols-2 gap-6">
-      <!-- 1조 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center space-x-3">
-            <div class="bg-blue-100 p-2 rounded-lg">
-              <span class="text-blue-600 font-bold">1조</span>
-            </div>
-            <div>
-              <h3 class="font-bold text-gray-800">김민준 멘토</h3>
-              <p class="text-sm text-gray-600">AI 챗봇 프로젝트</p>
-            </div>
+    <!-- 멘토 모드 일지 작성 영역 -->
+    <div id="mentorLogSection" class="bg-white rounded-lg shadow-sm p-6 mb-4 hidden">
+      <h3 class="text-lg font-semibold mb-4">멘토링 일지 작성</h3>
+      <div class="space-y-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">회차</label>
+            <select class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              <option>1회차 (09/16)</option>
+              <option>2회차 (09/19)</option>
+              <option>3회차 (09/23)</option>
+              <option>4회차 (09/26)</option>
+              <option>5회차 (09/30)</option>
+              <option>6회차 (10/02)</option>
+              <option>7회차 (10/10)</option>
+              <option>8회차 (10/14)</option>
+              <option>9회차 (10/17)</option>
+              <option>10회차 (10/21)</option>
+              <option>11회차 (10/24)</option>
+              <option>12회차 (10/28)</option>
+            </select>
           </div>
-          <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">완료</span>
         </div>
         
-        <div class="space-y-3">
-          <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg border border-green-200">
-            <span class="text-sm font-medium">6월 24일 (월)</span>
-            <div class="flex items-center space-x-2">
-              <span class="text-xs text-green-600">✓ 작성완료</span>
-              <button class="text-blue-600 hover:text-blue-800 text-xs">보기</button>
-            </div>
-          </div>
-          <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg border border-green-200">
-            <span class="text-sm font-medium">6월 26일 (수)</span>
-            <div class="flex items-center space-x-2">
-              <span class="text-xs text-green-600">✓ 작성완료</span>
-              <button class="text-blue-600 hover:text-blue-800 text-xs">보기</button>
-            </div>
-          </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">진행 사항 점검</label>
+          <textarea class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" rows="4" placeholder="진행 사항 점검"></textarea>
         </div>
-      </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">진행 방향 가이드</label>
+          <textarea class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" rows="4" placeholder="진행 방향 가이드"></textarea>
+        </div>
 
-      <!-- 2조 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center space-x-3">
-            <div class="bg-red-100 p-2 rounded-lg">
-              <span class="text-red-600 font-bold">2조</span>
-            </div>
-            <div>
-              <h3 class="font-bold text-gray-800">김민준 멘토</h3>
-              <p class="text-sm text-gray-600">추천 시스템 프로젝트</p>
-            </div>
-          </div>
-          <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미작성</span>
-        </div>
-        
-        <div class="space-y-3">
-          <div class="flex justify-between items-center p-3 bg-red-50 rounded-lg border border-red-200">
-            <span class="text-sm font-medium">6월 25일 (화)</span>
-            <div class="flex items-center space-x-2">
-              <span class="text-xs text-red-600">⚠️ 미작성</span>
-              <button class="text-red-600 hover:text-red-800 text-xs">알림</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3조 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center space-x-3">
-            <div class="bg-red-100 p-2 rounded-lg">
-              <span class="text-red-600 font-bold">3조</span>
-            </div>
-            <div>
-              <h3 class="font-bold text-gray-800">이수정 멘토</h3>
-              <p class="text-sm text-gray-600">웹 서비스 프로젝트</p>
-            </div>
-          </div>
-          <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미작성</span>
-        </div>
-        
-        <div class="space-y-3">
-          <div class="flex justify-between items-center p-3 bg-red-50 rounded-lg border border-red-200">
-            <span class="text-sm font-medium">6월 26일 (수)</span>
-            <div class="flex items-center space-x-2">
-              <span class="text-xs text-red-600">⚠️ 미작성</span>
-              <button class="text-red-600 hover:text-red-800 text-xs">알림</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4조 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center space-x-3">
-            <div class="bg-red-100 p-2 rounded-lg">
-              <span class="text-red-600 font-bold">4조</span>
-            </div>
-            <div>
-              <h3 class="font-bold text-gray-800">박성민 멘토</h3>
-              <p class="text-sm text-gray-600">데이터 분석 프로젝트</p>
-            </div>
-          </div>
-          <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">미작성</span>
-        </div>
-        
-        <div class="space-y-3">
-          <div class="flex justify-between items-center p-3 bg-red-50 rounded-lg border border-red-200">
-            <span class="text-sm font-medium">6월 27일 (목)</span>
-            <div class="flex items-center space-x-2">
-              <span class="text-xs text-red-600">⚠️ 미작성</span>
-              <button class="text-red-600 hover:text-red-800 text-xs">알림</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 주간 멘토링 캘린더 -->
-    <section class="bg-white rounded-xl shadow-lg p-6">
-      <h3 class="text-xl font-semibold mb-4 flex items-center">
-        <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-        </svg>
-        이번 주 멘토링 스케줄
-      </h3>
-      
-      <div class="grid grid-cols-7 gap-2">
-        <!-- 요일 헤더 -->
-        <div class="text-center text-sm font-medium text-gray-600 p-2">월</div>
-        <div class="text-center text-sm font-medium text-gray-600 p-2">화</div>
-        <div class="text-center text-sm font-medium text-gray-600 p-2">수</div>
-        <div class="text-center text-sm font-medium text-gray-600 p-2">목</div>
-        <div class="text-center text-sm font-medium text-gray-600 p-2">금</div>
-        <div class="text-center text-sm font-medium text-gray-600 p-2">토</div>
-        <div class="text-center text-sm font-medium text-gray-600 p-2">일</div>
-        
-        <!-- 날짜 및 일지 상태 -->
-        <div class="text-center p-2 border rounded">
-          <div class="text-sm font-medium">24</div>
-          <div class="flex flex-col space-y-1 mt-1">
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-          </div>
-        </div>
-        
-        <div class="text-center p-2 border rounded">
-          <div class="text-sm font-medium">25</div>
-          <div class="flex flex-col space-y-1 mt-1">
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-red-400 rounded"></div>
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-          </div>
-        </div>
-        
-        <div class="text-center p-2 border rounded">
-          <div class="text-sm font-medium">26</div>
-          <div class="flex flex-col space-y-1 mt-1">
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-red-400 rounded"></div>
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-          </div>
-        </div>
-        
-        <div class="text-center p-2 border rounded">
-          <div class="text-sm font-medium">27</div>
-          <div class="flex flex-col space-y-1 mt-1">
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-green-400 rounded"></div>
-            <div class="w-full h-1 bg-red-400 rounded"></div>
-          </div>
-        </div>
-        
-        <div class="text-center p-2 border rounded bg-gray-50">
-          <div class="text-sm font-medium">28</div>
-          <div class="flex flex-col space-y-1 mt-1">
-            <div class="w-full h-1 bg-gray-300 rounded"></div>
-            <div class="w-full h-1 bg-gray-300 rounded"></div>
-            <div class="w-full h-1 bg-gray-300 rounded"></div>
-            <div class="w-full h-1 bg-gray-300 rounded"></div>
-          </div>
-        </div>
-        
-        <div class="text-center p-2 border rounded bg-gray-50">
-          <div class="text-sm font-medium">29</div>
-          <div class="text-xs text-gray-400 mt-1">휴무</div>
-        </div>
-        
-        <div class="text-center p-2 border rounded bg-gray-50">
-          <div class="text-sm font-medium">30</div>
-          <div class="text-xs text-gray-400 mt-1">휴무</div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">차후 목표</label>
+          <textarea class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" rows="4" placeholder="차후 목표"></textarea>
         </div>
       </div>
       
-      <div class="flex items-center space-x-4 mt-4 text-sm">
-        <div class="flex items-center space-x-2">
-          <div class="w-3 h-1 bg-green-400 rounded"></div>
-          <span>작성완료</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <div class="w-3 h-1 bg-red-400 rounded"></div>
-          <span>미작성</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <div class="w-3 h-1 bg-gray-300 rounded"></div>
-          <span>예정</span>
+      <div class="mt-6 flex justify-end space-x-3">
+        <button class="px-6 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors">임시저장</button>
+        <button class="px-6 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">저장</button>
+      </div>
+    </div>
+
+    <!-- 멘토링 일지 테이블 -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="spreadsheet-table w-full min-w-full">
+          <thead>
+            <tr>
+              <th class="spreadsheet-cell spreadsheet-header px-3 py-2 text-center w-16">회차</th>
+              <th class="spreadsheet-cell spreadsheet-header px-3 py-2 text-center w-20">일자</th>
+              <th class="spreadsheet-cell spreadsheet-header px-3 py-2 text-left w-32">멘토링 주제</th>
+              <th class="spreadsheet-cell spreadsheet-header px-3 py-2 text-left">멘토링 진행 상황</th>
+            </tr>
+          </thead>
+          <tbody id="mentoringTableBody">
+            <!-- 1회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">1</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">09/16</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">멘토 소개 및 미니프로젝트</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs">
+                  <div>
+                    <div class="font-medium text-gray-700">진행 방향 가이드</div>
+                    <div class="text-gray-600 mt-1">- 멘토 자기소개 및 배경 공유<br>- 팀원들 소개 시간<br>- 프로젝트 전체 로드맵 설명</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">차후 목표</div>
+                    <div class="text-gray-600 mt-1">- 미니프로젝트 기획 및 설계<br>- 역할 분담 논의</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">진행 사항 점검</div>
+                    <div class="text-gray-600 mt-1">- 예정 시간: 2시간, 실제 소요 시간: 2시간 15분<br>- 전체적으로 적극적인 참여, 질문과 토론이 활발함</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 2회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">2</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">09/19</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">미니프로젝트</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs">
+                  <div>
+                    <div class="font-medium text-gray-700">진행 방향 가이드</div>
+                    <div class="text-gray-600 mt-1">- 프로젝트 기본 구조 설계<br>- HTML/CSS 기초 복습<br>- JavaScript 기본 기능 구현</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">차후 목표</div>
+                    <div class="text-gray-600 mt-1">- 미니프로젝트 완성<br>- 팀별 발표 준비</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">진행 사항 점검</div>
+                    <div class="text-gray-600 mt-1">- 각 팀원별 진도 확인<br>- 막힌 부분 해결</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 3회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">3</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">09/23</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">미니프로젝트</div>
+                <div class="text-xs text-red-600">발표 및 프로젝트 기획 (오프라인)</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs">
+                  <div>
+                    <div class="font-medium text-gray-700">진행 방향 가이드</div>
+                    <div class="text-gray-600 mt-1">- 미니프로젝트 발표 및 피드백<br>- 본격적인 프로젝트 기획 시작<br>- 팀별 아이디어 도출</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">차후 목표</div>
+                    <div class="text-gray-600 mt-1">- 프로젝트 주제 확정<br>- 기술 스택 선정</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">진행 사항 점검</div>
+                    <div class="text-gray-600 mt-1">- 오프라인 진행으로 활발한 토론<br>- 창의적인 아이디어 다수 제안</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 4회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">4</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">09/26</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">프로젝트 기획</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs">
+                  <div>
+                    <div class="font-medium text-gray-700">진행 방향 가이드</div>
+                    <div class="text-gray-600 mt-1">- 프로젝트 상세 기획서 작성<br>- 사용자 요구사항 분석<br>- 시스템 설계 및 ERD 작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">차후 목표</div>
+                    <div class="text-gray-600 mt-1">- 기획 발표 준비<br>- 개발 일정 수립</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">진행 사항 점검</div>
+                    <div class="text-gray-600 mt-1">- 체계적인 기획 과정 진행<br>- 팀원 간 역할 분담 완료</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 5회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">5</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">09/30</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium text-red-600">프로젝트 기획 발표</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs">
+                  <div>
+                    <div class="font-medium text-gray-700">진행 방향 가이드</div>
+                    <div class="text-gray-600 mt-1">- 프로젝트 기획 발표 진행<br>- 다른 팀 발표 청취 및 피드백<br>- 개발 환경 설정 가이드</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">차후 목표</div>
+                    <div class="text-gray-600 mt-1">- 본격적인 개발 시작<br>- 주차별 개발 목표 설정</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-700">진행 사항 점검</div>
+                    <div class="text-gray-600 mt-1">- 발표 완료, 좋은 피드백 획득<br>- 개발 준비 완료</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 6회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">6</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">10/02</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">프로젝트 진행</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs text-gray-400">
+                  <div>
+                    <div class="font-medium">진행 방향 가이드</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">차후 목표</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">진행 사항 점검</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 7회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">7</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">10/10</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">프로젝트 진행</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs text-gray-400">
+                  <div>
+                    <div class="font-medium">진행 방향 가이드</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">차후 목표</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">진행 사항 점검</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 8회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">8</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">10/14</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">프로젝트 진행</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs text-gray-400">
+                  <div>
+                    <div class="font-medium">진행 방향 가이드</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">차후 목표</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">진행 사항 점검</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 9회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">9</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">10/17</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">프로젝트 진행</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs text-gray-400">
+                  <div>
+                    <div class="font-medium">진행 방향 가이드</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">차후 목표</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">진행 사항 점검</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 10회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">10</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">10/21</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium text-red-600">프로젝트 중간 발표</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs text-gray-400">
+                  <div>
+                    <div class="font-medium">진행 방향 가이드</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">차후 목표</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">진행 사항 점검</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 11회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">11</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">10/24</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">프로젝트 진행</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs text-gray-400">
+                  <div>
+                    <div class="font-medium">진행 방향 가이드</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">차후 목표</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">진행 사항 점검</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- 12회차 -->
+            <tr>
+              <td class="spreadsheet-cell px-3 py-2 text-center font-medium">12</td>
+              <td class="spreadsheet-cell px-3 py-2 text-center">10/28</td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="text-sm font-medium">프로젝트 진행</div>
+              </td>
+              <td class="spreadsheet-cell px-3 py-2">
+                <div class="space-y-2 text-xs text-gray-400">
+                  <div>
+                    <div class="font-medium">진행 방향 가이드</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">차후 목표</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                  <div>
+                    <div class="font-medium">진행 사항 점검</div>
+                    <div class="mt-1">미작성</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 멘토링 일지 상세 모달 -->
+  <div id="logModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-lg max-w-2xl w-full max-h-96 overflow-y-auto">
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold" id="modalTitle">멘토링 일지</h3>
+            <button onclick="closeLogModal()" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div id="modalContent">
+            <!-- 일지 내용이 여기에 표시됩니다 -->
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 
   <script>
+    let currentMode = 'admin'; // 'admin' 또는 'mentor'
+    let currentMentorTeam = '1'; // 현재 멘토의 팀 (예: 김민준 = 1조)
+
+    // 샘플 멘토링 일지 데이터
+    const logData = {
+      '1': {
+        '09/16': {
+          date: '2024년 9월 16일 (1회차)',
+          content: `
+            <h4 class="font-semibold mb-2">멘토 소개 및 팀 빌딩</h4>
+            <p class="mb-3">- 멘토 자기소개 및 배경 공유</p>
+            <p class="mb-3">- 팀원들 소개 시간</p>
+            <p class="mb-3">- 프로젝트 전체 로드맵 설명</p>
+            <h4 class="font-semibold mb-2">미니프로젝트 안내</h4>
+            <p class="mb-3">- 간단한 웹 애플리케이션 제작</p>
+            <p class="mb-3">- 개발 환경 설정 가이드</p>
+            <h4 class="font-semibold mb-2">다음 계획</h4>
+            <p class="mb-3">- 미니프로젝트 기획 및 설계</p>
+            <p class="mb-3">- 역할 분담 논의</p>
+          `
+        },
+        '09/16-2': {
+          date: '2024년 9월 16일 (진행 사항 점검)',
+          content: `
+            <h4 class="font-semibold mb-2">시간 관리 점검</h4>
+            <p class="mb-3">- 예정 시간: 2시간</p>
+            <p class="mb-3">- 실제 소요 시간: 2시간 15분</p>
+            <h4 class="font-semibold mb-2">참여도 평가</h4>
+            <p class="mb-3">- 전체적으로 적극적인 참여</p>
+            <p class="mb-3">- 질문과 토론이 활발함</p>
+          `
+        },
+        '09/19': {
+          date: '2024년 9월 19일 (2회차)',
+          content: `
+            <h4 class="font-semibold mb-2">미니프로젝트 진행</h4>
+            <p class="mb-3">- 프로젝트 기본 구조 설계</p>
+            <p class="mb-3">- HTML/CSS 기초 복습</p>
+            <p class="mb-3">- JavaScript 기본 기능 구현</p>
+            <h4 class="font-semibold mb-2">진행 상황 점검</h4>
+            <p class="mb-3">- 각 팀원별 진도 확인</p>
+            <p class="mb-3">- 막힌 부분 해결</p>
+          `
+        }
+      },
+      '2': {
+        '09/16': {
+          date: '2024년 9월 16일 (1회차)',
+          content: `
+            <h4 class="font-semibold mb-2">팀 구성 및 목표 설정</h4>
+            <p class="mb-3">- 각자의 관심 분야 및 목표 공유</p>
+            <p class="mb-3">- 팀 프로젝트 방향성 논의</p>
+            <h4 class="font-semibold mb-2">기초 지식 점검</h4>
+            <p class="mb-3">- 프로그래밍 경험 수준 파악</p>
+            <p class="mb-3">- 보강이 필요한 부분 식별</p>
+          `
+        }
+      }
+    };
+
     function goBackToMain() {
       const currentCohort = localStorage.getItem('currentCohort') || 'ai-x-3rd';
       window.location.href = `main.html?cohort=${currentCohort}`;
     }
 
-    // 일지 보기 버튼들
-    document.querySelectorAll('button').forEach(button => {
-      if (button.textContent === '보기') {
-        button.addEventListener('click', function() {
-          alert('멘토링 일지 상세 내용을 확인합니다.');
-        });
+    // 모드 전환 기능
+    function switchMode(mode) {
+      currentMode = mode;
+      const adminBtn = document.getElementById('adminModeBtn');
+      const mentorBtn = document.getElementById('mentorModeBtn');
+      const adminAlert = document.getElementById('adminAlert');
+      const mentorLogSection = document.getElementById('mentorLogSection');
+      const teamTabs = document.getElementById('teamTabs');
+      const userInfo = document.getElementById('userInfo');
+      const statusInfo = document.getElementById('statusInfo');
+      const tableRows = document.querySelectorAll('tbody tr');
+
+      if (mode === 'admin') {
+        adminBtn.className = 'px-3 py-1 text-sm font-medium rounded-md bg-indigo-600 text-white';
+        mentorBtn.className = 'px-3 py-1 text-sm font-medium rounded-md text-gray-600 hover:text-gray-800';
+        adminAlert.classList.remove('hidden');
+        mentorLogSection.classList.add('hidden');
+        teamTabs.classList.remove('hidden');
+        userInfo.textContent = '운영진: 권회은';
+        statusInfo.classList.remove('hidden');
+        
+        // 모든 팀 행 표시
+        tableRows.forEach(row => row.style.display = '');
+      } else {
+        mentorBtn.className = 'px-3 py-1 text-sm font-medium rounded-md bg-indigo-600 text-white';
+        adminBtn.className = 'px-3 py-1 text-sm font-medium rounded-md text-gray-600 hover:text-gray-800';
+        adminAlert.classList.add('hidden');
+        mentorLogSection.classList.remove('hidden');
+        teamTabs.classList.add('hidden');
+        userInfo.textContent = '멘토: 김민준 (1조)';
+        statusInfo.classList.add('hidden');
+        
+        // 멘토 모드에서는 회차별로 모든 내용을 보여주되, 
+        // 자신의 팀 데이터만 수정/작성 가능하도록 설정
+        tableRows.forEach(row => row.style.display = '');
       }
-      if (button.textContent === '알림') {
-        button.addEventListener('click', function() {
-          alert('해당 멘토에게 작성 알림을 발송했습니다.');
-        });
+    }
+
+    // 일지 보기 기능
+    function viewLog(team, date) {
+      const log = logData[team] && logData[team][date];
+      
+      if (log) {
+        document.getElementById('modalTitle').textContent = `${team}조 ${log.date} 멘토링 일지`;
+        document.getElementById('modalContent').innerHTML = log.content;
+        document.getElementById('logModal').classList.remove('hidden');
+      } else {
+        if (currentMode === 'admin') {
+          alert(`${team}조 ${date} 멘토링 일지가 작성되지 않았습니다.`);
+        } else {
+          alert(`${date} 멘토링 일지가 작성되지 않았습니다.`);
+        }
       }
+    }
+
+    // 모달 닫기
+    function closeLogModal() {
+      document.getElementById('logModal').classList.add('hidden');
+    }
+
+    // 멘토 알림 기능
+    function alertMentor(team, date) {
+      if (currentMode === 'admin') {
+        alert(`${team}조 멘토에게 ${date} 일지 작성 알림을 발송했습니다.`);
+      }
+    }
+
+    // 모달 외부 클릭시 닫기
+    document.addEventListener('click', function(e) {
+      const modal = document.getElementById('logModal');
+      if (e.target === modal) {
+        closeLogModal();
+      }
+    });
+
+    // 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('adminModeBtn').addEventListener('click', () => switchMode('admin'));
+      document.getElementById('mentorModeBtn').addEventListener('click', () => switchMode('mentor'));
+      
+      // 초기 모드 설정
+      switchMode('admin');
     });
   </script>
 </body>
