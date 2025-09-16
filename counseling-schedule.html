@@ -50,33 +50,6 @@
       </div>
     </header>
 
-    <!-- 수정 요청 알림 -->
-    <section class="bg-gradient-to-r from-red-500 to-red-400 rounded-xl shadow-xl p-6 text-white">
-      <h3 class="text-xl font-bold mb-4 flex items-center">
-        🔄 일정 수정 요청
-      </h3>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="bg-white bg-opacity-20 rounded-lg p-4">
-          <p class="font-bold text-lg">김하늘 - 취업 상담</p>
-          <p class="text-sm opacity-90">7월 3일 → 7월 5일 변경 요청</p>
-          <p class="text-xs opacity-75">사유: 면접 일정 겹침</p>
-          <div class="mt-2 space-x-2">
-            <button class="bg-white text-green-500 px-3 py-1 rounded text-sm font-medium">승인</button>
-            <button class="bg-transparent border border-white text-white px-3 py-1 rounded text-sm">거절</button>
-          </div>
-        </div>
-        <div class="bg-white bg-opacity-20 rounded-lg p-4">
-          <p class="font-bold text-lg">박민수 - 개별 멘토링</p>
-          <p class="text-sm opacity-90">7월 4일 → 7월 6일 변경 요청</p>
-          <p class="text-xs opacity-75">사유: 개인 사정</p>
-          <div class="mt-2 space-x-2">
-            <button class="bg-white text-green-500 px-3 py-1 rounded text-sm font-medium">승인</button>
-            <button class="bg-transparent border border-white text-white px-3 py-1 rounded text-sm">거절</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- 달력 및 일정 관리 -->
     <section class="grid lg:grid-cols-3 gap-6">
       <!-- 달력 -->
@@ -120,22 +93,6 @@
             <div class="text-sm font-medium">2</div>
             <div class="mt-1 space-y-1">
               <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded truncate">이지윤 취업상담</div>
-            </div>
-          </div>
-
-          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50 border-orange-400" onclick="openDayModal('7월 3일')">
-            <div class="text-sm font-medium">3</div>
-            <div class="mt-1 space-y-1">
-              <div class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded truncate">김하늘 취업상담</div>
-              <div class="text-xs text-orange-600">🔄 수정요청</div>
-            </div>
-          </div>
-
-          <div class="border rounded-lg p-2 h-24 cursor-pointer hover:bg-gray-50 border-orange-400" onclick="openDayModal('7월 4일')">
-            <div class="text-sm font-medium">4</div>
-            <div class="mt-1 space-y-1">
-              <div class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded truncate">박민수 멘토링</div>
-              <div class="text-xs text-orange-600">🔄 수정요청</div>
             </div>
           </div>
 
@@ -216,46 +173,8 @@
             <span>취업 상담</span>
           </div>
           <div class="flex items-center space-x-2">
-            <div class="w-3 h-3 bg-purple-100 border border-purple-200 rounded"></div>
-            <span>취업 상담 (심화)</span>
-          </div>
-          <div class="flex items-center space-x-2">
             <div class="w-3 h-3 bg-red-100 border border-red-200 rounded"></div>
             <span>중요 일정</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <div class="w-3 h-3 bg-orange-100 border border-orange-400 rounded"></div>
-            <span>수정 요청</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 사이드바 -->
-      <div class="space-y-6">
-        <!-- 오늘의 일정 -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <h3 class="text-lg font-semibold mb-4 text-gray-800">오늘의 일정 (7/2)</h3>
-          <div class="space-y-3">
-            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
-              <div>
-                <p class="font-medium text-sm">이지윤 취업상담</p>
-                <p class="text-xs text-gray-600">14:00 - 15:00</p>
-              </div>
-              <button class="text-green-600 hover:text-green-800 text-xs">상세</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 빠른 액션 -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <h3 class="text-lg font-semibold mb-4 text-gray-800">빠른 액션</h3>
-          <div class="space-y-3">
-            <button class="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 text-sm">
-              + 새 상담 일정 추가
-            </button>
-            <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm">
-              📧 일정 알림 발송
-            </button>
           </div>
         </div>
       </div>
