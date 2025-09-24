@@ -25,7 +25,7 @@
     </div>
   </header>
 
-  <div class="max-w-6xl mx-auto p-6">
+  <div id="main-container" class="max-w-6xl mx-auto p-6">
     <!-- 통계 대시보드 헤더 -->
     <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
       <div class="flex items-center justify-between">
@@ -63,62 +63,84 @@
 
     <!-- 통계 개요 탭 -->
     <div id="overview-tab" class="tab-content">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <!-- 왼쪽 위: 기본 정보 -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-bold text-gray-800">기본 정보</h3>
-            <select id="chart-select-1" onchange="updateChart('chart1', this.value)" class="text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="gender">성별 분포</option>
-              <option value="computer_major">컴퓨터 전공 여부</option>
-              <option value="python_pre_learning">파이썬 사전 학습</option>
-            </select>
+      <div class="space-y-8">
+        <!-- 1행: 성별 분포, 컴퓨터 전공 여부 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">성별 분포</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-gender"></canvas>
+            </div>
           </div>
-          <div class="h-64 relative">
-            <canvas id="chart1"></canvas>
-          </div>
-        </div>
-
-        <!-- 오른쪽 위: 경험 분석 -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-bold text-gray-800">경험 분석</h3>
-            <select id="chart-select-2" onchange="updateChart('chart2', this.value)" class="text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="ai_experience">AI 경험 수준</option>
-              <option value="programming_languages">프로그래밍 언어</option>
-              <option value="tech_stack">기술 스택</option>
-              <option value="recent_role">최근 프로젝트 역할</option>
-            </select>
-          </div>
-          <div class="h-64 relative">
-            <canvas id="chart2"></canvas>
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">컴퓨터 전공 여부</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-computer-major"></canvas>
+            </div>
           </div>
         </div>
 
-        <!-- 왼쪽 아래: 목표 분석 -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-bold text-gray-800">목표 분석</h3>
-            <select id="chart-select-3" onchange="updateChart('chart3', this.value)" class="text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="learning_fields">학습 희망 분야</option>
-              <option value="preferred_project_type">선호 프로젝트 유형</option>
-            </select>
+        <!-- 2행: 파이썬 사전 학습, AI 경험 수준 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">파이썬 사전 학습 경험</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-python-learning"></canvas>
+            </div>
           </div>
-          <div class="h-64 relative">
-            <canvas id="chart3"></canvas>
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">AI 경험 수준</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-ai-experience"></canvas>
+            </div>
           </div>
         </div>
 
-        <!-- 오른쪽 아래: 성향 분석 -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-bold text-gray-800">성향 분석</h3>
-            <select id="chart-select-4" onchange="updateChart('chart4', this.value)" class="text-sm border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="mbti">MBTI 분포</option>
-            </select>
+        <!-- 3행: 프로그래밍 언어, 기술 스택 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">주요 프로그래밍 언어</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-programming-languages"></canvas>
+            </div>
           </div>
-          <div class="h-64 relative">
-            <canvas id="chart4"></canvas>
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">보유 기술 스택</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-tech-stack"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4행: 최근 프로젝트 역할, 학습 희망 분야 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">최근 프로젝트에서의 역할</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-recent-role"></canvas>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">학습 희망 분야</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-learning-fields"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5행: 선호 프로젝트 유형, MBTI 분포 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">선호하는 프로젝트 유형</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-preferred-project"></canvas>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">MBTI 성격 유형 분포</h3>
+            <div class="h-64 relative">
+              <canvas id="chart-mbti"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -129,72 +151,116 @@
       <div class="bg-white rounded-xl shadow-lg p-6">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-bold text-gray-800">개별 응답 목록</h3>
-          <div class="flex space-x-2">
-            <input type="text" id="search-input" placeholder="이름으로 검색..." class="px-3 py-1 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <button onclick="searchStudents()" class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors">
-              검색
-            </button>
-            <button onclick="resetFilters()" class="px-3 py-1 bg-gray-500 text-white rounded-lg text-sm hover:bg-gray-600 transition-colors">
-              초기화
-            </button>
-          </div>
+           <div class="flex space-x-2">
+             <input type="text" id="search-input" placeholder="이름으로 검색..." class="px-3 py-1 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+             <button onclick="searchStudents()" class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors">
+               검색
+             </button>
+             <button onclick="resetFilters()" class="px-3 py-1 bg-gray-500 text-white rounded-lg text-sm hover:bg-gray-600 transition-colors">
+               초기화
+             </button>
+           </div>
         </div>
 
-        <!-- 필터링 옵션 -->
-        <div class="mb-4 p-4 bg-gray-50 rounded-lg">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">AI 경험</label>
-              <select id="filter-ai-experience" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="">전체</option>
-                <option value="none">전혀 모른다</option>
-                <option value="chatgpt_basic">ChatGPT 기초</option>
-                <option value="chatgpt_dev">개발 도구 사용</option>
-                <option value="opensource">오픈소스 활용</option>
-                <option value="expert">전문가 수준</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">성별</label>
-              <select id="filter-gender" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="">전체</option>
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">전공 여부</label>
-              <select id="filter-computer-major" onchange="applyFilters()" class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="">전체</option>
-                <option value="Y">전공자</option>
-                <option value="N">비전공자</option>
-              </select>
-            </div>
-          </div>
-        </div>
 
         <!-- 검색 결과 정보 -->
         <div class="mb-4 text-sm text-gray-600" id="search-results-info">
           전체 30명 중 24명 표시
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이름</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이메일</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">전공여부</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">주요언어</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">최근 역할</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">더보기</th>
+        <div class="table-container">
+          <table class="sticky-table">
+            <thead>
+              <tr id="table-header">
+                <!-- 헤더가 JavaScript로 동적 생성됨 -->
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200" id="students-table-body">
+            <tbody id="students-table-body">
               <!-- 학생 데이터가 JavaScript로 동적 생성됨 -->
             </tbody>
           </table>
         </div>
+        
+        <style>
+          /* 테이블 스크롤 컨테이너 */
+          .table-container {
+            position: relative;
+            overflow: auto;
+            max-height: 24rem; /* 96 * 0.25rem = 24rem */
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+          }
+          
+          /* 테이블 기본 설정 */
+          .sticky-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+          }
+          
+          /* 헤더 고정 */
+          .sticky-table thead th {
+            position: sticky;
+            top: 0;
+            background: #f9fafb;
+            z-index: 10;
+            border-bottom: 1px solid #e5e7eb;
+          }
+          
+          /* 첫 번째 열(이름) 고정 */
+          .sticky-table th:first-child,
+          .sticky-table td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            background: white;
+            border-right: 2px solid #e5e7eb;
+          }
+          
+          /* 헤더의 첫 번째 열은 더 높은 z-index */
+          .sticky-table thead th:first-child {
+            z-index: 15;
+            background: #f9fafb;
+          }
+          
+          /* 테이블 바디 행 */
+          .sticky-table tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+          }
+          
+          .sticky-table tbody tr:hover {
+            background-color: #f9fafb;
+          }
+          
+          /* 테이블 셀 기본 스타일 */
+          .sticky-table th,
+          .sticky-table td {
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            font-size: 0.75rem;
+            line-height: 1rem;
+            white-space: nowrap;
+          }
+          
+          /* 스크롤바 스타일 */
+          .table-container::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+          }
+          
+          .table-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+          }
+          
+          .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+          }
+          
+          .table-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+          }
+        </style>
       </div>
     </div>
 
@@ -224,6 +290,45 @@
     </div>
   </div>
 
+  <!-- 컬럼 관리 모달 -->
+  <div id="column-manager-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
+    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+      <div class="p-6">
+        <!-- 모달 헤더 -->
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold text-gray-800">컬럼 관리</h3>
+          <button onclick="closeColumnManager()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- 새 컬럼 추가 -->
+        <div class="bg-blue-50 rounded-lg p-4 mb-6">
+          <h4 class="font-semibold text-gray-800 mb-3">새 컬럼 추가</h4>
+          <div class="flex space-x-3">
+            <input type="text" id="new-column-name" placeholder="컬럼 이름 (예: 조 이름)" 
+                   class="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="addCustomColumn()" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors">
+              추가
+            </button>
+          </div>
+        </div>
+
+        <!-- 현재 커스텀 컬럼 목록 -->
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h4 class="font-semibold text-gray-800 mb-3">현재 커스텀 컬럼</h4>
+          <div id="custom-columns-list" class="space-y-2">
+            <!-- 커스텀 컬럼 목록이 동적으로 생성됨 -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <script>
     // 현재 활성 탭
     let currentTab = 'overview';
@@ -231,13 +336,19 @@
     // 차트 인스턴스 저장
     const charts = {};
 
-    // 차트 선택 상태
-    const chartSelections = {
-      chart1: 'gender',
-      chart2: 'ai_experience',
-      chart3: 'learning_fields',
-      chart4: 'mbti'
-    };
+    // 차트 설정
+    const chartConfigs = [
+      { id: 'chart-gender', dataType: 'gender' },
+      { id: 'chart-computer-major', dataType: 'computer_major' },
+      { id: 'chart-python-learning', dataType: 'python_pre_learning' },
+      { id: 'chart-ai-experience', dataType: 'ai_experience' },
+      { id: 'chart-programming-languages', dataType: 'programming_languages' },
+      { id: 'chart-tech-stack', dataType: 'tech_stack' },
+      { id: 'chart-recent-role', dataType: 'recent_role' },
+      { id: 'chart-learning-fields', dataType: 'learning_fields' },
+      { id: 'chart-preferred-project', dataType: 'preferred_project_type' },
+      { id: 'chart-mbti', dataType: 'mbti' }
+    ];
 
     // 설문 통계 데이터 (React 컴포넌트와 동일한 구조)
     const surveyStatsData = {
@@ -251,12 +362,12 @@
       total_responses: 24,
       statistics: {
         gender: {
-          '남성': 14,
-          '여성': 10
+          '남': 14,
+          '여': 10
         },
         computer_major: {
-          '전공자': 16,
-          '비전공자': 8
+          '전공': 16,
+          '비전공': 8
         },
         python_pre_learning: {
           '있음': 18,
@@ -402,16 +513,25 @@
       ]
     };
 
-    // 필터 상태
-    let currentFilters = {
-      aiExperience: '',
-      gender: '',
-      computerMajor: '',
-      searchName: ''
+    // 정렬 상태
+    let currentSort = {
+      column: '',
+      direction: 'asc' // 'asc' 또는 'desc'
     };
+    
+    // 검색 상태
+    let searchName = '';
+
+    // 커스텀 컬럼 관리
+    let customColumns = [];
+    let customColumnData = {}; // { studentId: { columnId: value } }
+    let currentEditingCell = null;
+    let addColumnBlurTimer = null;
+    let inlineEditBlurTimer = null;
 
     // 페이지 로드 시 초기화
     document.addEventListener('DOMContentLoaded', function() {
+      loadCustomColumns();
       initializeCharts();
       renderStudentsTable();
     });
@@ -429,6 +549,14 @@
         ? 'py-2 px-1 border-b-2 font-medium text-sm transition-colors border-indigo-500 text-gray-600'
         : 'py-2 px-1 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
 
+      // 컨테이너 크기 조정 - 개별 응답 탭일 때만 최대 너비 증가
+      const mainContainer = document.getElementById('main-container');
+      if (tab === 'responses') {
+        mainContainer.className = 'max-w-full mx-auto p-6 px-4';
+      } else {
+        mainContainer.className = 'max-w-6xl mx-auto p-6';
+      }
+
       // 탭 컨텐츠 표시/숨김
       document.getElementById('overview-tab').style.display = tab === 'overview' ? 'block' : 'none';
       document.getElementById('responses-tab').style.display = tab === 'responses' ? 'block' : 'none';
@@ -438,16 +566,14 @@
 
     // 차트 초기화
     function initializeCharts() {
-      const chartIds = ['chart1', 'chart2', 'chart3', 'chart4'];
-
-      chartIds.forEach(chartId => {
-        const canvas = document.getElementById(chartId);
+      chartConfigs.forEach(config => {
+        const canvas = document.getElementById(config.id);
         if (canvas) {
           const ctx = canvas.getContext('2d');
-          const chartType = getChartType(chartSelections[chartId]);
-          const chartData = generateChartData(chartSelections[chartId]);
+          const chartType = getChartType(config.dataType);
+          const chartData = generateChartData(config.dataType);
 
-          charts[chartId] = new Chart(ctx, {
+          charts[config.id] = new Chart(ctx, {
             type: chartType,
             data: chartData,
             options: getChartOptions(chartType)
@@ -456,26 +582,10 @@
       });
     }
 
-    // 차트 업데이트
+    // 차트 업데이트 (더 이상 사용하지 않음 - 드롭다운 제거로 인해)
     function updateChart(chartId, dataType) {
-      chartSelections[chartId] = dataType;
-
-      if (charts[chartId]) {
-        charts[chartId].destroy();
-      }
-
-      const canvas = document.getElementById(chartId);
-      const ctx = canvas.getContext('2d');
-      const chartType = getChartType(dataType);
-      const chartData = generateChartData(dataType);
-
-      charts[chartId] = new Chart(ctx, {
-        type: chartType,
-        data: chartData,
-        options: getChartOptions(chartType)
-      });
-
-      console.log('차트 선택 변경 (즉시 렌더링):', { chartId, dataType });
+      // 이 함수는 더 이상 사용되지 않습니다.
+      console.log('updateChart 함수는 더 이상 사용되지 않습니다.');
     }
 
     // 차트 타입 결정
@@ -596,114 +706,577 @@
       }
     }
 
+    // 커스텀 컬럼 로드
+    function loadCustomColumns() {
+      const saved = localStorage.getItem('survey-custom-columns');
+      if (saved) {
+        customColumns = JSON.parse(saved);
+      }
+      
+      const savedData = localStorage.getItem('survey-custom-column-data');
+      if (savedData) {
+        customColumnData = JSON.parse(savedData);
+      }
+    }
+
+    // 커스텀 컬럼 저장
+    function saveCustomColumns() {
+      localStorage.setItem('survey-custom-columns', JSON.stringify(customColumns));
+      localStorage.setItem('survey-custom-column-data', JSON.stringify(customColumnData));
+    }
+
+
+    // + 버튼 클릭 시 인라인 입력 표시
+    function showAddColumnInput() {
+      const addColumnTh = document.querySelector('th[onclick="showAddColumnInput()"]');
+      if (!addColumnTh) return;
+
+      // 기존 + 버튼을 입력 필드로 교체
+      addColumnTh.innerHTML = `
+        <div class="flex items-center space-x-1">
+          <input type="text" 
+                 id="inline-column-input" 
+                 placeholder="컬럼명" 
+                 class="w-16 px-1 py-1 text-xs border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                 onkeydown="handleAddColumnKeydown(event)"
+                 onblur="scheduleAddColumnCancel()">
+          <button onmousedown="clearAddColumnTimer()" onclick="confirmAddColumn()" 
+                  class="text-green-600 hover:text-green-800 text-xs flex-shrink-0" 
+                  title="추가">✓</button>
+          <button onmousedown="clearAddColumnTimer()" onclick="cancelAddColumn()" 
+                  class="text-red-600 hover:text-red-800 text-xs flex-shrink-0" 
+                  title="취소">✗</button>
+        </div>
+      `;
+
+      // 입력 필드에 포커스
+      setTimeout(() => {
+        const input = document.getElementById('inline-column-input');
+        if (input) {
+          input.focus();
+        }
+      }, 50);
+    }
+
+    // 키보드 이벤트 처리
+    function handleAddColumnKeydown(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        confirmAddColumn();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        cancelAddColumn();
+      }
+    }
+
+    // 컬럼 추가 확인
+    function confirmAddColumn() {
+      clearAddColumnTimer();
+      
+      const input = document.getElementById('inline-column-input');
+      if (!input) return;
+
+      const name = input.value.trim();
+      if (!name) {
+        cancelAddColumn();
+        return;
+      }
+
+      if (customColumns.some(col => col.name === name)) {
+        alert('이미 존재하는 컬럼 이름입니다.');
+        input.focus();
+        return;
+      }
+
+      const newColumn = {
+        id: 'custom_' + Date.now(),
+        name: name,
+        created: new Date().toISOString()
+      };
+
+      customColumns.push(newColumn);
+      saveCustomColumns();
+      renderStudentsTable();
+      
+      console.log('새 컬럼 추가:', newColumn);
+    }
+
+    // blur 이벤트 스케줄링
+    function scheduleAddColumnCancel() {
+      addColumnBlurTimer = setTimeout(() => {
+        cancelAddColumn();
+      }, 150);
+    }
+
+    // 타이머 취소
+    function clearAddColumnTimer() {
+      if (addColumnBlurTimer) {
+        clearTimeout(addColumnBlurTimer);
+        addColumnBlurTimer = null;
+      }
+    }
+
+    // 컬럼 추가 취소
+    function cancelAddColumn() {
+      clearAddColumnTimer();
+      renderTableHeader(); // 원래 + 버튼으로 복원
+    }
+
+    // 컬럼 관리 모달 열기 (기존 함수는 유지하되 사용하지 않음)
+    function openColumnManager() {
+      document.getElementById('column-manager-modal').classList.remove('hidden');
+      renderCustomColumnsList();
+    }
+
+    // 컬럼 관리 모달 닫기
+    function closeColumnManager() {
+      document.getElementById('column-manager-modal').classList.add('hidden');
+    }
+
+    // 새 커스텀 컬럼 추가
+    function addCustomColumn() {
+      const nameInput = document.getElementById('new-column-name');
+      const name = nameInput.value.trim();
+      
+      if (!name) {
+        alert('컬럼 이름을 입력해주세요.');
+        return;
+      }
+
+      if (customColumns.some(col => col.name === name)) {
+        alert('이미 존재하는 컬럼 이름입니다.');
+        return;
+      }
+
+      const newColumn = {
+        id: 'custom_' + Date.now(),
+        name: name,
+        created: new Date().toISOString()
+      };
+
+      customColumns.push(newColumn);
+      saveCustomColumns();
+      renderCustomColumnsList();
+      renderStudentsTable();
+      
+      nameInput.value = '';
+      console.log('새 컬럼 추가:', newColumn);
+    }
+
+    // 커스텀 컬럼 삭제
+    function deleteCustomColumn(columnId) {
+      const column = customColumns.find(col => col.id === columnId);
+      if (!column) return;
+
+      if (!confirm(`"${column.name}" 컬럼을 삭제하시겠습니까?\n모든 입력된 데이터가 함께 삭제됩니다.`)) {
+        return;
+      }
+
+      customColumns = customColumns.filter(col => col.id !== columnId);
+      
+      // 해당 컬럼의 모든 데이터 삭제
+      Object.keys(customColumnData).forEach(studentId => {
+        if (customColumnData[studentId] && customColumnData[studentId][columnId]) {
+          delete customColumnData[studentId][columnId];
+        }
+      });
+
+      saveCustomColumns();
+      renderCustomColumnsList();
+      renderStudentsTable();
+      console.log('컬럼 삭제:', columnId);
+    }
+
+    // 커스텀 컬럼 목록 렌더링
+    function renderCustomColumnsList() {
+      const container = document.getElementById('custom-columns-list');
+      
+      if (customColumns.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-sm">추가된 커스텀 컬럼이 없습니다.</p>';
+        return;
+      }
+
+      container.innerHTML = customColumns.map(column => `
+        <div class="flex items-center justify-between p-3 bg-white rounded-lg border">
+          <div>
+            <span class="font-medium text-gray-800">${column.name}</span>
+            <span class="text-xs text-gray-500 ml-2">(${new Date(column.created).toLocaleDateString()})</span>
+          </div>
+          <button onclick="deleteCustomColumn('${column.id}')" 
+                  class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors">
+            삭제
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // 인라인 편집 시작
+    function startInlineEdit(studentId, columnId, currentValue = '') {
+      const cellId = `cell-${studentId}-${columnId}`;
+      const cell = document.getElementById(cellId);
+      if (!cell) return;
+
+      currentEditingCell = { studentId, columnId, cellId };
+      
+      // 현재 셀의 크기를 저장
+      const cellRect = cell.getBoundingClientRect();
+      const cellWidth = cellRect.width;
+      
+      // 셀 내용을 입력 필드로 변경 (크기 고정)
+      cell.innerHTML = `
+        <div class="flex items-center space-x-1" style="width: ${cellWidth - 16}px;">
+          <input type="text" 
+                 id="inline-edit-input" 
+                 value="${currentValue}" 
+                 class="flex-1 px-1 py-1 text-xs border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-0"
+                 style="width: calc(100% - 32px);"
+                 onkeydown="handleInlineEditKeydown(event)"
+                 onblur="scheduleInlineEditCancel()">
+          <button onmousedown="clearInlineEditTimer()" onclick="confirmInlineEdit()" 
+                  class="text-green-600 hover:text-green-800 text-xs flex-shrink-0 w-4 h-4 flex items-center justify-center" 
+                  title="저장">✓</button>
+          <button onmousedown="clearInlineEditTimer()" onclick="cancelInlineEdit()" 
+                  class="text-red-600 hover:text-red-800 text-xs flex-shrink-0 w-4 h-4 flex items-center justify-center" 
+                  title="취소">✗</button>
+        </div>
+      `;
+
+      // 입력 필드에 포커스
+      setTimeout(() => {
+        const input = document.getElementById('inline-edit-input');
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }, 50);
+    }
+
+    // 키보드 이벤트 처리
+    function handleInlineEditKeydown(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        confirmInlineEdit();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        cancelInlineEdit();
+      }
+    }
+
+    // 인라인 편집 확인
+    function confirmInlineEdit() {
+      clearInlineEditTimer();
+      
+      if (!currentEditingCell) return;
+
+      const input = document.getElementById('inline-edit-input');
+      if (!input) return;
+
+      const { studentId, columnId } = currentEditingCell;
+      const value = input.value.trim();
+
+      if (!customColumnData[studentId]) {
+        customColumnData[studentId] = {};
+      }
+
+      customColumnData[studentId][columnId] = value;
+      saveCustomColumns();
+      renderStudentsTable();
+      
+      console.log('컬럼 값 저장:', { studentId, columnId, value });
+    }
+
+    // blur 이벤트 스케줄링
+    function scheduleInlineEditCancel() {
+      inlineEditBlurTimer = setTimeout(() => {
+        cancelInlineEdit();
+      }, 150);
+    }
+
+    // 타이머 취소
+    function clearInlineEditTimer() {
+      if (inlineEditBlurTimer) {
+        clearTimeout(inlineEditBlurTimer);
+        inlineEditBlurTimer = null;
+      }
+    }
+
+    // 인라인 편집 취소
+    function cancelInlineEdit() {
+      clearInlineEditTimer();
+      if (currentEditingCell) {
+        currentEditingCell = null;
+        renderStudentsTable(); // 원래 상태로 복원
+      }
+    }
+
+    // 테이블 헤더 렌더링
+    function renderTableHeader() {
+      const thead = document.getElementById('table-header');
+      
+      // 기본 컬럼들
+      const baseColumns = [
+        { id: 'name', label: '이름', width: 'w-24' },
+        { id: 'gender', label: '성별', width: 'w-16' },
+        { id: 'email', label: '노션 이메일', width: 'w-48' },
+        { id: 'mbti', label: 'MBTI', width: 'w-16' },
+        { id: 'previous_course', label: '이전 수료 과정', width: 'w-32' },
+        { id: 'ai_experience', label: 'AI는 내친구?', width: 'w-32' },
+        { id: 'computer_major', label: '컴퓨터 전공', width: 'w-24' },
+        { id: 'career_details', label: '경력 사항', width: 'w-40' },
+        { id: 'tech_stack', label: '기술 스택', width: 'w-56' },
+        { id: 'recent_role', label: '최근 역할', width: 'w-32' },
+        { id: 'desired_job', label: '희망직무', width: 'w-32' },
+        { id: 'course_questions', label: '질문 사항', width: 'w-56' }
+      ];
+
+      // 커스텀 컬럼 추가
+      const allColumns = [...baseColumns, ...customColumns.map(col => ({
+        id: col.id,
+        label: col.name,
+        width: 'w-24',
+        isCustom: true
+      }))];
+
+      const columnHeaders = allColumns.map(column => `
+        <th onclick="sortTable('${column.id}')" class="cursor-pointer hover:bg-gray-100 select-none ${column.isCustom ? 'bg-blue-50 text-blue-700' : 'text-gray-500'}" style="min-width: ${getMinWidth(column.id)}px;">
+          ${column.label} <span id="sort-icon-${column.id}" class="ml-1">↕</span>
+          ${column.isCustom ? `<button onclick="event.stopPropagation(); deleteCustomColumn('${column.id}')" class="ml-2 text-red-500 hover:text-red-700 text-xs">×</button>` : ''}
+        </th>
+      `).join('');
+
+      // + 버튼 추가
+      const addColumnButton = `
+        <th class="text-center bg-green-50 hover:bg-green-100 cursor-pointer transition-colors relative group" style="min-width: 80px;" onclick="showAddColumnInput()">
+          <div class="flex items-center justify-center">
+            <div class="w-6 h-6 rounded-full bg-green-200 group-hover:bg-green-300 flex items-center justify-center transition-colors">
+              <span class="text-green-700 text-sm font-bold" title="새 컬럼 추가">+</span>
+            </div>
+          </div>
+          <div class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+            새 컬럼 추가
+          </div>
+        </th>
+      `;
+
+      thead.innerHTML = columnHeaders + addColumnButton;
+    }
+
+    // 컬럼별 최소 너비 설정
+    function getMinWidth(columnId) {
+      const widthMap = {
+        'name': 100,
+        'gender': 60,
+        'email': 200,
+        'mbti': 60,
+        'previous_course': 120,
+        'ai_experience': 120,
+        'computer_major': 100,
+        'career_details': 150,
+        'tech_stack': 220,
+        'recent_role': 120,
+        'desired_job': 120,
+        'course_questions': 200
+      };
+      
+      // 커스텀 컬럼은 기본 100px
+      return widthMap[columnId] || 100;
+    }
+
     // 학생 테이블 렌더링
     function renderStudentsTable() {
+      // 먼저 헤더 렌더링
+      renderTableHeader();
+      
       const tbody = document.getElementById('students-table-body');
       let filteredStudents = individualResponsesData.students;
 
-      // 필터 적용
-      if (currentFilters.searchName) {
+      // 검색 적용
+      if (searchName) {
         filteredStudents = filteredStudents.filter(student =>
-          student.name.toLowerCase().includes(currentFilters.searchName.toLowerCase())
+          student.name.toLowerCase().includes(searchName.toLowerCase())
         );
       }
 
-      if (currentFilters.aiExperience) {
-        filteredStudents = filteredStudents.filter(student =>
-          student.survey_data && student.survey_data.ai_experience === currentFilters.aiExperience
-        );
-      }
-
-      if (currentFilters.gender) {
-        filteredStudents = filteredStudents.filter(student =>
-          student.survey_data && student.survey_data.gender === currentFilters.gender
-        );
-      }
-
-      if (currentFilters.computerMajor) {
-        filteredStudents = filteredStudents.filter(student =>
-          student.survey_data && student.survey_data.computer_major === currentFilters.computerMajor
-        );
+      // 정렬 적용
+      if (currentSort.column) {
+        filteredStudents.sort((a, b) => {
+          let aValue = getSortValue(a, currentSort.column);
+          let bValue = getSortValue(b, currentSort.column);
+          
+          // 문자열 비교 (빈 값은 맨 뒤로)
+          if (aValue === '-' && bValue !== '-') return 1;
+          if (aValue !== '-' && bValue === '-') return -1;
+          if (aValue === '-' && bValue === '-') return 0;
+          
+          const comparison = aValue.localeCompare(bValue, 'ko');
+          return currentSort.direction === 'asc' ? comparison : -comparison;
+        });
       }
 
       // 테이블 HTML 생성
-      tbody.innerHTML = filteredStudents.map(student => `
-        <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-            ${student.name}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            ${student.email}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-              student.computer_major === '전공자'
-                ? 'bg-blue-100 text-gray-800'
-                : student.computer_major === '비전공자'
+      tbody.innerHTML = filteredStudents.map(student => {
+        const data = student.survey_data || {};
+        const aiExperienceMap = {
+          'none': '전혀 모름',
+          'chatgpt_basic': 'ChatGPT 기초',
+          'chatgpt_dev': 'ChatGPT 개발',
+          'opensource': '오픈소스 활용',
+          'expert': '전문가 수준'
+        };
+
+        // 기본 셀들
+        const baseCells = [
+          `<td class="font-medium text-gray-900" style="min-width: ${getMinWidth('name')}px;">${student.name}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('gender')}px;">${data.gender === 'male' ? '남' : data.gender === 'female' ? '여' : '-'}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('email')}px;">${student.email}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('mbti')}px;">${data.mbti || '-'}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('previous_course')}px;">${data.previous_course || '-'}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('ai_experience')}px;">${aiExperienceMap[data.ai_experience] || data.ai_experience || '-'}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('computer_major')}px;">
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${
+              data.computer_major === 'Y'
+                ? 'bg-blue-100 text-blue-800'
+                : data.computer_major === 'N'
                 ? 'bg-gray-100 text-gray-800'
                 : 'bg-red-100 text-red-800'
             }">
-              ${student.computer_major}
+              ${data.computer_major === 'Y' ? '전공' : data.computer_major === 'N' ? '비전공' : '-'}
             </span>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            ${student.main_language}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            ${student.recent_role}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-            ${student.survey_completed ? `
-              <button onclick="showStudentDetail(${student.user_id})" class="text-gray-600 hover:text-gray-900 transition-colors">
-                더보기
-              </button>
-            ` : `
-              <span class="text-gray-400">미완료</span>
-            `}
-          </td>
-        </tr>
-      `).join('');
+          </td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('career_details')}px;">${data.career_details || '-'}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('tech_stack')}px;">${data.tech_stack ? data.tech_stack.join(', ') : '-'}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('recent_role')}px;">${student.recent_role || '-'}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('desired_job')}px;">${data.desired_job || '-'}</td>`,
+          `<td class="text-gray-500" style="min-width: ${getMinWidth('course_questions')}px;">${data.course_questions || '-'}</td>`
+        ];
+
+        // 커스텀 컬럼 셀들
+        const customCells = customColumns.map(column => {
+          const currentValue = customColumnData[student.user_id]?.[column.id] || '';
+          const cellId = `cell-${student.user_id}-${column.id}`;
+          return `
+            <td class="bg-blue-50/30 cursor-pointer hover:bg-blue-100/50 transition-colors text-gray-500" 
+                style="min-width: ${getMinWidth(column.id)}px;" id="${cellId}" onclick="startInlineEdit(${student.user_id}, '${column.id}', '${currentValue}')">
+              <div class="flex items-center justify-between">
+                <span class="${currentValue ? 'text-gray-700' : 'text-gray-400 italic'}">${currentValue || '클릭하여 입력'}</span>
+                <svg class="h-3 w-3 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+            </td>`;
+        });
+        
+        // + 버튼에 대응하는 빈 셀
+        const addColumnCell = '<td class="bg-green-50/30" style="min-width: 80px;"></td>';
+        
+        return `<tr class="group">${baseCells.join('')}${customCells.join('')}${addColumnCell}</tr>`;
+      }).join('');
 
       // 검색 결과 정보 업데이트
       document.getElementById('search-results-info').textContent =
         `전체 ${individualResponsesData.total_students}명 중 ${filteredStudents.length}명 표시${
-          currentFilters.searchName ? ` (검색: "${currentFilters.searchName}")` : ''
+          searchName ? ` (검색: "${searchName}")` : ''
         }`;
+      
+      // 정렬 아이콘 업데이트
+      updateSortIcons();
     }
 
     // 검색 실행
     function searchStudents() {
       const searchInput = document.getElementById('search-input').value;
-      currentFilters.searchName = searchInput.trim();
+      searchName = searchInput.trim();
       renderStudentsTable();
-      console.log('검색 실행:', currentFilters.searchName);
+      console.log('검색 실행:', searchName);
     }
 
-    // 필터 적용
-    function applyFilters() {
-      currentFilters.aiExperience = document.getElementById('filter-ai-experience').value;
-      currentFilters.gender = document.getElementById('filter-gender').value;
-      currentFilters.computerMajor = document.getElementById('filter-computer-major').value;
-      renderStudentsTable();
-      console.log('필터 변경:', currentFilters);
-    }
-
-    // 필터 초기화
+    // 검색 초기화
     function resetFilters() {
       document.getElementById('search-input').value = '';
-      document.getElementById('filter-ai-experience').value = '';
-      document.getElementById('filter-gender').value = '';
-      document.getElementById('filter-computer-major').value = '';
+      searchName = '';
+      renderStudentsTable();
+      console.log('검색 초기화');
+    }
 
-      currentFilters = {
-        aiExperience: '',
-        gender: '',
-        computerMajor: '',
-        searchName: ''
+    // 테이블 정렬
+    function sortTable(column) {
+      if (currentSort.column === column) {
+        // 같은 컬럼 클릭 시 방향 전환
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        // 다른 컬럼 클릭 시 오름차순으로 시작
+        currentSort.column = column;
+        currentSort.direction = 'asc';
+      }
+      renderStudentsTable();
+      console.log('정렬 변경:', currentSort);
+    }
+
+    // 정렬용 값 추출
+    function getSortValue(student, column) {
+      const data = student.survey_data || {};
+      const aiExperienceMap = {
+        'none': '전혀 모름',
+        'chatgpt_basic': 'ChatGPT 기초',
+        'chatgpt_dev': 'ChatGPT 개발',
+        'opensource': '오픈소스 활용',
+        'expert': '전문가 수준'
       };
 
-      renderStudentsTable();
-      console.log('필터 및 검색 초기화');
+      // 커스텀 컬럼인지 확인
+      if (column.startsWith('custom_')) {
+        return customColumnData[student.user_id]?.[column] || '-';
+      }
+
+      switch (column) {
+        case 'name':
+          return student.name || '-';
+        case 'gender':
+          return data.gender === 'male' ? '남' : data.gender === 'female' ? '여' : '-';
+        case 'email':
+          return student.email || '-';
+        case 'mbti':
+          return data.mbti || '-';
+        case 'previous_course':
+          return data.previous_course || '-';
+        case 'ai_experience':
+          return aiExperienceMap[data.ai_experience] || data.ai_experience || '-';
+        case 'computer_major':
+          return data.computer_major === 'Y' ? '전공' : data.computer_major === 'N' ? '비전공' : '-';
+        case 'career_details':
+          return data.career_details || '-';
+        case 'tech_stack':
+          return data.tech_stack ? data.tech_stack.join(', ') : '-';
+        case 'recent_role':
+          return student.recent_role || '-';
+        case 'desired_job':
+          return data.desired_job || '-';
+        case 'course_questions':
+          return data.course_questions || '-';
+        default:
+          return '-';
+      }
+    }
+
+    // 정렬 아이콘 업데이트
+    function updateSortIcons() {
+      // 기본 컬럼들
+      const baseColumns = ['name', 'gender', 'email', 'mbti', 'previous_course', 'ai_experience', 
+                          'computer_major', 'career_details', 'tech_stack', 'recent_role', 'desired_job', 'course_questions'];
+      
+      // 커스텀 컬럼들 추가
+      const allColumns = [...baseColumns, ...customColumns.map(col => col.id)];
+      
+      allColumns.forEach(column => {
+        const icon = document.getElementById(`sort-icon-${column}`);
+        if (icon) {
+          if (currentSort.column === column) {
+            icon.textContent = currentSort.direction === 'asc' ? '↑' : '↓';
+          } else {
+            icon.textContent = '↕';
+          }
+        }
+      });
     }
 
     // 학생 상세 정보 표시
@@ -739,9 +1312,9 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div><span class="font-medium">이름:</span> ${student.survey_data.name}</div>
               <div><span class="font-medium">이메일:</span> ${student.survey_data.email}</div>
-              <div><span class="font-medium">성별:</span> ${student.survey_data.gender === 'male' ? '남성' : '여성'}</div>
+              <div><span class="font-medium">성별:</span> ${student.survey_data.gender === 'male' ? '남' : '여'}</div>
               <div><span class="font-medium">MBTI:</span> ${student.survey_data.mbti}</div>
-              <div><span class="font-medium">컴퓨터 전공:</span> ${student.survey_data.computer_major === 'Y' ? '전공자' : '비전공자'}</div>
+              <div><span class="font-medium">컴퓨터 전공:</span> ${student.survey_data.computer_major === 'Y' ? '전공' : '비전공'}</div>
               <div><span class="font-medium">파이썬 사전 학습:</span> ${student.survey_data.python_pre_learning === 'Y' ? '있음' : '없음'}</div>
             </div>
           </div>
@@ -806,6 +1379,19 @@
     document.getElementById('survey-detail-modal').addEventListener('click', function(e) {
       if (e.target === this) {
         closeModal();
+      }
+    });
+
+    document.getElementById('column-manager-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeColumnManager();
+      }
+    });
+
+    // 엔터키로 컬럼 추가
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && e.target.id === 'new-column-name') {
+        addCustomColumn();
       }
     });
   </script>
