@@ -35,6 +35,10 @@
         <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
           로그인
         </button>
+        <br></br>
+        <button type="button" onclick="window.location.href='register.html'" class="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
+          회원가입
+        </button>
       </form>
     </div>
   </div>
@@ -45,12 +49,12 @@
     <!-- 헤더 -->
     <header class="flex justify-between items-center">
       <div>
-        <h1 class="text-3xl font-bold mb-2">📁 AI-X 과정 관리</h1>
+        <h1 class="text-3xl font-bold mb-2">AI-X 과정 관리</h1>
         <p class="text-gray-600">운영자 권회은 님, 총 3개 과정을 관리 중입니다.</p>
       </div>
       <div class="flex gap-2">
         <button id="adminToolBtn" onclick="window.location.href='admin.html'" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors">
-          ⚙️ 관리자 도구
+          관리자 도구
         </button>
         <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">
           로그아웃
@@ -60,7 +64,7 @@
 
     <!-- 전체 과정 목록 -->
     <section class="bg-white shadow rounded-xl p-6">
-      <h2 class="text-xl font-semibold mb-6">🗂 과정 목록</h2>
+      <h2 class="text-xl font-semibold mb-6">과정 목록</h2>
       
       <!-- 과정 카드 그리드 -->
       <div class="grid md:grid-cols-3 gap-6">
@@ -75,7 +79,7 @@
             <p><span class="font-medium">멘토:</span> 정기수, 배경관</p>
           </div>
           <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">
-            📋 과정 관리
+            과정 관리
           </button>
         </div>
         
@@ -90,7 +94,7 @@
             <p><span class="font-medium">멘토:</span> 정기수, 김민수</p>
           </div>
           <button class="mt-4 w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition-colors">
-            📚 아카이브 보기
+            아카이브 보기
           </button>
         </div>
         
@@ -105,7 +109,7 @@
             <p><span class="font-medium">멘토:</span> 박지영, 이상훈</p>
           </div>
           <button class="mt-4 w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition-colors">
-            📚 아카이브 보기
+            아카이브 보기
           </button>
         </div>
       </div>
@@ -114,6 +118,15 @@
 
 
   </div>
+
+  <!-- 푸터 -->
+  <footer class="mt-16 py-6 border-t border-gray-200">
+    <div class="max-w-5xl mx-auto flex justify-end">
+      <button type="button" onclick="window.location.href='mentor-signup.html'" class="text-xs text-gray-500 hover:text-gray-700 underline transition-colors">
+        운영진 회원가입
+      </button>
+    </div>
+  </footer>
 
   <script>
     // 로그인 처리 (와이어프레임용 - 인증 없이 진행)

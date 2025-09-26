@@ -34,8 +34,8 @@
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <div class="flex items-center space-x-4">
-          <a href="#" onclick="goBackToMain()" class="text-indigo-600 hover:text-indigo-800">← 메인으로</a>
-          <h1 class="text-2xl font-bold text-indigo-700">⚙️ 관리자 설정</h1>
+          <a href="index.html?authenticated=true" class="text-indigo-600 hover:text-indigo-800">메인으로</a>
+          <h1 class="text-2xl font-bold text-indigo-700">관리자 설정</h1>
         </div>
         <div class="flex items-center space-x-4">
           <span class="text-gray-600">운영자: 권회은</span>
@@ -46,257 +46,168 @@
   </nav>
 
   <div class="max-w-7xl mx-auto px-4 space-y-8">
-    
-    <!-- 시스템 상태 모니터링 -->
-    <section class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold mb-6 flex items-center">
-        <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        시스템 상태 모니터링
-      </h2>
-      <div class="grid md:grid-cols-4 gap-6">
-        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-green-600 font-medium">시스템 상태</p>
-              <p class="text-2xl font-bold text-green-800">정상</p>
-            </div>
-            <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-          </div>
-        </div>
-        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-blue-600 font-medium">활성 사용자</p>
-              <p class="text-2xl font-bold text-blue-800">24</p>
-            </div>
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-            </svg>
-          </div>
-        </div>
-        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-yellow-600 font-medium">저장 용량</p>
-              <p class="text-2xl font-bold text-yellow-800">78%</p>
-            </div>
-            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
-            </svg>
-          </div>
-        </div>
-        <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-purple-600 font-medium">백업 상태</p>
-              <p class="text-2xl font-bold text-purple-800">최신</p>
-            </div>
-            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- 데이터 관리 -->
-    <section class="grid md:grid-cols-2 gap-8">
-      <!-- 백업 및 복원 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path>
-          </svg>
-          데이터 백업 관리
-        </h3>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p class="font-medium">전체 시스템 백업</p>
-              <p class="text-sm text-gray-600">마지막 백업: 2시간 전</p>
-            </div>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              백업 실행
-            </button>
-          </div>
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p class="font-medium">Google Drive 동기화</p>
-              <p class="text-sm text-gray-600">자동 동기화 활성화됨</p>
-            </div>
-            <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-              설정
-            </button>
-          </div>
-          <div class="border-t pt-4">
-            <p class="font-medium mb-2">백업 복원</p>
-            <input type="file" class="border p-2 rounded w-full mb-2" accept=".zip,.json">
-            <button class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 w-full">
-              백업 파일 복원
-            </button>
-          </div>
-        </div>
-      </div>
+    <section class="grid md:grid-cols-1 gap-8">
 
       <!-- 사용자 관리 -->
       <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-          </svg>
+        <h3 class="text-xl font-bold mb-6 flex items-center">
           사용자 권한 관리
         </h3>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p class="font-medium">권회은 (운영자)</p>
-              <p class="text-sm text-gray-600">전체 관리자 권한</p>
-            </div>
-            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">관리자</span>
-          </div>
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p class="font-medium">정기수 (멘토)</p>
-              <p class="text-sm text-gray-600">멘토링 및 과제 관리</p>
-            </div>
-            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">멘토</span>
-          </div>
-          <div class="border-t pt-4">
-            <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 w-full">
-              새 사용자 추가
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 시스템 설정 -->
-    <section class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold mb-6 flex items-center">
-        <svg class="w-6 h-6 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-        </svg>
-        시스템 설정
-      </h2>
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="space-y-4">
-          <h4 class="font-semibold text-gray-800">알림 설정</h4>
-          <div class="space-y-3">
-            <label class="flex items-center">
-              <input type="checkbox" checked class="mr-2">
-              <span class="text-sm">과제 마감 알림</span>
-            </label>
-            <label class="flex items-center">
-              <input type="checkbox" checked class="mr-2">
-              <span class="text-sm">멘토링 일지 미작성 알림</span>
-            </label>
-            <label class="flex items-center">
-              <input type="checkbox" class="mr-2">
-              <span class="text-sm">시스템 업데이트 알림</span>
-            </label>
-          </div>
-        </div>
         
-        <div class="space-y-4">
-          <h4 class="font-semibold text-gray-800">외부 연동</h4>
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Google Drive</span>
-              <button class="bg-green-100 text-green-800 px-3 py-1 rounded text-sm">연결됨</button>
+        <!-- 승인 대기 목록 -->
+        <div class="mb-8">
+          <h4 class="text-lg font-semibold mb-4 flex items-center">
+            <span class="w-3 h-3 bg-yellow-400 rounded-full mr-3"></span>
+            승인 대기 중 (<span id="pendingCount">2</span>명)
+          </h4>
+          <div id="pendingUsersList" class="space-y-4">
+            <!-- 승인 대기 사용자 카드들 -->
+            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm flex flex-wrap items-center justify-between">
+              <div class="flex-grow mb-4 md:mb-0">
+                <p class="font-bold text-gray-900">김민수 <span class="text-sm font-normal text-gray-500 ml-2">2024-09-25 14:30 신청</span></p>
+                <p class="text-sm text-gray-600">이메일: kim.minsu@example.com</p>
+                <p class="text-sm text-gray-600 mt-1">수강생 | AI-X 11기</p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition duration-200">승인</button>
+                <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md transition duration-200">거부</button>
+              </div>
             </div>
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Slack 알림</span>
-              <button class="bg-gray-100 text-gray-800 px-3 py-1 rounded text-sm">연결</button>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Notion 연동</span>
-              <button class="bg-gray-100 text-gray-800 px-3 py-1 rounded text-sm">연결</button>
+            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm flex flex-wrap items-center justify-between">
+              <div class="flex-grow mb-4 md:mb-0">
+                <p class="font-bold text-gray-900">이지현 <span class="text-sm font-normal text-gray-500 ml-2">2024-09-25 16:15 신청</span></p>
+                <p class="text-sm text-gray-600">이메일: lee.jihyun@example.com</p>
+                <p class="text-sm text-gray-600 mt-1">코치 | 10기</p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition duration-200">승인</button>
+                <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md transition duration-200">거부</button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="space-y-4">
-          <h4 class="font-semibold text-gray-800">시스템 관리</h4>
-          <div class="space-y-3">
-            <button class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 w-full text-sm">
-              캐시 초기화
-            </button>
-            <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full text-sm">
-              시스템 재시작
-            </button>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full text-sm">
-              데이터베이스 최적화
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
+        <!-- 기존 승인된 사용자 목록 -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4 flex items-center">
+            <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+            승인된 사용자
+          </h4>
 
-    <!-- 통계 및 리포트 -->
-    <section class="grid md:grid-cols-2 gap-8">
-      <!-- 사용 통계 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
-          사용 통계
-        </h3>
-        <div class="chart-container">
-          <canvas id="usageChart"></canvas>
-        </div>
-        <div class="mt-4 grid grid-cols-2 gap-4 text-center">
-          <div>
-            <p class="text-2xl font-bold text-blue-600">156</p>
-            <p class="text-sm text-gray-600">총 과제 제출</p>
+          <!-- 필터 및 검색 UI -->
+          <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 flex flex-wrap gap-4 items-center">
+            <div class="flex-grow w-full sm:w-auto">
+              <label for="search-user" class="sr-only">사용자 검색</label>
+              <input type="text" id="search-user" placeholder="이름, 이메일로 검색..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="flex-none">
+              <label for="filter-batch" class="sr-only">기수 필터</label>
+              <select id="filter-batch" class="h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline-blue focus:border-blue-300 min-w-[120px]">
+                <option value="all">전체 기수</option>
+                <option value="11기">11기</option>
+                <option value="10기">10기</option>
+                <option value="9기">9기</option>
+              </select>
+            </div>
+            <div class="flex-none">
+              <label for="filter-role" class="sr-only">역할 필터</label>
+              <select id="filter-role" class="h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline-blue focus:border-blue-300 min-w-[120px]">
+                <option value="all">전체 역할</option>
+                <option value="수강생">수강생</option>
+                <option value="코치">코치</option>
+                <option value="멘토">멘토</option>
+                <option value="관리자">관리자</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <p class="text-2xl font-bold text-green-600">89%</p>
-            <p class="text-sm text-gray-600">평균 제출률</p>
-          </div>
-        </div>
-      </div>
 
-      <!-- 로그 모니터링 -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 flex items-center">
-          <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-          시스템 로그
-        </h3>
-        <div class="space-y-2 max-h-48 overflow-y-auto">
-          <div class="flex items-center justify-between p-2 bg-green-50 rounded text-sm">
-            <span>✅ AI-X 3기 백업 완료</span>
-            <span class="text-gray-500">14:32</span>
+          <!-- 사용자 목록 테이블 -->
+          <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-600">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3">이름</th>
+                  <th scope="col" class="px-6 py-3">이메일</th>
+                  <th scope="col" class="px-6 py-3">역할</th>
+                  <th scope="col" class="px-6 py-3">기수</th>
+                  <th scope="col" class="px-6 py-3">승인일</th>
+                  <th scope="col" class="px-6 py-3 text-right">관리</th>
+                </tr>
+              </thead>
+              <tbody id="user-list">
+                <tr class="bg-white border-b hover:bg-gray-50">
+                  <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">권회은</td>
+                  <td class="px-6 py-4">kwon.hoeeun@example.com</td>
+                  <td class="px-6 py-4">
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">관리자</span>
+                  </td>
+                  <td class="px-6 py-4">11기</td>
+                  <td class="px-6 py-4">2024-08-15</td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="font-medium text-blue-600 hover:underline">수정</button>
+                    <button class="font-medium text-red-600 hover:underline ml-4">삭제</button>
+                  </td>
+                </tr>
+                <tr class="bg-white border-b hover:bg-gray-50">
+                  <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">정기수</td>
+                  <td class="px-6 py-4">jung.gisu@example.com</td>
+                  <td class="px-6 py-4">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">멘토</span>
+                  </td>
+                  <td class="px-6 py-4">10기</td>
+                  <td class="px-6 py-4">2024-08-20</td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="font-medium text-blue-600 hover:underline">수정</button>
+                    <button class="font-medium text-red-600 hover:underline ml-4">삭제</button>
+                  </td>
+                </tr>
+                <tr class="bg-white border-b hover:bg-gray-50">
+                  <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">박현우</td>
+                  <td class="px-6 py-4">park.hyunwoo@example.com</td>
+                  <td class="px-6 py-4">
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">수강생</span>
+                  </td>
+                  <td class="px-6 py-4">11기</td>
+                  <td class="px-6 py-4">2024-08-25</td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="font-medium text-blue-600 hover:underline">수정</button>
+                    <button class="font-medium text-red-600 hover:underline ml-4">삭제</button>
+                  </td>
+                </tr>
+                <tr class="bg-white border-b hover:bg-gray-50">
+                  <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">김지은</td>
+                  <td class="px-6 py-4">kim.jieun@example.com</td>
+                  <td class="px-6 py-4">
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">코치</span>
+                  </td>
+                  <td class="px-6 py-4">9기</td>
+                  <td class="px-6 py-4">2024-08-10</td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="font-medium text-blue-600 hover:underline">수정</button>
+                    <button class="font-medium text-red-600 hover:underline ml-4">삭제</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="flex items-center justify-between p-2 bg-blue-50 rounded text-sm">
-            <span>ℹ️ 새 사용자 로그인: 배경관</span>
-            <span class="text-gray-500">13:45</span>
+          
+          <!-- 페이지네이션 -->
+          <div id="pagination" class="mt-6 flex justify-center items-center space-x-2">
+            <button class="px-3 py-1 rounded-md border bg-gray-100 text-gray-400 cursor-not-allowed">&laquo;</button>
+            <button class="px-3 py-1 rounded-md border bg-blue-500 text-white border-blue-500">1</button>
+            <button class="px-3 py-1 rounded-md border bg-white text-gray-600 hover:bg-gray-100">2</button>
+            <button class="px-3 py-1 rounded-md border bg-white text-gray-600 hover:bg-gray-100">3</button>
+            <button class="px-3 py-1 rounded-md border bg-white text-gray-600 hover:bg-gray-100">&raquo;</button>
           </div>
-          <div class="flex items-center justify-between p-2 bg-yellow-50 rounded text-sm">
-            <span>⚠️ 과제 제출 마감 알림 발송</span>
-            <span class="text-gray-500">12:00</span>
-          </div>
-          <div class="flex items-center justify-between p-2 bg-gray-50 rounded text-sm">
-            <span>📁 멘토링 일지 업데이트</span>
-            <span class="text-gray-500">11:23</span>
-          </div>
-        </div>
-        <div class="mt-4">
-          <button class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full text-sm">
-            전체 로그 다운로드
-          </button>
         </div>
       </div>
     </section>
 
     <!-- 새 과정 생성 -->
-    <section class="bg-white shadow rounded-xl p-4">
-      <h2 class="text-lg font-semibold mb-3">➕ 새 과정 생성</h2>
+    <section class="bg-white shadow rounded-xl p-4 mb-10">
+      <h2 class="text-lg font-semibold mb-3">새 과정 생성</h2>
       <form class="space-y-4" onsubmit="createNewCohort(event)">
         <!-- 기본 정보 -->
         <div class="grid md:grid-cols-4 gap-3">
@@ -326,7 +237,7 @@
 
         <!-- 자동 생성된 주요 일정 -->
         <div class="border-t pt-4">
-          <h3 class="text-base font-semibold mb-3">📅 주요 일정</h3>
+          <h3 class="text-base font-semibold mb-3">주요 일정</h3>
           <div class="grid md:grid-cols-3 gap-3">
             <div data-schedule-item="orientationDate">
               <label class="block text-xs font-medium mb-1">OT (오리엔테이션)</label>
@@ -375,45 +286,154 @@
           </div>
         </div>
 
+        <!-- 멘토링 회차 정보 -->
+        <div class="border-t pt-4" id="mentoringSessionsSection" style="display: none;">
+          <h3 class="text-base font-semibold mb-3">멘토링 회차 정보</h3>
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-3">
+            <div class="flex items-center mb-2">
+              <span class="text-blue-600 font-medium">총 멘토링 회차:</span>
+              <span id="totalSessions" class="ml-2 text-lg font-bold text-blue-800">-</span>
+              <span class="ml-1 text-blue-600">회</span>
+            </div>
+            <div class="text-sm text-blue-600">
+              <span id="sessionDuration" class="font-medium">-</span>
+              <span class="ml-2" id="sessionFrequency">-</span>
+            </div>
+          </div>
+          <div id="sessionsList" class="grid md:grid-cols-3 gap-3">
+            <!-- 동적으로 생성될 회차별 멘토링 일정 -->
+          </div>
+        </div>
+
         <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-semibold text-sm">
-          📝 과정 생성하기
+          과정 생성하기
         </button>
       </form>
     </section>
 
-    <!-- 리포트 생성 -->
-    <section class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold mb-6 flex items-center">
-        <svg class="w-6 h-6 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
-        </svg>
-        리포트 생성
-      </h2>
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="p-4 border rounded-lg">
-          <h4 class="font-semibold mb-2">과정별 진행 리포트</h4>
-          <p class="text-sm text-gray-600 mb-4">과제 제출률, 멘토링 현황 등 종합 리포트</p>
-          <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">
-            PDF 생성
-          </button>
+    <!-- 산출물 목록 관리 -->
+    <!-- <section class="bg-white shadow rounded-xl p-4">
+      <h2 class="text-lg font-semibold mb-3">산출물 목록 관리</h2>
+      <div class="space-y-4">
+        <div id="deliverablesList" class="space-y-2">
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg" data-deliverable="team-formation">
+            <div>
+              <p class="font-medium">팀 구성 계획서</p>
+              <p class="text-sm text-gray-600">1주차 - 팀 구성 및 역할 분담</p>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="editDeliverable('team-formation')" class="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded border border-blue-300 hover:bg-blue-50">
+                수정
+              </button>
+              <button onclick="deleteDeliverable('team-formation')" class="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded border border-red-300 hover:bg-red-50">
+                삭제
+              </button>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg" data-deliverable="mini-project">
+            <div>
+              <p class="font-medium">미니 프로젝트 발표자료</p>
+              <p class="text-sm text-gray-600">3주차 - 미니 프로젝트 결과물</p>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="editDeliverable('mini-project')" class="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded border border-blue-300 hover:bg-blue-50">
+                수정
+              </button>
+              <button onclick="deleteDeliverable('mini-project')" class="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded border border-red-300 hover:bg-red-50">
+                삭제
+              </button>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg" data-deliverable="project-plan">
+            <div>
+              <p class="font-medium">프로젝트 기획서</p>
+              <p class="text-sm text-gray-600">5주차 - 최종 프로젝트 기획 문서</p>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="editDeliverable('project-plan')" class="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded border border-blue-300 hover:bg-blue-50">
+                수정
+              </button>
+              <button onclick="deleteDeliverable('project-plan')" class="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded border border-red-300 hover:bg-red-50">
+                삭제
+              </button>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg" data-deliverable="mid-report">
+            <div>
+              <p class="font-medium">중간 보고서</p>
+              <p class="text-sm text-gray-600">10주차 - 프로젝트 진행 상황 보고</p>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="editDeliverable('mid-report')" class="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded border border-blue-300 hover:bg-blue-50">
+                수정
+              </button>
+              <button onclick="deleteDeliverable('mid-report')" class="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded border border-red-300 hover:bg-red-50">
+                삭제
+              </button>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg" data-deliverable="final-presentation">
+            <div>
+              <p class="font-medium">최종 발표자료</p>
+              <p class="text-sm text-gray-600">최종주차 - 프로젝트 최종 결과물</p>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="editDeliverable('final-presentation')" class="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded border border-blue-300 hover:bg-blue-50">
+                수정
+              </button>
+              <button onclick="deleteDeliverable('final-presentation')" class="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded border border-red-300 hover:bg-red-50">
+                삭제
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="p-4 border rounded-lg">
-          <h4 class="font-semibold mb-2">멘토링 통계</h4>
-          <p class="text-sm text-gray-600 mb-4">멘토별 활동 현황 및 수강생 피드백</p>
-          <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">
-            Excel 생성
-          </button>
-        </div>
-        <div class="p-4 border rounded-lg">
-          <h4 class="font-semibold mb-2">시스템 사용 분석</h4>
-          <p class="text-sm text-gray-600 mb-4">기능별 사용률 및 개선점 분석</p>
-          <button class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 w-full">
-            데이터 추출
+        
+        <div class="border-t pt-4">
+          <button onclick="showAddDeliverableModal()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">
+            새 산출물 추가
           </button>
         </div>
       </div>
-    </section>
+    </section> -->
+  </div>
 
+
+  <div id="deliverableModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+      <h3 id="deliverableModalTitle" class="text-lg font-bold mb-4">새 산출물 추가</h3>
+      <form onsubmit="saveDeliverable(event)">
+        <input type="hidden" id="deliverableId">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">산출물 제목 *</label>
+            <input type="text" id="deliverableTitle" placeholder="예: 프로젝트 제안서" class="w-full border p-2 rounded" required>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium mb-1">설명</label>
+            <textarea id="deliverableDescription" placeholder="산출물에 대한 간단한 설명" class="w-full border p-2 rounded h-20"></textarea>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium mb-1">제출 주차</label>
+            <input type="text" id="deliverableWeek" placeholder="예: 3주차" class="w-full border p-2 rounded">
+          </div>
+        </div>
+        
+        <div class="flex justify-end space-x-3 mt-6">
+          <button type="button" onclick="hideDeliverableModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">
+            취소
+          </button>
+          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            저장
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
@@ -551,6 +571,46 @@
         }
         
         return null; // 찾지 못한 경우
+      },
+
+      // 전체 멘토링 회차 정보 계산
+      calculateAllSessions(startDate, endDate, mentoringDays) {
+        const sessions = [];
+        let session = 0;
+        let currentDate = new Date(startDate);
+        
+        // OT + 딥러닝 특강 2일 + 과정안내 1일 = 총 4일 건너뛰기
+        currentDate = DateUtils.addDays(currentDate, 4);
+        
+        while (currentDate <= endDate) {
+          if (this.isValidMentoringDay(currentDate, mentoringDays)) {
+            session++;
+            sessions.push({
+              session: session,
+              date: new Date(currentDate),
+              dateString: DateUtils.formatDate(currentDate),
+              dayOfWeek: DateUtils.getDayOfWeek(currentDate)
+            });
+          }
+          currentDate = DateUtils.addDays(currentDate, 1);
+        }
+        
+        return sessions;
+      },
+
+      // 멘토링 기간 및 빈도 계산
+      calculateSessionInfo(startDate, endDate, mentoringDays) {
+        const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        const weeksApprox = Math.floor(totalDays / 7);
+        const sessionsPerWeek = mentoringDays.length;
+        
+        return {
+          totalDays: totalDays,
+          weeks: weeksApprox,
+          sessionsPerWeek: sessionsPerWeek,
+          frequency: `주 ${sessionsPerWeek}회 (${mentoringDays.join(', ')})`,
+          duration: `${Math.floor(totalDays / 7)}주 과정`
+        };
       }
     };
 
@@ -644,6 +704,9 @@
       // 최종 발표: 과정 종료일
       document.getElementById('finalPresentationDate').value = DateUtils.formatDate(endDate);
 
+      // 5. 멘토링 회차 정보 생성 및 표시
+      generateMentoringSessionsInfo(startDate, endDate, mentoringDays);
+
       // 일정 생성 완료 후 수정/삭제 버튼 활성화
       enableScheduleEditButtons();
 
@@ -652,6 +715,261 @@
       console.log(`시작일: ${DateUtils.formatDate(startDate)}`);
       console.log(`종료일: ${DateUtils.formatDate(endDate)}`);
       console.log(`멘토링 요일: ${mentoringDays.join(', ')}`);
+    }
+
+    // 전역 변수로 현재 회차 정보 저장
+    let currentSessions = [];
+
+    /**
+     * 멘토링 회차 정보 생성 및 표시
+     */
+    function generateMentoringSessionsInfo(startDate, endDate, mentoringDays) {
+      // 멘토링 회차 정보 계산
+      const sessions = MentoringUtils.calculateAllSessions(startDate, endDate, mentoringDays);
+      const sessionInfo = MentoringUtils.calculateSessionInfo(startDate, endDate, mentoringDays);
+      
+      // 전역 변수에 회차 정보 저장
+      currentSessions = [...sessions];
+      
+      // 멘토링 회차 섹션 표시
+      const mentoringSection = document.getElementById('mentoringSessionsSection');
+      mentoringSection.style.display = 'block';
+      
+      // 기본 정보 업데이트
+      document.getElementById('totalSessions').textContent = sessions.length;
+      document.getElementById('sessionDuration').textContent = sessionInfo.duration;
+      document.getElementById('sessionFrequency').textContent = sessionInfo.frequency;
+      
+      // 회차별 목록 생성
+      const sessionsList = document.getElementById('sessionsList');
+      sessionsList.innerHTML = '';
+      
+      sessions.forEach(session => {
+        const sessionElement = createSessionElement(session);
+        sessionsList.appendChild(sessionElement);
+      });
+      
+      // 주요 일정과 동일한 수정/삭제 기능 활성화
+      enableSessionEditButtons();
+      
+      console.log(`📊 멘토링 회차 정보: 총 ${sessions.length}회차, ${sessionInfo.frequency}`);
+    }
+
+    /**
+     * 개별 멘토링 회차 요소 생성 (주요 일정과 동일한 형태)
+     */
+    function createSessionElement(session) {
+      const div = document.createElement('div');
+      div.setAttribute('data-session-item', session.session);
+      
+      // 특별한 회차인지 확인하여 레이블 표시
+      const specialSessions = {
+        3: { label: '미니발표' },
+        4: { label: '취업특강' },
+        5: { label: '기획발표' },
+        10: { label: '중간발표' }
+      };
+      
+      const special = specialSessions[session.session];
+      const labelText = special ? `${session.session}회차 (${special.label})` : `${session.session}회차`;
+      
+      div.innerHTML = `
+        <label class="block text-xs font-medium mb-1">${labelText}</label>
+        <input type="date" id="session${session.session}Date" value="${session.dateString}" class="w-full border p-2 rounded text-sm bg-gray-100" readonly>
+      `;
+      
+      return div;
+    }
+
+    /**
+     * 멘토링 회차 수정/삭제 기능 활성화 (주요 일정과 동일한 방식)
+     */
+    function enableSessionEditButtons() {
+      const sessionItems = document.querySelectorAll('[data-session-item]');
+      
+      sessionItems.forEach(container => {
+        const sessionNumber = container.getAttribute('data-session-item');
+        const input = container.querySelector('input');
+        const label = container.querySelector('label');
+        const itemName = label.textContent;
+        
+        // 값이 있는 항목만 수정 가능하게 설정
+        if (input.value) {
+          // 컨테이너 스타일 변경
+          container.classList.add('border', 'rounded-lg', 'p-3', 'bg-gray-50', 'relative', 'hover:bg-blue-50', 'transition-colors');
+          
+          // 우상단에 삭제 버튼만 추가
+          const actionButtons = document.createElement('div');
+          actionButtons.className = 'absolute top-2 right-2';
+          actionButtons.innerHTML = `
+            <button type="button" onclick="quickDeleteSession('${sessionNumber}', '${itemName}')" class="text-red-600 hover:text-red-800 text-sm opacity-70 hover:opacity-100" title="삭제">
+              🗑️
+            </button>
+          `;
+          container.appendChild(actionButtons);
+          
+          // 입력 필드를 호버 시 수정 가능하게 설정
+          input.classList.remove('bg-gray-100');
+          input.classList.add('bg-white', 'hover:bg-blue-50', 'cursor-pointer', 'transition-colors');
+          input.title = '클릭하여 수정';
+          
+          // 클릭 이벤트로 수정 모드 활성화
+          input.addEventListener('click', function() {
+            enableSessionEditMode(sessionNumber);
+          });
+          
+          // 마우스 오버 시 시각적 피드백
+          input.addEventListener('mouseenter', function() {
+            if (input.readOnly) {
+              input.classList.add('border-blue-300');
+            }
+          });
+          
+          input.addEventListener('mouseleave', function() {
+            if (input.readOnly) {
+              input.classList.remove('border-blue-300');
+            }
+          });
+        }
+      });
+    }
+
+    /**
+     * 멘토링 회차 수정 모드 활성화
+     */
+    function enableSessionEditMode(sessionNumber) {
+      const input = document.getElementById(`session${sessionNumber}Date`);
+      const originalValue = input.value;
+      
+      if (input.readOnly) {
+        // 수정 모드로 전환
+        input.readOnly = false;
+        input.classList.remove('bg-blue-50', 'hover:bg-blue-50', 'border-blue-300');
+        input.classList.add('bg-yellow-50', 'border-yellow-400', 'ring-2', 'ring-yellow-200');
+        input.title = 'Enter: 저장, Escape: 취소';
+        input.focus();
+        
+        // 키보드 이벤트 설정
+        input.onkeydown = function(e) {
+          if (e.key === 'Enter') {
+            saveSessionEdit(sessionNumber, originalValue);
+          } else if (e.key === 'Escape') {
+            cancelSessionEdit(sessionNumber, originalValue);
+          }
+        };
+        
+        // 포커스 벗어나면 저장
+        input.onblur = function() {
+          setTimeout(() => saveSessionEdit(sessionNumber, originalValue), 100);
+        };
+      }
+    }
+
+    /**
+     * 멘토링 회차 수정 저장
+     */
+    function saveSessionEdit(sessionNumber, originalValue) {
+      const input = document.getElementById(`session${sessionNumber}Date`);
+      const newValue = input.value;
+      
+      if (!newValue) {
+        alert('날짜를 입력해주세요.');
+        input.value = originalValue;
+        return;
+      }
+      
+      // 현재 회차 정보 업데이트
+      const sessionIndex = currentSessions.findIndex(s => s.session == sessionNumber);
+      if (sessionIndex !== -1) {
+        currentSessions[sessionIndex].dateString = newValue;
+        currentSessions[sessionIndex].date = new Date(newValue);
+        currentSessions[sessionIndex].dayOfWeek = DateUtils.getDayOfWeek(new Date(newValue));
+      }
+      
+      // 읽기 전용 모드로 복원
+      input.readOnly = true;
+      input.classList.remove('bg-yellow-50', 'border-yellow-400', 'ring-2', 'ring-yellow-200');
+      input.classList.add('bg-white', 'hover:bg-blue-50');
+      input.title = '클릭하여 수정';
+      input.onkeydown = null;
+      input.onblur = null;
+      
+      if (newValue !== originalValue) {
+        console.log(`📅 ${sessionNumber}회차 날짜 수정: ${originalValue} → ${newValue}`);
+      }
+    }
+
+    /**
+     * 멘토링 회차 수정 취소
+     */
+    function cancelSessionEdit(sessionNumber, originalValue) {
+      const input = document.getElementById(`session${sessionNumber}Date`);
+      input.value = originalValue;
+      input.readOnly = true;
+      input.classList.remove('bg-yellow-50', 'border-yellow-400', 'ring-2', 'ring-yellow-200');
+      input.classList.add('bg-white', 'hover:bg-blue-50');
+      input.title = '클릭하여 수정';
+      input.onkeydown = null;
+      input.onblur = null;
+    }
+
+    /**
+     * 멘토링 회차 삭제
+     */
+    function quickDeleteSession(sessionNumber, itemName) {
+      const input = document.getElementById(`session${sessionNumber}Date`);
+      const currentValue = input.value;
+      
+      if (!currentValue) {
+        alert('이미 삭제된 회차입니다.');
+        return;
+      }
+      
+      if (confirm(`${itemName} 일정을 삭제하시겠습니까?`)) {
+        const container = input.parentElement;
+        const actionButtons = container.querySelector('.absolute');
+        
+        // 회차 삭제
+        input.value = '';
+        container.classList.remove('bg-gray-50');
+        container.classList.add('bg-red-100', 'opacity-60');
+        
+        // 버튼을 복원 버튼으로 변경
+        actionButtons.innerHTML = `
+          <button type="button" onclick="quickRestoreSession('${sessionNumber}', '${currentValue}', '${itemName}')" class="text-blue-600 hover:text-blue-800 text-sm" title="복원">
+            🔄
+          </button>
+        `;
+        
+        console.log(`🗑️ ${itemName} 삭제됨`);
+      }
+    }
+
+    /**
+     * 멘토링 회차 복원
+     */
+    function quickRestoreSession(sessionNumber, originalValue, itemName) {
+      const input = document.getElementById(`session${sessionNumber}Date`);
+      const container = input.parentElement;
+      const actionButtons = container.querySelector('.absolute');
+      
+      // 회차 복원
+      input.value = originalValue;
+      container.classList.remove('bg-red-100', 'opacity-60');
+      container.classList.add('bg-gray-50', 'hover:bg-blue-50');
+      
+      // 원래 버튼으로 복원
+      actionButtons.innerHTML = `
+        <button type="button" onclick="quickDeleteSession('${sessionNumber}', '${itemName}')" class="text-red-600 hover:text-red-800 text-sm opacity-70 hover:opacity-100" title="삭제">
+          🗑️
+        </button>
+      `;
+      
+      // 입력 필드 클릭 이벤트 다시 설정
+      input.classList.add('bg-white', 'hover:bg-blue-50', 'cursor-pointer', 'transition-colors');
+      input.title = '클릭하여 수정';
+      
+      console.log(`🔄 ${itemName} 복원됨`);
     }
 
     /**
@@ -755,6 +1073,21 @@
           element.value = '';
         }
       });
+
+      // 멘토링 회차 섹션 숨기기 및 초기화
+      const mentoringSection = document.getElementById('mentoringSessionsSection');
+      if (mentoringSection) {
+        mentoringSection.style.display = 'none';
+        
+        // 멘토링 정보 초기화
+        document.getElementById('totalSessions').textContent = '-';
+        document.getElementById('sessionDuration').textContent = '-';
+        document.getElementById('sessionFrequency').textContent = '-';
+        document.getElementById('sessionsList').innerHTML = '';
+        
+        // 전역 회차 정보 초기화
+        currentSessions = [];
+      }
     }
 
     function createNewCohort(event) {
@@ -991,6 +1324,560 @@
       
       console.log(`🔄 일정 복원됨: ${itemName}`);
     }
+
+    /**
+     * 새 사용자 추가 모달 관련 함수들
+     */
+    function showAddUserModal() {
+      // 폼 초기화
+      document.getElementById('newUserName').value = '';
+      document.getElementById('newUserEmail').value = '';
+      document.getElementById('newUserRole').value = '';
+      document.getElementById('newUserCohort').value = '';
+      document.getElementById('newUserPassword').value = '';
+      
+      // 모달 표시
+      const modal = document.getElementById('addUserModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      // 임시 비밀번호 자동 생성
+      generatePassword();
+    }
+
+    function hideAddUserModal() {
+      const modal = document.getElementById('addUserModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function generatePassword() {
+      // 8자리 임시 비밀번호 생성
+      const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+      let password = '';
+      for (let i = 0; i < 8; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('newUserPassword').value = password;
+    }
+
+    function addNewUser(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('newUserName').value;
+      const email = document.getElementById('newUserEmail').value;
+      const role = document.getElementById('newUserRole').value;
+      const cohort = document.getElementById('newUserCohort').value;
+      const password = document.getElementById('newUserPassword').value;
+      
+      // 역할별 표시 텍스트
+      const roleNames = {
+        'student': '수강생',
+        'coach': '코치',
+        'mentor': '멘토',
+        'admin': '관리자',
+        'operator': '운영진'
+      };
+      
+      // 기수 표시 텍스트
+      const cohortNames = {
+        'ai-x-10th': 'AI-X 10기',
+        'ai-x-11th': 'AI-X 11기',
+        'ai-x-12th': 'AI-X 12기',
+        'ai-x-13th': 'AI-X 13기'
+      };
+
+      // 역할별 배지 색상
+      const roleBadges = {
+        'student': 'bg-green-100 text-green-800',
+        'coach': 'bg-blue-100 text-blue-800',
+        'admin': 'bg-red-100 text-red-800',
+        'operator': 'bg-gray-100 text-gray-800'
+      };
+      
+      const confirmMessage = `다음 사용자를 추가하시겠습니까?
+
+📋 사용자 정보:
+• 이름: ${name}
+• 이메일: ${email}
+• 역할: ${roleNames[role]}
+• 소속 기수: ${cohortNames[cohort]}
+• 임시 비밀번호: ${password}
+
+※ 사용자는 최초 로그인 시 비밀번호를 변경해야 합니다.`;
+
+      if (confirm(confirmMessage)) {
+        // 사용자 목록에 새 사용자 추가
+        const userList = document.querySelector('.space-y-4');
+        const newUserElement = document.createElement('div');
+        newUserElement.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+        newUserElement.innerHTML = `
+          <div>
+            <p class="font-medium">${name}</p>
+            <p class="text-sm text-gray-600">${email} • ${cohortNames[cohort]}</p>
+          </div>
+          <span class="${roleBadges[role]} px-3 py-1 rounded-full text-sm">${roleNames[role]}</span>
+        `;
+        
+        // 새 사용자 추가 버튼 전에 삽입
+        const addButton = userList.querySelector('.border-t');
+        userList.insertBefore(newUserElement, addButton);
+        
+        // 실제 시스템에서는 서버로 데이터 전송
+        console.log('👤 새 사용자 추가:', {
+          name, email, role, cohort, 
+          temporaryPassword: password,
+          createdAt: new Date().toISOString()
+        });
+        
+        alert(`✅ ${name}님이 성공적으로 추가되었습니다!\n\n임시 비밀번호: ${password}\n\n해당 정보를 사용자에게 안전하게 전달해주세요.`);
+        hideAddUserModal();
+      }
+    }
+
+    /**
+     * 산출물 관리 관련 함수들
+     */
+    let deliverables = {
+      'team-formation': {
+        title: '팀 구성 계획서',
+        description: '팀 구성 및 역할 분담',
+        week: '1주차'
+      },
+      'mini-project': {
+        title: '미니 프로젝트 발표자료',
+        description: '미니 프로젝트 결과물',
+        week: '3주차'
+      },
+      'project-plan': {
+        title: '프로젝트 기획서',
+        description: '최종 프로젝트 기획 문서',
+        week: '5주차'
+      },
+      'mid-report': {
+        title: '중간 보고서',
+        description: '프로젝트 진행 상황 보고',
+        week: '10주차'
+      },
+      'final-presentation': {
+        title: '최종 발표자료',
+        description: '프로젝트 최종 결과물',
+        week: '최종주차'
+      }
+    };
+
+    function showAddDeliverableModal() {
+      // 폼 초기화 (새 산출물 추가)
+      document.getElementById('deliverableModalTitle').textContent = '새 산출물 추가';
+      document.getElementById('deliverableId').value = '';
+      document.getElementById('deliverableTitle').value = '';
+      document.getElementById('deliverableDescription').value = '';
+      document.getElementById('deliverableWeek').value = '';
+      
+      // 모달 표시
+      const modal = document.getElementById('deliverableModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function hideDeliverableModal() {
+      const modal = document.getElementById('deliverableModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function editDeliverable(deliverableId) {
+      const deliverable = deliverables[deliverableId];
+      if (!deliverable) return;
+      
+      // 폼에 기존 데이터 설정 (수정 모드)
+      document.getElementById('deliverableModalTitle').textContent = '산출물 수정';
+      document.getElementById('deliverableId').value = deliverableId;
+      document.getElementById('deliverableTitle').value = deliverable.title;
+      document.getElementById('deliverableDescription').value = deliverable.description;
+      document.getElementById('deliverableWeek').value = deliverable.week;
+      
+      // 모달 표시
+      const modal = document.getElementById('deliverableModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function deleteDeliverable(deliverableId) {
+      const deliverable = deliverables[deliverableId];
+      if (!deliverable) return;
+      
+      if (confirm(`"${deliverable.title}" 산출물을 삭제하시겠습니까?`)) {
+        // 데이터에서 삭제
+        delete deliverables[deliverableId];
+        
+        // DOM에서 제거
+        const element = document.querySelector(`[data-deliverable="${deliverableId}"]`);
+        if (element) {
+          element.remove();
+        }
+        
+        console.log(`🗑️ 산출물 삭제됨: ${deliverable.title}`);
+        alert(`"${deliverable.title}" 산출물이 삭제되었습니다.`);
+      }
+    }
+
+    function saveDeliverable(event) {
+      event.preventDefault();
+      
+      const deliverableId = document.getElementById('deliverableId').value;
+      const title = document.getElementById('deliverableTitle').value;
+      const description = document.getElementById('deliverableDescription').value;
+      const week = document.getElementById('deliverableWeek').value;
+      
+      const isEdit = !!deliverableId;
+      const finalId = deliverableId || generateDeliverableId(title);
+      
+      // 데이터 저장
+      deliverables[finalId] = { title, description, week };
+      
+      if (isEdit) {
+        // 기존 항목 수정
+        updateDeliverableDOM(finalId);
+        console.log(`✏️ 산출물 수정됨: ${title}`);
+        alert(`"${title}" 산출물이 수정되었습니다.`);
+      } else {
+        // 새 항목 추가
+        addDeliverableDOM(finalId);
+        console.log(`➕ 산출물 추가됨: ${title}`);
+        alert(`"${title}" 산출물이 추가되었습니다.`);
+      }
+      
+      hideDeliverableModal();
+    }
+
+    function generateDeliverableId(title) {
+      return title.toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-가-힣]/g, '')
+        .substring(0, 20);
+    }
+
+    function updateDeliverableDOM(deliverableId) {
+      const deliverable = deliverables[deliverableId];
+      const element = document.querySelector(`[data-deliverable="${deliverableId}"]`);
+      
+      if (element && deliverable) {
+        const contentDiv = element.querySelector('div');
+        contentDiv.innerHTML = `
+          <p class="font-medium">${deliverable.title}</p>
+          <p class="text-sm text-gray-600">${deliverable.week} - ${deliverable.description}</p>
+        `;
+      }
+    }
+
+    function addDeliverableDOM(deliverableId) {
+      const deliverable = deliverables[deliverableId];
+      const deliverablesList = document.getElementById('deliverablesList');
+      
+      const newElement = document.createElement('div');
+      newElement.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+      newElement.setAttribute('data-deliverable', deliverableId);
+      newElement.innerHTML = `
+        <div>
+          <p class="font-medium">${deliverable.title}</p>
+          <p class="text-sm text-gray-600">${deliverable.week} - ${deliverable.description}</p>
+        </div>
+        <div class="flex space-x-2">
+          <button onclick="editDeliverable('${deliverableId}')" class="text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded border border-blue-300 hover:bg-blue-50">
+            수정
+          </button>
+          <button onclick="deleteDeliverable('${deliverableId}')" class="text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded border border-red-300 hover:bg-red-50">
+            삭제
+          </button>
+        </div>
+      `;
+      
+      deliverablesList.appendChild(newElement);
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.addEventListener('click', function(event) {
+      const addUserModal = document.getElementById('addUserModal');
+      const deliverableModal = document.getElementById('deliverableModal');
+      
+      if (event.target === addUserModal) {
+        hideAddUserModal();
+      }
+      if (event.target === deliverableModal) {
+        hideDeliverableModal();
+      }
+    });
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        hideAddUserModal();
+        hideDeliverableModal();
+      }
+    });
+
+    /**
+     * 사용자 승인 관련 함수들
+     */
+    
+    // 승인 대기 사용자 데이터 (실제로는 서버에서 가져올 데이터)
+    let pendingUsers = [
+      {
+        id: 'user1',
+        name: '김수진',
+        email: 'kim.sujin@example.com',
+        appliedAt: '2024-09-25 14:30',
+        defaultRole: 'student',
+        defaultCohort: 'ai-x-11th'
+      },
+      {
+        id: 'user2',
+        name: '박지훈',
+        email: 'park.jihun@example.com',
+        appliedAt: '2024-09-25 16:15',
+        defaultRole: 'coach',
+        defaultCohort: ''
+      },
+      {
+        id: 'user3',
+        name: '김지훈',
+        email: 'kim.jihun@example.com',
+        appliedAt: '2024-09-25 16:15',
+        defaultRole: 'mentor',
+        defaultCohort: ''
+      },
+      {
+        id: 'user4',
+        name: '김강남',
+        email: 'kim.gangnam@example.com',
+        appliedAt: '2024-09-25 16:15',
+        defaultRole: 'operator',
+        defaultCohort: ''
+      }
+    ];
+
+    // 역할 및 기수 옵션 데이터
+    const roleOptions = [
+      { value: '', label: '역할 선택' },
+      { value: 'student', label: '수강생' },
+      { value: 'coach', label: '코치' },
+      { value: 'mentor', label: '멘토' },
+      { value: 'admin', label: '관리자' },
+      { value: 'operator', label: '운영진' }
+    ];
+
+    const cohortOptions = [
+      { value: '', label: '기수 선택' },
+      { value: 'ai-x-11th', label: 'AI-X 11기' },
+      { value: 'ai-x-12th', label: 'AI-X 12기' },
+      { value: 'ai-x-13th', label: 'AI-X 13기' }
+    ];
+
+    /**
+     * 승인 대기 사용자 목록을 동적으로 생성하는 함수
+     */
+    function renderPendingUsersList() {
+      const container = document.getElementById('pendingUsersList');
+      const countElement = document.getElementById('pendingCount');
+      
+      // 승인 대기 카운트 업데이트
+      countElement.textContent = pendingUsers.length;
+      
+      // 승인 대기 사용자가 없는 경우
+      if (pendingUsers.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-gray-500">
+            <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p>승인 대기 중인 사용자가 없습니다.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // 승인 대기 사용자 목록 생성
+      container.innerHTML = '';
+      pendingUsers.forEach(user => {
+        const userElement = createPendingUserElement(user);
+        container.appendChild(userElement);
+      });
+    }
+
+    /**
+     * 개별 승인 대기 사용자 요소를 생성하는 함수
+     */
+    function createPendingUserElement(user) {
+      const div = document.createElement('div');
+      div.className = 'border-l-4 border-yellow-400 bg-yellow-50 p-4 rounded-r-lg';
+      div.setAttribute('data-pending-user', user.id);
+      
+      // 역할 선택 옵션 생성
+      const roleOptionsHTML = roleOptions.map(option => 
+        `<option value="${option.value}" ${option.value === user.defaultRole ? 'selected' : ''}>${option.label}</option>`
+      ).join('');
+      
+      // 기수 선택 옵션 생성
+      const cohortOptionsHTML = cohortOptions.map(option => 
+        `<option value="${option.value}" ${option.value === user.defaultCohort ? 'selected' : ''}>${option.label}</option>`
+      ).join('');
+      
+      div.innerHTML = `
+        <div class="flex justify-between items-start">
+          <div class="flex-1">
+            <div class="flex items-center space-x-3 mb-2">
+              <p class="font-medium text-gray-900">${user.name}</p>
+              <span class="text-sm text-gray-500">${user.appliedAt} 신청</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-1">이메일: ${user.email}</p>
+            <div class="flex space-x-2">
+              <select class="text-sm border rounded px-2 py-1" data-role-select="${user.id}">
+                ${roleOptionsHTML}
+              </select>
+              <select class="text-sm border rounded px-2 py-1" data-cohort-select="${user.id}">
+                ${cohortOptionsHTML}
+              </select>
+            </div>
+          </div>
+          <div class="flex space-x-2 ml-4">
+            <button onclick="approveUser('${user.id}')" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+              승인
+            </button>
+            <button onclick="rejectUser('${user.id}')" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+              거부
+            </button>
+          </div>
+        </div>
+      `;
+      
+      return div;
+    }
+
+    function approveUser(userId) {
+      const roleSelect = document.querySelector(`[data-role-select="${userId}"]`);
+      const cohortSelect = document.querySelector(`[data-cohort-select="${userId}"]`);
+      const role = roleSelect.value;
+      const cohort = cohortSelect.value;
+      const user = pendingUsers.find(u => u.id === userId);
+
+      if (!user) {
+        alert('사용자를 찾을 수 없습니다.');
+        return;
+      }
+
+      if (!role || !cohort) {
+        alert('역할과 기수를 모두 선택해주세요.');
+        return;
+      }
+
+      // 역할별 표시 텍스트
+      const roleNames = {
+        'student': '수강생',
+        'coach': '코치', 
+        'mentor': '멘토',
+        'admin': '관리자',
+        'operator': '운영진'
+      };
+      
+      // 기수 표시 텍스트
+      const cohortNames = {
+        'ai-x-10th': 'AI-X 10기',
+        'ai-x-11th': 'AI-X 11기',
+        'ai-x-12th': 'AI-X 12기',
+        'ai-x-13th': 'AI-X 13기'
+      };
+
+      // 역할별 배지 색상
+      const roleBadges = {
+        'student': 'bg-green-100 text-green-800',
+        'coach': 'bg-blue-100 text-blue-800',
+        'mentor': 'bg-purple-100 text-purple-800',
+        'admin': 'bg-red-100 text-red-800',
+        'operator': 'bg-gray-100 text-gray-800'
+      };
+
+      const confirmMessage = `${user.name}님을 다음과 같이 승인하시겠습니까?
+
+승인 정보:
+• 이름: ${user.name}
+• 이메일: ${user.email}
+• 역할: ${roleNames[role]}
+• 소속 기수: ${cohortNames[cohort]}`;
+
+      if (confirm(confirmMessage)) {
+        // 승인된 사용자 목록에 추가
+        addApprovedUser(user, role, cohort, roleNames, cohortNames, roleBadges);
+        
+        // 배열에서 사용자 제거
+        const userIndex = pendingUsers.findIndex(u => u.id === userId);
+        if (userIndex > -1) {
+          pendingUsers.splice(userIndex, 1);
+        }
+        
+        // 목록 다시 렌더링
+        renderPendingUsersList();
+        
+        console.log(`✅ 사용자 승인됨:`, {
+          ...user,
+          role,
+          cohort,
+          approvedAt: new Date().toISOString()
+        });
+        
+        alert(`✅ ${user.name}님이 ${roleNames[role]}(${cohortNames[cohort]})로 승인되었습니다.`);
+      }
+    }
+
+    function rejectUser(userId) {
+      const user = pendingUsers.find(u => u.id === userId);
+      
+      if (!user) {
+        alert('사용자를 찾을 수 없습니다.');
+        return;
+      }
+      
+      if (confirm(`${user.name}님의 가입 신청을 거부하시겠습니까?\n\n※ 거부 사유는 이메일로 별도 안내됩니다.`)) {
+        // 배열에서 사용자 제거
+        const userIndex = pendingUsers.findIndex(u => u.id === userId);
+        if (userIndex > -1) {
+          pendingUsers.splice(userIndex, 1);
+        }
+        
+        // 목록 다시 렌더링
+        renderPendingUsersList();
+        
+        console.log(`❌ 사용자 거부됨:`, {
+          ...user,
+          rejectedAt: new Date().toISOString()
+        });
+        
+        alert(`❌ ${user.name}님의 가입 신청이 거부되었습니다.`);
+      }
+    }
+
+    function addApprovedUser(user, role, cohort, roleNames, cohortNames, roleBadges) {
+      const approvedUsersContainer = document.querySelector('.space-y-4');
+      const newUserElement = document.createElement('div');
+      newUserElement.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+      newUserElement.innerHTML = `
+        <div>
+          <p class="font-medium">${user.name}</p>
+          <p class="text-sm text-gray-600">${user.email} • ${cohortNames[cohort]}</p>
+        </div>
+        <span class="${roleBadges[role]} px-3 py-1 rounded-full text-sm">${roleNames[role]}</span>
+      `;
+      
+      // 새 사용자 추가 버튼 전에 삽입
+      const addButton = approvedUsersContainer.querySelector('.border-t');
+      approvedUsersContainer.insertBefore(newUserElement, addButton);
+    }
+
+
+    // 페이지 로드 시 승인 대기 목록 렌더링
+    document.addEventListener('DOMContentLoaded', function() {
+      renderPendingUsersList();
+    });
   </script>
 </body>
 </html> 
