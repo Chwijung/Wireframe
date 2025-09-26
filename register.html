@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 - AI-X 시스템</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      overflow-x: hidden;
+      height: 100%;
+      scroll-behavior: smooth;
+      background-color: #f9fafb;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-sm p-8">
+      <!-- 헤더 -->
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">회원가입</h1>
+        <p class="text-gray-600 text-sm">AI-X 과정에 참여하기 위한 회원가입입니다</p>
+      </div>
+
+      <!-- 회원가입 폼 -->
+      <form onsubmit="handleRegister(event)" class="space-y-6">
+        <!-- 이름 -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">이름 *</label>
+          <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            required
+            placeholder="실명을 입력해주세요"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+        </div>
+
+        <!-- 이메일 -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">이메일 *</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            required
+            placeholder="이메일 주소"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+        </div>
+
+        <!-- 신청 기수 -->
+        <div>
+          <label for="cohort" class="block text-sm font-medium text-gray-700 mb-2">신청 기수 *</label>
+          <select 
+            id="cohort" 
+            name="cohort" 
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+          >
+            <!-- JavaScript로 동적 생성 -->
+          </select>
+        </div>
+
+        <!-- 비밀번호 -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">비밀번호 *</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            required
+            placeholder="영문, 숫자 포함 6자 이상"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+        </div>
+
+        <!-- 비밀번호 확인 -->
+        <div>
+          <label for="passwordConfirm" class="block text-sm font-medium text-gray-700 mb-2">비밀번호 확인 *</label>
+          <input 
+            type="password" 
+            id="passwordConfirm" 
+            name="passwordConfirm" 
+            required
+            placeholder="비밀번호를 다시 입력해주세요"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+        </div>
+
+        <!-- 회원가입 버튼 -->
+        <button 
+          type="submit" 
+          id="submitBtn"
+          class="w-full bg-gray-500 text-white font-semibold py-3 px-4 rounded-md transition-colors duration-300 hover:bg-gray-600"
+        >
+          학생 회원가입 하기
+        </button>
+
+        <!-- 로그인 링크 -->
+        <div class="text-center">
+          <p class="text-sm text-gray-600">
+            이미 계정이 있으신가요? 
+            <a href="index.html" class="text-orange-600 hover:text-orange-800 font-medium">로그인하기</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    // 기수 데이터 (최신 기수부터 내림차순)
+    const cohorts = [
+    { value: 'ai-x-11th', label: 'AI-X 11기', status: 'running' },
+    { value: 'ai-x-12th', label: 'AI-X 12기', status: 'recruiting' }
+
+    ];
+
+    /**
+     * 기수 선택 옵션을 동적으로 생성
+     */
+    function initializeCohortOptions() {
+      const cohortSelect = document.getElementById('cohort');
+      cohortSelect.innerHTML = '';
+      
+      cohorts.forEach((cohort, index) => {
+        const option = document.createElement('option');
+        option.value = cohort.value;
+        option.textContent = cohort.label;
+        
+        // 모집 중이 아닌 기수는 비활성화
+        if (cohort.status === 'full') {
+          option.textContent += ' (모집완료)';
+          option.disabled = true;
+        }
+        
+        // 첫 번째 기수(최신 기수)를 기본 선택
+        if (index === 0 && cohort.status === 'recruiting') {
+          option.selected = true;
+        }
+        
+        cohortSelect.appendChild(option);
+      });
+    }
+
+    /**
+     * 회원가입 처리
+     */
+    function handleRegister(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      const password = formData.get('password');
+      const passwordConfirm = formData.get('passwordConfirm');
+      
+      // 비밀번호 확인
+      if (password !== passwordConfirm) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+      
+      // 비밀번호 강도 체크 (간단한 검증)
+      if (password.length < 6) {
+        alert('비밀번호는 6자 이상이어야 합니다.');
+        return;
+      }
+      
+      const userData = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        cohort: formData.get('cohort'),
+        role: 'student', // 학생 전용
+        registeredAt: new Date().toISOString()
+      };
+      
+      // 선택된 기수 정보
+      const selectedCohort = cohorts.find(c => c.value === userData.cohort);
+      
+      const confirmMessage = `다음 정보로 회원가입하시겠습니까?
+
+📋 신청 정보:
+• 이름: ${userData.name}
+• 이메일: ${userData.email}
+• 신청 기수: ${selectedCohort?.label}
+
+승인 검토 후 이메일로 결과를 안내드립니다.`;
+      
+      if (confirm(confirmMessage)) {
+        // 실제 시스템에서는 서버로 데이터 전송
+        console.log('🎓 학생 회원가입 신청:', userData);
+        
+        // 성공 메시지
+        alert(`🎉 회원가입 신청이 완료되었습니다!
+
+${userData.name}님의 ${selectedCohort?.label} 신청이 접수되었습니다.
+
+관리자 승인 후 이메일로 결과를 안내드리며,
+승인 완료 시 로그인이 가능합니다.
+
+감사합니다!`);
+        
+        // 로그인 페이지로 이동
+        window.location.href = 'index.html';
+      }
+    }
+
+    // 이벤트 리스너 설정
+    document.addEventListener('DOMContentLoaded', function() {
+      // 기수 옵션 초기화
+      initializeCohortOptions();
+    });
+  </script>
+</body>
+</html>
